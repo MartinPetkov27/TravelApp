@@ -39,7 +39,7 @@ namespace BusinessLayer
 
         public string Description { get; set; }
 
-        private Place() { }
+        public Place() { }
         public Place(string name, double latitude, double longitude, Country country)
         { 
             Name = name; 

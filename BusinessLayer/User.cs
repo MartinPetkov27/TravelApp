@@ -39,7 +39,7 @@ namespace BusinessLayer
         public ICollection<Story> Stories { get; set; }
 
         //Constructors
-        private User() { }
+        public User() { }
         public User(string username, string password, string email, string firstName, string lastName, string address, string phoneNumber, RoleType role)
         {
             Username = username;

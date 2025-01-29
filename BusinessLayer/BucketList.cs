@@ -24,7 +24,7 @@ namespace BusinessLayer
         [Required]
         public User User { get; set; }
 
-        private BucketList() { }
+        public BucketList() { }
         public BucketList( ICollection<Place> destination, User user)
         {
             Destinations = destination;

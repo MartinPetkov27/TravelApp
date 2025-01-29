@@ -26,7 +26,7 @@ namespace BusinessLayer
         [Required]
         public User User { get; set; }
 
-        private Story() { }
+        public Story() { }
         public Story(string title, string content,  int userId, User user)
         { 
             Title = title;

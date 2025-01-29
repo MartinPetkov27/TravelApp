@@ -46,7 +46,7 @@ namespace BusinessLayer
         public User User{ get; set; }
 
         //constructors
-        private Trip() { }
+        public Trip() { }
         public Trip( string title, ICollection<Place> places, int userId, User user)
         {
             Title = title;

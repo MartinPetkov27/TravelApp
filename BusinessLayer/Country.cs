@@ -26,7 +26,7 @@ namespace BusinessLayer
         
         //national Flag
 
-        private Country() { }
+        public Country() { }
         public Country(string alphaCode, string name)
         { 
             AlphaCode = alphaCode;
