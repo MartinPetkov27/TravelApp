@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BusinessLayer;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataLayer
 {
-    public class TravelAppDbContext : DbContext 
+    public class TravelAppDbContext : IdentityDbContext<User>
     {
         public TravelAppDbContext(): base()
         { }
