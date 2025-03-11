@@ -41,7 +41,7 @@ namespace BusinessLayer
 
         //relation with user -> many-to-one from the perspective of the trip
         [ForeignKey("User")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         [Required]
         public User User{ get; set; }
 

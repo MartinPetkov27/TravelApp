@@ -22,7 +22,7 @@ namespace BusinessLayer
         public Status Status { get; set; }
 
         [ForeignKey("User")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         [Required]
         public User User { get; set; }
 

@@ -20,7 +20,7 @@ namespace BusinessLayer
         public ICollection<Place> Destinations { get; set; }
                 
         [ForeignKey("User")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         [Required]
         public User User { get; set; }
 
