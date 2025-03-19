@@ -25,27 +25,27 @@ namespace DataLayer
 
         #region Seeding Data
 
-        public async Task SeedDataAsync(string adminPass, string adminEmail)
-        {
-            int userRoles = await context.UserRoles.CountAsync();
+        //public async Task SeedDataAsync(string adminPass, string adminEmail)
+        //{
+        //    int userRoles = await context.UserRoles.CountAsync();
 
-            if (userRoles == 0)
-            {
-                await ConfigureAdminAccountAsync(adminPass, adminEmail);
-            }
-        }
+        //    if (userRoles == 0)
+        //    {
+        //        await ConfigureAdminAccountAsync(adminPass, adminEmail);
+        //    }
+        //}
 
-        private async Task ConfigureAdminAccountAsync(string password, string email)
-        {
-            User adminIdentityUser = await context.Users.FirstAsync();
+        //private async Task ConfigureAdminAccountAsync(string password, string email)
+        //{
+        //    User adminIdentityUser = await context.Users.FirstAsync();
 
-            if (adminIdentityUser != null)
-            {
-                await userManager.AddToRoleAsync(adminIdentityUser, RoleType.Admin.ToString());
-                await userManager.AddPasswordAsync(adminIdentityUser, password);
-                await userManager.SetEmailAsync(adminIdentityUser, email);
-            }
-        }
+        //    if (adminIdentityUser != null)
+        //    {
+        //        await userManager.AddToRoleAsync(adminIdentityUser, RoleType.Admin.ToString());
+        //        await userManager.AddPasswordAsync(adminIdentityUser, password);
+        //        await userManager.SetEmailAsync(adminIdentityUser, email);
+        //    }
+        //}
 
         #endregion
 

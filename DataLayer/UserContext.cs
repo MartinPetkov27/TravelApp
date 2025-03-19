@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace DataLayer
 {
-    public class UserContext : IDb<User, int>
+    public class UserContext : IDb<User, string>
     {
         private readonly TravelAppDbContext dbContext;
 
@@ -87,7 +87,7 @@ namespace DataLayer
                 throw;
             }
         }
-        public async Task<User> ReadAsync(int key, bool useNavigationalProperties = false, bool isReadOnly = true)
+        public async Task<User> ReadAsync(string key, bool useNavigationalProperties = false, bool isReadOnly = true)
         {
             try
             {
@@ -135,12 +135,12 @@ namespace DataLayer
             User userFromDb = await ReadAsync(item.Id, useNavigationalProperties, false);
 
             userFromDb.Id = item.Id;
-            userFromDb.Username = item.Username;
-            userFromDb.Password = item.Password;
+            userFromDb.UserName = item.UserName;
+            userFromDb.PasswordHash = item.PasswordHash;
             userFromDb.Email = item.Email;
             userFromDb.FirstName = item.FirstName;  
             userFromDb.LastName = item.LastName;
-            userFromDb.Role = item.Role;
+            //userFromDb.= item.Role;
 
             if (useNavigationalProperties)
             {
@@ -205,7 +205,7 @@ namespace DataLayer
 
             await dbContext.SaveChangesAsync();
         }
-        public async Task DeleteAsync(int key)
+        public async Task DeleteAsync(string key)
         {
             try
             {

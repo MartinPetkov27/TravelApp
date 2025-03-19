@@ -21,7 +21,7 @@ namespace ServiceLayer
         {
             await userContext.CreateAsync(item);
         }
-        public async Task<User> ReadAsync(int key, bool useNavigationalProperties = false, bool isReadOnly = true)
+        public async Task<User> ReadAsync(string key, bool useNavigationalProperties = false, bool isReadOnly = true)
         {
             return await userContext.ReadAsync(key, useNavigationalProperties, isReadOnly);
         }
@@ -33,7 +33,7 @@ namespace ServiceLayer
         {
             await userContext.UpdateAsync(item, useNaigationalProperties);
         }
-        public async Task DeleteAsync(int key)
+        public async Task DeleteAsync(string key)
         {
             await userContext.DeleteAsync(key);
         }
