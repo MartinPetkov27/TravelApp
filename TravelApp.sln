@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceLayer", "ServiceLaye
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PresentationLayer", "PresentationLayer\PresentationLayer.csproj", "{E031D42F-D053-4167-8724-2BFC2BB31BFB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeedingDataLayer", "SeedingDataLayer\SeedingDataLayer.csproj", "{4649392B-43D5-4443-B02F-5C707DB9B6D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{E031D42F-D053-4167-8724-2BFC2BB31BFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E031D42F-D053-4167-8724-2BFC2BB31BFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E031D42F-D053-4167-8724-2BFC2BB31BFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4649392B-43D5-4443-B02F-5C707DB9B6D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4649392B-43D5-4443-B02F-5C707DB9B6D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4649392B-43D5-4443-B02F-5C707DB9B6D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4649392B-43D5-4443-B02F-5C707DB9B6D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

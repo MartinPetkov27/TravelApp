@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using System;
+using Microsoft.Extensions.Options;
+using PresentationLayer;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("TravelAppDbContextConnection") ?? throw new InvalidOperationException("Connection string 'TravelAppDbContextConnection' not found.");;
@@ -17,7 +19,7 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddDbContext<TravelAppDbContext>(options => options.UseSqlServer(connectionString));
 
-//builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<TravelAppDbContext>();
+//builder.Services.AddDefaultIdentity<User>(/*options => options.SignIn.RequireConfirmedAccount = true*/).AddEntityFrameworkStores<TravelAppDbContext>();
 
 //builder.Services.AddScoped<TravelAppDbContext, TravelAppDbContext>();
 
@@ -43,6 +45,7 @@ builder.Services.AddScoped<UserManager, UserManager>();
 builder.Services.AddScoped<UserContext, UserContext>();
 
 builder.Services.AddScoped<IdentityContext, IdentityContext>();
+builder.Services.AddScoped<IdentityManager, IdentityManager>(); 
 
 #endregion
 
@@ -56,6 +59,8 @@ builder.Services.AddIdentity<User, IdentityRole>(io =>
 
     io.User.RequireUniqueEmail = false;
 
+    //Those should be removeds when the email service is implemented
+    io.SignIn.RequireConfirmedAccount = false;
     io.SignIn.RequireConfirmedEmail = false;
 
     io.Lockout.MaxFailedAccessAttempts = 3;
@@ -63,7 +68,7 @@ builder.Services.AddIdentity<User, IdentityRole>(io =>
                  .AddEntityFrameworkStores<TravelAppDbContext>()
                  .AddDefaultTokenProviders();
 
-//builder.Services.AddSingleton<IEmailSender, FakeEmailSender>();
+builder.Services.AddSingleton<IEmailSender, FakeEmailSender>();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -91,10 +96,13 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapRazorPages();
 
 app.Run();

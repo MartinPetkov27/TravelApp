@@ -70,9 +70,9 @@ namespace DataLayer
                 {
                     return new Tuple<IdentityResult, User>(result, user);
                 }
-                if (role == RoleType.Admin)
+                if (role == RoleType.Administrator)
                 {
-                    await userManager.AddToRoleAsync(user, RoleType.Admin.ToString());
+                    await userManager.AddToRoleAsync(user, RoleType.Administrator.ToString());
                 }
                 if (role == RoleType.Historian)
                 {

@@ -8,7 +8,7 @@ namespace BusinessLayer
 {
     public enum RoleType
     {
-        Admin,
+        Administrator,
         User,
         Historian
     }
