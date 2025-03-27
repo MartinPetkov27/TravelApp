@@ -29,9 +29,9 @@ namespace SeedingDataConsoleApp
 
                 DbContextOptionsBuilder builder = new DbContextOptionsBuilder();
                 builder.UseSqlServer(
-                    "Server=Segotep\\SQLEXPRESS;Database=TripAppDb;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True"
-                //"Server=III-PC\\SQLEXPRESS;Database=MVCProjectTemplateDb;Trusted_Connection=True;"
-                    );
+				   "Server=212-1\\SQLEXPRESS;Database=TravelApp;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True"
+					//"Server=III-PC\\SQLEXPRESS;Database=MVCProjectTemplateDb;Trusted_Connection=True;"
+					);
 
                 TravelAppDbContext dbContext = new TravelAppDbContext(builder.Options);
                 
