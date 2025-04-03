@@ -138,6 +138,25 @@ namespace DataLayer
             }
         }
 
+        public async Task<RoleType> GetUserRoleAsync(string key)
+        {
+            try
+            {
+                User user = await context.Users.SingleOrDefaultAsync(u => u.Id == key);
+                if (user == null)
+                {
+                    throw new InvalidOperationException("User not found.");
+                }
+
+                var roles = userManager.GetRolesAsync(user);
+                return Enum.Parse<RoleType>(roles.Result.First());
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task<IEnumerable<User>> ReadAllUsersAsync(bool useNavigationalProperties = false)
         {
             try
@@ -156,7 +175,7 @@ namespace DataLayer
             }
         }
 
-        public async Task UpdateUserAsync(string id, string username, string firstName, string lastName, string phoneNumber)
+        public async Task UpdateUserAsync(string id, string username, string email, string firstName, string lastName, string phoneNumber)
         {
             try
             {
@@ -164,10 +183,12 @@ namespace DataLayer
                 {
                     User user = await context.Users.FindAsync(id);
                     user.UserName = username;
+                    user.Email = email;
                     user.FirstName = firstName;
                     user.LastName = lastName;
                     user.PhoneNumber = phoneNumber;
-                    await userManager.UpdateAsync(user);
+                    context.Users.Update(user);
+                    await context.SaveChangesAsync();
                 }
             }
             catch (Exception ex)

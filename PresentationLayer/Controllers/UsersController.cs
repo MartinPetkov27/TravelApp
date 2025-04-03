@@ -1,5 +1,6 @@
 ﻿using BusinessLayer;
 using DataLayer;
+using PresentationLayer.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -24,14 +25,14 @@ namespace PresentationLayer.Controllers
 		}
 
 		// GET: Users/Details/5
-		public async Task<IActionResult> Details(string key)
+		public async Task<IActionResult> Details(string id)
 		{
-			if (key == null)
+			if (id == null)
 			{
 				return NotFound();
 			}
 
-			var user = await _context.ReadUserAsync(key);
+			var user = await _context.ReadUserAsync(id);
 
 			if (user == null)
 			{
@@ -98,38 +99,47 @@ namespace PresentationLayer.Controllers
 			}
 
 			var user = await _context.ReadUserAsync(id);
+			var role = await _context.GetUserRoleAsync(id);
 
-			if (user == null)
-			{
-				return NotFound();
-			}
+            var viewModel = new EditUserViewModel
+            {
+                User = user,
+                Role = role // Store the single role
+            };
 
-			return View(user);
-		}
+            return View(viewModel);
+        }
 
 		// POST: Users/Edit/5
 		// To protect from overposting attacks, enable the specific properties you want to bind to.
 		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edits(string id, [Bind("UserName,FirstName,LastNameEmail,PhoneNumber")] User user)
+		public async Task<IActionResult> Edit(string id, [Bind("Id,UserName,Email,FirstName,LastName,PhoneNumber")] User user)
 		{
 			if (id != user.Id)
 			{
 				return NotFound();
 			}
 
+			User userFromDb = await _context.ReadUserAsync(id);
+			user.Trips = userFromDb.Trips;
+			user.BucketLists = userFromDb.BucketLists;
+			user.Stories = userFromDb.Stories;
+
 			if (ModelState.IsValid)
 			{
 				try
 				{
-					await _context.UpdateUserAsync(user.Id, user.UserName, user.FirstName,user.LastName, user.PhoneNumber);
-				} catch (DbUpdateConcurrencyException)
+					await _context.UpdateUserAsync(user.Id, user.UserName, user.Email, user.FirstName,user.LastName, user.PhoneNumber);
+                } 
+				catch (DbUpdateConcurrencyException)
 				{
 					if (!await UserExists(user.Id))
 					{
 						return NotFound();
-					} else
+					} 
+					else
 					{
 						throw;
 					}
@@ -137,7 +147,13 @@ namespace PresentationLayer.Controllers
 				return RedirectToAction(nameof(Index));
 			}
 
-			return View(user);
+			var viewModel = new EditUserViewModel
+			{
+				User = await _context.ReadUserAsync(id),
+				Role = await _context.GetUserRoleAsync(id) // Store the single role
+			};
+
+            return View(viewModel);
 		}
 
 		// GET: Users/Delete/5

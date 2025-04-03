@@ -39,9 +39,9 @@ namespace ServiceLayer
             return await identityContext.ReadAllUsersAsync(useNavigationalProperties);
         }
 
-        public async Task UpdateUserAsync(string id, string username, string firstName, string lastName, string phoneNumber)
+        public async Task UpdateUserAsync(string id, string username, string email, string firstName, string lastName, string phoneNumber)
         {
-            await identityContext.UpdateUserAsync(id, username, firstName, lastName, phoneNumber);
+            await identityContext.UpdateUserAsync(id, username, email, firstName, lastName, phoneNumber);
         }
 
         public async Task DeleteUserByNameAsync(string username)

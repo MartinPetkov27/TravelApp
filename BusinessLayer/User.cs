@@ -4,6 +4,7 @@ using Microsoft.Extensions.Identity.Core;
 using System.Data;
 using System.Net;
 using System.Xml.Linq;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BusinessLayer
 {
@@ -41,9 +42,12 @@ namespace BusinessLayer
         //public RoleType Role { get; set; }
         #endregion
 
-        public ICollection<Trip> Trips { get; set; }
-        public ICollection<BucketList> BucketLists { get; set; }
-        public ICollection<Story> Stories { get; set; }
+        [NotMapped]
+        public ICollection<Trip> Trips { get; set; } = new List<Trip>();
+        [NotMapped]
+        public ICollection<BucketList> BucketLists { get; set; } = new List<BucketList>();
+        [NotMapped]
+        public ICollection<Story> Stories { get; set; } = new List<Story>();
 
         //Constructors
         public User() { }

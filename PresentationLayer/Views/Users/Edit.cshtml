@@ -1,33 +1,204 @@
-﻿@model BusinessLayer.User
+﻿@model PresentationLayer.ViewModels.EditUserViewModel
 
 @{
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1>Edit:</h1>
 
-<h4>User</h4>
+<h4>@Model.User.UserName</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-controller="Users" asp-action="Edit" asp-route-id="@Model.User.Id" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+            @Html.AntiForgeryToken() <!-- Prevents CSRF attacks -->
+            <input type="hidden" asp-for="User.Id" />
+         
             <div class="form-group">
-                <label asp-for="UserName" class="control-label"></label>
-                <input asp-for="UserName" class="form-control" />
-                <span asp-validation-for="UserName" class="text-danger"></span>
+                <label asp-for="User.UserName" class="control-label"></label>
+                <input asp-for="User.UserName" class="form-control" />
+                <span asp-validation-for="User.UserName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <label asp-for="User.Email" class="control-label"></label>
+                <input asp-for="User.Email" class="form-control" />
+                <span asp-validation-for="User.Email" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PhoneNumber" class="control-label"></label>
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                <label asp-for="User.FirstName" class="control-label"></label>
+                <input asp-for="User.FirstName" class="form-control" />
+                <span asp-validation-for="User.FirstName" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="User.LastName" class="control-label"></label>
+                <input asp-for="User.LastName" class="form-control" />
+                <span asp-validation-for="User.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="User.PhoneNumber" class="control-label"></label>
+                <input asp-for="User.PhoneNumber" class="form-control" />
+                <span asp-validation-for="User.PhoneNumber" class="text-danger"></span>
+            </div>
+
+            <p></p>
+            <!-- Button to Toggle Collapse -->
+            <button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#tripTable">
+                @Model.User.UserName's Trips
+            </button>
+
+            <!-- Collapsible Table -->
+            <div class="collapse mt-3" id="tripTable">
+                @if (Model.User.Trips != null && Model.User.Trips.Any())
+                {
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>@Html.DisplayNameFor(model => model.User.Trips.First().Title)</th>
+                                <th>@Html.DisplayNameFor(model => model.User.Trips.First().Description)</th>
+                                <th>@Html.DisplayNameFor(model => model.User.Trips.First().StartingDate)</th>
+                                <th>@Html.DisplayNameFor(model => model.User.Trips.First().EndingDate)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.User.Trips)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.Title)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.StartingDate)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.EndingDate)</td>
+                                    <td>
+                                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p>No trips found for this user.</p>
+                }
+            </div>
+            <p></p>
+
+            <p></p>
+            <!-- Button to Toggle Collapse -->
+            <button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#bucketListTable">
+                @Model.User.UserName's BucketList
+            </button>
+
+            <!-- Collapsible Table -->
+            <div class="collapse mt-3" id="bucketListTable">
+                @if (Model.User.BucketLists != null && Model.User.BucketLists.Any())
+                {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.User.BucketLists.First().Name)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.User.BucketLists.First().User)
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.User.BucketLists)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.User.Email)
+                                    </td>
+                                    <td>
+                                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p>No trips found for this user.</p>
+                }
+            </div>
+            <p></p>
+
+			
+            @if (Model.Role == BusinessLayer.RoleType.Historian)
+            {
+                <!-- Button to Toggle Collapse -->
+                <button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#storiesTable">
+                    @Model.User.UserName's BucketList
+                </button>
+
+                <!-- Collapsible Table -->
+                <div class="collapse mt-3" id="storiesTable">
+                    @if (Model.User.Stories != null && Model.User.Stories.Any())
+                    {
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.User.Stories.First().Title)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.User.Stories.First().Content)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.User.Stories.First().Status)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.User.Stories.First().User)
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.User.Stories)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Title)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Content)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Status)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.User.Email)
+                                        </td>
+                                        <td>
+                                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p>No trips found for this user.</p>
+                    }
+                </div>
+                <p></p>
+            }
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
