@@ -149,5 +149,15 @@ namespace PresentationLayer.Controllers
             {
                 return tripManager.ReadAsync(id) is not null;
             }
-        }
+
+            [HttpGet]
+            public async Task<IActionResult> GetCountries()
+            {
+                using (var httpClient = new HttpClient())
+                {
+                var response = await httpClient.GetStringAsync("https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json");
+                return Content(response, "application/json");
+                }
+            }
+    }
 }

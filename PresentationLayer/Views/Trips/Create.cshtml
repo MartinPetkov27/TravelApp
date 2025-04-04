@@ -4,49 +4,148 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Create Trip</h1>
 
-<h4>Trip</h4>
+<h4>Start your journey now.</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StartingDate" class="control-label"></label>
-                <input asp-for="StartingDate" class="form-control" />
-                <span asp-validation-for="StartingDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EndingDate" class="control-label"></label>
-                <input asp-for="EndingDate" class="form-control" />
-                <span asp-validation-for="EndingDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+
+<h4>Where do you strat from?</h4>
+
+<!-- Search input -->
+<input type="text" id="searchBox" placeholder="Search for a country..." class="form-control" autocomplete="off" />
+
+<!-- Dropdown list -->
+<ul id="suggestions" class="dropdown-menu"></ul>
+
+<!-- Hidden input to store selected country -->
+<input type="hidden" id="SelectedCountry" name="SelectedCountry" /> 
+
+<!-- Map container -->
+<hr />
+<div id="map" style="height: 500px;"></div>
+
+<form asp-action="Create" method="post">
+    <input type="hidden" id="SelectedCountry" name="SelectedCountry" />
+    <div class="form-group">
+        <label asp-for="Title" class="control-label"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
     </div>
-</div>
+    <div class="form-group">
+        <label asp-for="Description" class="control-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Create</button>
+</form>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Back to your trips.</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var map = L.map('map').setView([20, 0], 2);
+
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '© OpenStreetMap & CartoDB'
+            }).addTo(map);
+
+            let selectedLayer = null;
+            let countryLayers = {};
+            let countryNames = [];
+
+            fetch('/Trips/GetCountries')
+                .then(response => response.json())
+                .then(data => {
+                    let countryLayer = L.geoJSON(data, {
+                        style: { color: "#000", weight: 1, fillOpacity: 0.3 },
+                        onEachFeature: function (feature, layer) {
+                            let countryName = feature.properties.name;
+                            countryLayers[countryName.toLowerCase()] = layer;
+                            countryNames.push(countryName);
+
+                            layer.on('click', function () {
+                                selectCountry(layer, countryName);
+                            });
+                        }
+                    }).addTo(map);
+                })
+                .catch(error => console.error('Error loading country data:', error));
+
+            function selectCountry(layer, countryName) {
+                if (selectedLayer) {
+                    selectedLayer.setStyle({ color: "#000", weight: 1, fillOpacity: 0.3 });
+                }
+
+                layer.setStyle({ color: "blue", weight: 3, fillOpacity: 0.5 });
+
+                document.getElementById('searchBox').value = countryName;
+                document.getElementById('SelectedCountry').value = countryName;
+                document.getElementById('suggestions').innerHTML = '';
+
+                map.fitBounds(layer.getBounds());
+                selectedLayer = layer;
+            }
+
+            // Auto-suggest dropdown
+            document.getElementById('searchBox').addEventListener('input', function () {
+                let query = this.value.toLowerCase();
+                let suggestionsBox = document.getElementById('suggestions');
+
+                suggestionsBox.innerHTML = '';
+
+                if (query.length > 0) {
+                    let matches = countryNames.filter(name => name.toLowerCase().startsWith(query));
+
+                    matches.forEach(name => {
+                        let listItem = document.createElement('li');
+                        listItem.textContent = name;
+                        listItem.classList.add('dropdown-item');
+
+                        listItem.addEventListener('click', function (event) {
+                            event.stopPropagation(); // Prevents any weird bubbling issues
+
+                            let searchBox = document.getElementById('searchBox');
+                            let suggestionsBox = document.getElementById('suggestions');
+
+                            searchBox.value = name;
+                            suggestionsBox.innerHTML = '';
+                            suggestionsBox.style.display = 'none'; // Hides dropdown after selection
+
+                            // Ensure the selected country is actually recognized
+                            if (countryLayers[name.toLowerCase()]) {
+                             selectCountry(countryLayers[name.toLowerCase()], name);
+                            } else {
+                                console.warn("Country not found in layers:", name);
+                            }
+                        });
+
+
+                        suggestionsBox.appendChild(listItem);
+                    });
+
+                    suggestionsBox.style.display = matches.length > 0 ? 'block' : 'none';
+                } else {
+                    suggestionsBox.style.display = 'none';
+                }
+            });
+
+            // Hide suggestions when clicking outside
+            document.addEventListener('click', function (e) {
+                if (!document.getElementById('searchBox').contains(e.target) &&
+                    !document.getElementById('suggestions').contains(e.target)) {
+                    document.getElementById('suggestions').innerHTML = '';
+                }
+            });
+        });
+    </script>
 }
+

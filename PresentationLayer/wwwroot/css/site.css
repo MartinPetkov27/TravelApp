@@ -20,3 +20,28 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+#suggestions {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+    width: auto; /* Auto width based on content */
+    /*min-width: 100%;*/ /* Ensures it’s at least as wide as the search box */
+    z-index: 1000;
+    display: none;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dropdown-item {
+    padding: 8px;
+    cursor: pointer;
+    white-space: nowrap; /* Prevents text from wrapping */
+}
+
+    .dropdown-item:hover {
+        background-color: #f0f0f0;
+    }
