@@ -21,6 +21,7 @@ body {
   margin-bottom: 60px;
 }
 
+/* CSS for CreateTripStart */
 #suggestions {
     position: absolute;
     background: white;
@@ -45,3 +46,65 @@ body {
     .dropdown-item:hover {
         background-color: #f0f0f0;
     }
+
+/* CSS for CreateTripSelectCity */
+.timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    position: relative;
+    padding-left: 20px;
+}
+
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 10px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background-color: #ccc;
+    }
+
+.timeline-step {
+    position: relative;
+    padding-left: 20px;
+}
+
+    .timeline-step .dot {
+        position: absolute;
+        left: -10px;
+        top: 5px;
+        width: 14px;
+        height: 14px;
+        background-color: #007bff;
+        border-radius: 50%;
+    }
+
+    .timeline-step.active .dot {
+        background-color: #28a745;
+    }
+
+.step-title {
+    font-weight: 500;
+}
+
+#citySuggestions {
+    position: absolute;
+    z-index: 1000;
+    width: 100%;
+    background-color: white;
+    list-style: none;
+    margin-top: 2px;
+    border: 1px solid #ccc;
+    display: none;
+}
+
+    #citySuggestions li {
+        padding: 8px 12px;
+        cursor: pointer;
+    }
+
+        #citySuggestions li:hover {
+            background-color: #f0f0f0;
+        }

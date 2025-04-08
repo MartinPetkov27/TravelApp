@@ -1,4 +1,4 @@
-﻿@model BusinessLayer.Trip
+﻿@model PresentationLayer.ViewModels.CreateTripStartViewModel;
 
 @{
     ViewData["Title"] = "Create";
@@ -14,35 +14,34 @@
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 
-<h4>Where do you strat from?</h4>
+<form id="tripForm" asp-controller="Trips" asp-action="CreateTripSelectCities" method="post">
+    <div class="form-group">
+        <label asp-for="Title" class="control-label"></label>
+        <input asp-for="Title" class="form-control" id="titleInput" placeholder="Trip title"/>
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
 
-<!-- Search input -->
-<input type="text" id="searchBox" placeholder="Search for a country..." class="form-control" autocomplete="off" />
+    <h4>Where do you strat from?</h4>
 
-<!-- Dropdown list -->
-<ul id="suggestions" class="dropdown-menu"></ul>
+    <!-- Search input -->
+    <input type="text" id="searchBox" placeholder="Search for a country..." class="form-control" autocomplete="off" />
 
-<!-- Hidden input to store selected country -->
-<input type="hidden" id="SelectedCountry" name="SelectedCountry" /> 
+    <!-- Dropdown list -->
+    <ul id="suggestions" class="dropdown-menu"></ul>
+
+    <!-- Hidden input to store selected country -->
+    <input type="hidden" id="SelectedCountry" name="SelectedCountry" /> 
+</form>
+
 
 <!-- Map container -->
 <hr />
 <div id="map" style="height: 500px;"></div>
+<hr />
 
-<form asp-action="Create" method="post">
-    <input type="hidden" id="SelectedCountry" name="SelectedCountry" />
-    <div class="form-group">
-        <label asp-for="Title" class="control-label"></label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Description" class="control-label"></label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary mt-3">Create</button>
-</form>
-
+<div class="mt-3">
+    <button type="submit" form="tripForm" class="btn btn-primary">Continue to Select Cities</button>
+</div>
 <div>
     <a asp-action="Index">Back to your trips.</a>
 </div>
@@ -93,6 +92,11 @@
 
                 map.fitBounds(layer.getBounds());
                 selectedLayer = layer;
+
+                let titleInput = document.getElementById('titleInput');
+                if (titleInput && countryName) {
+                    titleInput.value = `Holiday to ${countryName}`;
+                }
             }
 
             // Auto-suggest dropdown
@@ -119,6 +123,13 @@
                             searchBox.value = name;
                             suggestionsBox.innerHTML = '';
                             suggestionsBox.style.display = 'none'; // Hides dropdown after selection
+
+                            //     // ✅ Update title placeholder
+                            // let titleInput = document.getElementById('titleInput');
+                            // if (titleInput && name) 
+                            // {
+                            //     titleInput.placeholder = `Holiday to ${name}`;
+                            // }
 
                             // Ensure the selected country is actually recognized
                             if (countryLayers[name.toLowerCase()]) {

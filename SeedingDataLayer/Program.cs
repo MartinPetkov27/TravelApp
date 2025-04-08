@@ -9,6 +9,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using PresentationLayer.Models;
+using ServiceLayer;
+
 
 
 namespace SeedingDataConsoleApp
@@ -29,7 +32,7 @@ namespace SeedingDataConsoleApp
 
                 DbContextOptionsBuilder builder = new DbContextOptionsBuilder();
                 builder.UseSqlServer(
-                   "Server=Segotep\\SQLEXPRESS;Database=TravelApp;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True"
+                   "Server=DESKTOP-AUDH7G9\\SQLEXPRESS;Database=TravelApp;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True"
                     //"Server=III-PC\\SQLEXPRESS;Database=MVCProjectTemplateDb;Trusted_Connection=True;"
                     );
 
@@ -44,7 +47,8 @@ namespace SeedingDataConsoleApp
                     );
 
                 IdentityContext identityContext = new IdentityContext(dbContext, userManager);
-                ClearTablesAsync(dbContext).Wait();
+                
+                await ClearTablesAsync(dbContext);
 
                 dbContext.Roles.Add(new IdentityRole("Administrator") { NormalizedName = "ADMINISTRATOR" });
                 dbContext.Roles.Add(new IdentityRole("User") { NormalizedName = "USER" });
@@ -55,6 +59,8 @@ namespace SeedingDataConsoleApp
                 Tuple<IdentityResult, User> result1 = await identityContext.CreateUserAsync("user", "user", "usercho@abv.bg", "User", "Userov", "0888888888", RoleType.User);
                 Tuple<IdentityResult, User> result2 = await identityContext.CreateUserAsync("historian", "historian", "historiancho@abv.bg", "Historian", "Historianov", "0888888888", RoleType.Historian);
 
+                //Seeding Countries
+                await SeedCountries(dbContext);
 
                 Console.WriteLine("Roles added successfully!");
 
@@ -98,11 +104,49 @@ namespace SeedingDataConsoleApp
             dbContext.Roles.RemoveRange(dbContext.Roles);
             dbContext.Users.RemoveRange(dbContext.Users);
             dbContext.UserRoles.RemoveRange(dbContext.UserRoles);
-           
 
             // Optionally, for many-to-many or other related tables, clear those too
             await dbContext.SaveChangesAsync();
         }
+        static async Task SeedCountries(TravelAppDbContext dbContext)
+        {
+            var httpClient = new HttpClient();
+            var geoNamesService = new GeoNamesService(httpClient);
+
+            Console.WriteLine("About to call GeoNamesService...");
+            var countries = await geoNamesService.GetAllCountriesAsync();
+            Console.WriteLine("After calling GeoNamesService");
+
+            var validCountries = countries
+            .Where(c => !string.IsNullOrWhiteSpace(c.AlphaCode)
+                && !string.IsNullOrWhiteSpace(c.Name)
+                && c.AlphaCode.Length == 3
+                && c.Name.Length <= 100)
+            .ToList();
+
+            foreach (var country in validCountries)
+            {
+                if (!dbContext.Countries.Any(c => c.AlphaCode.ToLower() == country.AlphaCode.ToLower()))
+                {
+                    dbContext.Countries.Add(country);
+                }
+            }
+
+            try
+            {
+                await dbContext.SaveChangesAsync();
+                Console.WriteLine("Countries saved successfully!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error saving countries:");
+                Console.WriteLine(ex.Message);
+                if (ex.InnerException != null)
+                    Console.WriteLine("Inner exception: " + ex.InnerException.Message);
+            }
+
+        }
+
     }
 }
 

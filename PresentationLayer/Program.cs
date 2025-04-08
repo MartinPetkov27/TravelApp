@@ -23,6 +23,8 @@ builder.Services.AddDbContext<TravelAppDbContext>(options => options.UseSqlServe
 
 //builder.Services.AddScoped<TravelAppDbContext, TravelAppDbContext>();
 
+builder.Services.AddHttpClient<GeoNamesService>();
+
 #region AddScoped(Manager and Content classes dependency injections)
 
 //AddScoped(Manager and Content classes dependency injections)

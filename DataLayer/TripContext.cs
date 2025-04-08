@@ -37,7 +37,7 @@ namespace DataLayer
 
                 if (useNavigationalProperties)
                 {
-                    query = query.Include(t => t.User).Include(t => t.Places);
+                    query = query.Include(t => t.User).Include(t => t.Places).Include(t => t.Countries);
                 }
 
                 if (isReadOnly)
@@ -60,7 +60,7 @@ namespace DataLayer
                 
                 if (useNavigationalProperties)
                 {
-                    query = query.Include(t => t.User).Include(t => t.Places);
+                    query = query.Include(t => t.User).Include(t => t.Places).Include(t => t.Countries);
                 }
 
                 if (isReadOnly)
@@ -120,6 +120,23 @@ namespace DataLayer
                     {
                         tripFromDb.User = item.User;
                     }
+                    #endregion
+
+                    #region Countries
+                    List<Country> countries = new List<Country>(item.Countries.Count);
+                    foreach (var country in item.Countries)
+                    {
+                        Country countryFromDb = await dbContext.Countries.FindAsync(country.AlphaCode);
+                        if (countryFromDb is null)
+                        {
+                            countries.Add(country);
+                        }
+                        else
+                        {
+                            countries.Add(countryFromDb);
+                        }
+                    }
+                    tripFromDb.Countries = countries;
                     #endregion
                 }
             }

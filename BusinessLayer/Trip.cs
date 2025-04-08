@@ -22,6 +22,8 @@ namespace BusinessLayer
 
         public DateTime? EndingDate { get; set; }
 
+        public ICollection<Country> Countries { get; set; }
+
         ////starting place
         //[ForeignKey("StaritingPlace")]
         //public int StartingPlaceId { get; set; }
@@ -47,9 +49,10 @@ namespace BusinessLayer
 
         //constructors
         public Trip() { }
-        public Trip( string title, ICollection<Place> places, int userId, User user)
+        public Trip( string title, ICollection<Country> countries, ICollection<Place> places, int userId, User user)
         {
             Title = title;
+            Countries = countries;
             Places = places;
             StartingPlace = places.First();
             EndingPlace = places.Last();

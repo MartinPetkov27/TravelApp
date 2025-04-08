@@ -8,16 +8,27 @@ using Microsoft.EntityFrameworkCore;
 using BusinessLayer;
 using DataLayer;
 using ServiceLayer;
+using Newtonsoft.Json;
+using static PresentationLayer.Models.GeoNamesCountryDTO;
+using System.Net.Http;
+using PresentationLayer.ViewModels;
+using Microsoft.AspNetCore.Identity;
 
 namespace PresentationLayer.Controllers
 {
     public class TripsController : Controller
     {
+            private readonly UserManager<User> userManager; 
             private readonly TripManager tripManager;
+            private readonly GeoNamesService geoNamesService;
+            private readonly CountryManager countryManager;
 
-            public TripsController(TripManager tripManager)
+            public TripsController(TripManager tripManager, GeoNamesService geoNamesService, CountryManager countryManager, UserManager<User> userManager)
             {
                 this.tripManager = tripManager;
+                this.geoNamesService = geoNamesService;
+                this.countryManager = countryManager;
+                this.userManager = userManager;
             }
 
             // GET: Trips
@@ -43,10 +54,42 @@ namespace PresentationLayer.Controllers
                 return View(trip);
             }
 
-            // GET: Trips/Create
-            public IActionResult Create()
+            [HttpPost]
+            public async Task<IActionResult> CreateTripStart(CreateTripStartViewModel viewModel)
             {
-                return View();
+                if (!ModelState.IsValid)
+                    return View(viewModel); // show errors if needed
+                
+                Country country = countryManager.GetCountryByName(viewModel.CountryName).Result;
+                
+                if (country == null)
+                {
+                    ModelState.AddModelError("CountryName", "Country not found.");
+                    return View(viewModel);
+                }
+                
+                var user = await userManager.GetUserAsync(User);
+
+                if (user == null)
+                {
+                    return Unauthorized(); // Or redirect to login
+                }
+
+                Trip trip = new Trip();
+                trip.Title = viewModel.Title;
+                trip.User = user;
+                trip.Countries.Add(country);
+
+                await tripManager.CreateAsync(trip);
+
+                return RedirectToAction("CreateTripSelectCities", new { viewModel = viewModel } /*new { countryName = viewModel.CountryName }*/);
+            }   
+
+            public async Task<IActionResult> CreateTripSelectCities(CreateTripStartViewModel viewModel)
+            {
+                Country country = new Country();
+                //country = await countryManager.GetCountryByName(countryName);
+                return View(country);
             }
 
             // POST: Trips/Create
@@ -158,6 +201,16 @@ namespace PresentationLayer.Controllers
                 var response = await httpClient.GetStringAsync("https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json");
                 return Content(response, "application/json");
                 }
+            }
+
+            [HttpGet]
+            public async Task<IActionResult> FetchCountry(string alpha2Code)
+            {
+                var country = await geoNamesService.GetCountryInfoAsync(alpha2Code);
+                if (country == null)
+                    return NotFound();
+
+                return Json(country);
             }
     }
 }

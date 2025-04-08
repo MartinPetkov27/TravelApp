@@ -22,7 +22,7 @@ namespace DataLayer
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=Segotep\\SQLEXPRESS;Database=TravelApp;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-AUDH7G9\\SQLEXPRESS;Database=TravelApp;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True");
             }
             base.OnConfiguring(optionsBuilder);
         }
@@ -41,6 +41,9 @@ namespace DataLayer
                 .HasMany(u => u.Stories)
                 .WithOne(s => s.User)
                 .HasForeignKey(s => s.UserId);
+            modelBuilder.Entity<Trip>()
+                .HasMany(t => t.Countries)
+                .WithMany(c => c.Trips);
 
             //modelBuilder.Entity<Trip>()
             //    .HasOne(t => t.StartingPlace)

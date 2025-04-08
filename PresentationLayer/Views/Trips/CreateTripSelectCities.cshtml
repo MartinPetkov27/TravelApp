@@ -1,0 +1,128 @@
+﻿@model BusinessLayer.Trip
+
+@{
+    ViewData["Title"] = "Create";
+    var selectedCountry = ViewBag.SelectedCountry as string ?? "Selected Country";
+}
+
+<!-- Head content -->
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+
+<!-- Main content -->
+<h1>Create Trip - Add Cities</h1>
+<h4>@Model.Title</h4>
+<hr />
+
+<div>
+    <a asp-action="CreateStart">Back to the starting point.</a>
+</div>
+
+<div class="container-fluid mt-4">
+    <div class="row">
+        <!-- LEFT SIDE: Map -->
+        <div class="col-md-7" style="height: 90vh;">
+            <div class="card h-100">
+                <div class="card-header">
+                    <input id="citySearchBox" class="form-control" placeholder="Search for a city..." />
+                    <ul id="citySuggestions" class="dropdown-menu show"></ul>
+                </div>
+                <div class="card-body p-0">
+                    <div id="cityMap" style="width: 100%; height: 100%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDE: Timeline -->
+        <div class="col-md-5 bg-light" style="height: 90vh; overflow-y: auto;">
+            <div class="p-4">
+                <h4 class="mb-4">Your Trip Progress</h4>
+                <div class="timeline">
+                    <div class="timeline-step active">
+                        <span class="dot"></span>
+                        <span class="step-title">Selected Country: <strong>@selectedCountry</strong></span>
+                    </div>
+                    <div class="timeline-step">
+                        <span class="dot"></span>
+                        <span class="step-title">Select Starting City</span>
+                    </div>
+                    <div class="timeline-step">
+                        <span class="dot"></span>
+                        <span class="step-title">Add More Cities</span>
+                    </div>
+                    <div class="timeline-step">
+                        <span class="dot"></span>
+                        <span class="step-title">Finalize Trip</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script>
+        let selectedCountryName = '@selectedCountry';
+        let map = L.map('cityMap').setView([20, 0], 2); // Placeholder
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data © OpenStreetMap contributors'
+        }).addTo(map);
+
+        function zoomToCountry(countryName) {
+            if (countryName === "Italy") {
+                map.setView([41.8719, 12.5674], 6);
+            }
+            else if (countryName === "France") {
+                map.setView([46.6034, 1.8883], 6);
+            }
+            // Add more or integrate real geo-lookup
+        }
+
+        zoomToCountry(selectedCountryName);
+
+        document.getElementById('citySearchBox').addEventListener('input', function () {
+            const query = this.value.toLowerCase();
+            const suggestionsBox = document.getElementById('citySuggestions');
+            suggestionsBox.innerHTML = '';
+
+            if (query.length === 0) {
+                suggestionsBox.style.display = 'none';
+                return;
+            }
+
+            const cities = ["Rome", "Milan", "Naples", "Florence", "Turin"]; // Example cities
+            const matches = cities.filter(c => c.toLowerCase().includes(query));
+
+            if (matches.length > 0) {
+                suggestionsBox.style.display = 'block';
+                matches.forEach(city => {
+                    const li = document.createElement('li');
+                    li.textContent = city;
+                    li.addEventListener('click', () => {
+                        document.getElementById('citySearchBox').value = city;
+                        suggestionsBox.style.display = 'none';
+                        // Optional: Zoom to city
+                    });
+                    suggestionsBox.appendChild(li);
+                });
+            } else {
+                suggestionsBox.style.display = 'none';
+            }
+        });
+
+        map.on('click', function (e) {
+            L.marker(e.latlng).addTo(map);
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!document.getElementById('citySearchBox').contains(e.target)) {
+                document.getElementById('citySuggestions').style.display = 'none';
+            }
+        });
+    </script>
+}
+

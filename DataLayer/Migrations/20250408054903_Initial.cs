@@ -57,7 +57,7 @@ namespace DataLayer.Migrations
                 columns: table => new
                 {
                     AlphaCode = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(70)", maxLength: 70, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Capital = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Currency = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Language = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -239,6 +239,30 @@ namespace DataLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CountryTrip",
+                columns: table => new
+                {
+                    CountriesAlphaCode = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    TripsId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CountryTrip", x => new { x.CountriesAlphaCode, x.TripsId });
+                    table.ForeignKey(
+                        name: "FK_CountryTrip_Countries_CountriesAlphaCode",
+                        column: x => x.CountriesAlphaCode,
+                        principalTable: "Countries",
+                        principalColumn: "AlphaCode",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CountryTrip_Trips_TripsId",
+                        column: x => x.TripsId,
+                        principalTable: "Trips",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Places",
                 columns: table => new
                 {
@@ -319,6 +343,11 @@ namespace DataLayer.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CountryTrip_TripsId",
+                table: "CountryTrip",
+                column: "TripsId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Places_BucketListId",
                 table: "Places",
                 column: "BucketListId");
@@ -361,6 +390,9 @@ namespace DataLayer.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "CountryTrip");
 
             migrationBuilder.DropTable(
                 name: "Places");

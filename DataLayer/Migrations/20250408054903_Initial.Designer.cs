@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataLayer.Migrations
 {
     [DbContext(typeof(TravelAppDbContext))]
-    [Migration("20250401125316_Initial")]
+    [Migration("20250408054903_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -68,8 +68,8 @@ namespace DataLayer.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(70)
-                        .HasColumnType("nvarchar(70)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("AlphaCode");
 
@@ -260,6 +260,21 @@ namespace DataLayer.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("CountryTrip", b =>
+                {
+                    b.Property<string>("CountriesAlphaCode")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("TripsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CountriesAlphaCode", "TripsId");
+
+                    b.HasIndex("TripsId");
+
+                    b.ToTable("CountryTrip");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -447,6 +462,21 @@ namespace DataLayer.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CountryTrip", b =>
+                {
+                    b.HasOne("BusinessLayer.Country", null)
+                        .WithMany()
+                        .HasForeignKey("CountriesAlphaCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BusinessLayer.Trip", null)
+                        .WithMany()
+                        .HasForeignKey("TripsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

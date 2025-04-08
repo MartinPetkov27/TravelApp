@@ -15,7 +15,7 @@ namespace BusinessLayer
         public string AlphaCode { get; set; } // it consists of three letters 
 
         [Required]
-        [MaxLength(70, ErrorMessage = "The country name should not be longer than 70 synmols.")]
+        [MaxLength(100, ErrorMessage = "The country name should not be longer than 70 synmols.")]
         public string Name { get; set; }
 
         public string Capital { get; set; }
@@ -23,7 +23,9 @@ namespace BusinessLayer
         public string Currency { get; set; }
         
         public string Language { get; set; }
-        
+
+        public ICollection<Trip> Trips{ get; set; }
+
         //national Flag
 
         public Country() { }
