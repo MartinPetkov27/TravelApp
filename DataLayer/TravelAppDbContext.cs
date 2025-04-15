@@ -22,7 +22,7 @@ namespace DataLayer
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=DESKTOP-AUDH7G9\\SQLEXPRESS;Database=TravelApp;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True");
+                optionsBuilder.UseSqlServer("Server=Segotep\\SQLEXPRESS;Database=TravelApp1;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True");
             }
             base.OnConfiguring(optionsBuilder);
         }

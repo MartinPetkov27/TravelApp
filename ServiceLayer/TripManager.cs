@@ -25,6 +25,11 @@ namespace ServiceLayer
         {
             return await tripContext.ReadAsync(key, useNavigationalProperties, isReadOnly);
         }
+        public async Task<int> GetIdByName(string title)
+        {
+            ICollection<Trip> trips = await tripContext.ReadAllAsync(false, true);
+            return trips.FirstOrDefault(t => t.Title == title).Id;
+        }
         public async Task<ICollection<Trip>> ReadAllAsync(bool useNAvigationalProperties = false, bool isReadOnly = true)
         {
             return await tripContext.ReadAllAsync(useNAvigationalProperties, isReadOnly);

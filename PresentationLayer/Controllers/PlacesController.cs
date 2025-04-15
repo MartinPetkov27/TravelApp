@@ -14,10 +14,14 @@ namespace PresentationLayer.Controllers
     public class PlacesController : Controller
     {
         private readonly PlaceManager placeManager;
+        private readonly CountryManager countryManager;
+        private readonly TripManager tripManager;
 
-        public PlacesController(PlaceManager placeManager)
+        public PlacesController(PlaceManager placeManager, CountryManager countryManager, TripManager tripManager)
         {
             this.placeManager = placeManager;
+            this.countryManager = countryManager;
+            this.tripManager = tripManager;
         }
 
         // GET: Places
@@ -44,8 +48,13 @@ namespace PresentationLayer.Controllers
         }
 
         // GET: Places/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create(string tripName)
         {
+            var countries = await countryManager.ReadAllAsync();
+            ViewBag.Countries = countries.Select(c => c.Name).ToList(); // Or .Distinct() if needed
+
+            ViewBag.TripName = tripName;
+            int tripId = await tripManager.GetIdByName(tripName);
             return View();
         }
 

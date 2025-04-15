@@ -18,97 +18,113 @@ namespace PresentationLayer.Controllers
 {
     public class TripsController : Controller
     {
-            private readonly UserManager<User> userManager; 
-            private readonly TripManager tripManager;
-            private readonly GeoNamesService geoNamesService;
-            private readonly CountryManager countryManager;
+        private readonly UserManager<User> userManager;
+        private readonly TripManager tripManager;
+        private readonly GeoNamesService geoNamesService;
+        private readonly CountryManager countryManager;
 
-            public TripsController(TripManager tripManager, GeoNamesService geoNamesService, CountryManager countryManager, UserManager<User> userManager)
+        public TripsController(TripManager tripManager, GeoNamesService geoNamesService, CountryManager countryManager, UserManager<User> userManager)
+        {
+            this.tripManager = tripManager;
+            this.geoNamesService = geoNamesService;
+            this.countryManager = countryManager;
+            this.userManager = userManager;
+        }
+
+        // GET: Trips
+        public async Task<IActionResult> Index()
+        {
+            return View(await tripManager.ReadAllAsync(true, true));
+        }
+
+        // GET: Trips/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
             {
-                this.tripManager = tripManager;
-                this.geoNamesService = geoNamesService;
-                this.countryManager = countryManager;
-                this.userManager = userManager;
+                return NotFound();
             }
 
-            // GET: Trips
-            public async Task<IActionResult> Index()
+            var trip = await tripManager.ReadAsync((int)id, true, true);
+            if (trip == null)
             {
-                return View(await tripManager.ReadAllAsync(true, true));
+                return NotFound();
             }
 
-            // GET: Trips/Details/5
-            public async Task<IActionResult> Details(int? id)
+            return View(trip);
+        }
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View("CreateTripStart", new CreateTripStartViewModel());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTripStart(CreateTripStartViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+                return View(viewModel); // show errors if needed
+
+            //Country country = countryManager.GetCountryByName(viewModel.CountryName).Result;
+
+            //if (country == null)
+            //{
+            //    ModelState.AddModelError("CountryName", "Country not found.");
+            //    return View(viewModel);
+            //}
+
+            //var user = await userManager.GetUserAsync(User);
+
+            //if (user == null)
+            //{
+            //    return Unauthorized(); // Or redirect to login
+            //}
+
+            //Trip trip = new Trip();
+            //trip.Title = viewModel.Title;
+            //trip.User = user;
+            //trip.Countries = new List<Country> { country };
+
+            //await tripManager.CreateAsync(trip);
+
+            return RedirectToAction("CreateTripSelectCities", new { countryName = viewModel.CountryName, title = viewModel.Title });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTripSelectCities(string countryName, string title)
+        {
+            var countries = await countryManager.ReadAllAsync();
+            ViewBag.Countries = countries.Select(c => c.Name).ToList();
+
+            var country = countryManager.GetCountryByName(countryName).Result;
+
+            if (country == null) return NotFound();
+
+            var trip = new Trip
             {
-                if (id == null)
-                {
-                    return NotFound();
-                }
+                Title = title,
+                Countries = new List<Country> { country }
+            };
+            return View(trip);
+        }
 
-                var trip = await tripManager.ReadAsync((int)id, true, true);
-                if (trip == null)
-                {
-                    return NotFound();
-                }
-
-                return View(trip);
-            }
-
-            [HttpPost]
-            public async Task<IActionResult> CreateTripStart(CreateTripStartViewModel viewModel)
+        // POST: Trips/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,Title,Description,StartingDate,EndingDate,StaritingPlaceId,EndingPlaceId,UserId")] Trip trip)
+        {
+            if (ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
-                    return View(viewModel); // show errors if needed
-                
-                Country country = countryManager.GetCountryByName(viewModel.CountryName).Result;
-                
-                if (country == null)
-                {
-                    ModelState.AddModelError("CountryName", "Country not found.");
-                    return View(viewModel);
-                }
-                
-                var user = await userManager.GetUserAsync(User);
-
-                if (user == null)
-                {
-                    return Unauthorized(); // Or redirect to login
-                }
-
-                Trip trip = new Trip();
-                trip.Title = viewModel.Title;
-                trip.User = user;
-                trip.Countries.Add(country);
-
                 await tripManager.CreateAsync(trip);
-
-                return RedirectToAction("CreateTripSelectCities", new { viewModel = viewModel } /*new { countryName = viewModel.CountryName }*/);
-            }   
-
-            public async Task<IActionResult> CreateTripSelectCities(CreateTripStartViewModel viewModel)
-            {
-                Country country = new Country();
-                //country = await countryManager.GetCountryByName(countryName);
-                return View(country);
+                return RedirectToAction(nameof(Index));
             }
+            return View(trip);
+        }
 
-            // POST: Trips/Create
-            // To protect from overposting attacks, enable the specific properties you want to bind to.
-            // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-            [HttpPost]
-            [ValidateAntiForgeryToken]
-            public async Task<IActionResult> Create([Bind("Id,Title,Description,StartingDate,EndingDate,StaritingPlaceId,EndingPlaceId,UserId")] Trip trip)
-            {
-                if (ModelState.IsValid)
-                {
-                    await tripManager.CreateAsync(trip);
-                    return RedirectToAction(nameof(Index));
-                }
-                return View(trip);
-            }
-
-            // GET: Trips/Edit/5
-            public async Task<IActionResult> Edit(int? id)
+        // GET: Trips/Edit/5
+        public async Task<IActionResult> Edit(int? id)
             {
                 if (id == null)
                 {

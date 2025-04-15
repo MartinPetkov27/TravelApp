@@ -1,128 +1,280 @@
 ﻿@model BusinessLayer.Trip
 
 @{
-    ViewData["Title"] = "Create";
-    var selectedCountry = ViewBag.SelectedCountry as string ?? "Selected Country";
+    ViewData["Title"] = "Select Cities";
+    var selectedCountry = Model.Countries?.FirstOrDefault()?.Name ?? "Unknown Country";
+    var countries = ViewBag.Countries as List<string>;
+	
 }
 
-<!-- Head content -->
 <head>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+
+    </style>
 </head>
 
-<!-- Main content -->
-<h1>Create Trip - Add Cities</h1>
+@* <h1>Create Trip - Explore @selectedCountry  </h1>
 <h4>@Model.Title</h4>
 <hr />
 
 <div>
-    <a asp-action="CreateStart">Back to the starting point.</a>
-</div>
+    <a asp-action="Create">Back to Your Trips</a>
+</div> *@
 
-<div class="container-fluid mt-4">
+<h1>Create Trip - Explore @selectedCountry</h1>
+<h5>Holiday to @selectedCountry</h5>
+<hr />
+<a asp-action="Create">Back to Your Trips</a>
+
+<div class="row mt-4">
+    <!-- LEFT SIDE -->
+    <div class="col-md-7">
+        <form asp-action="AddCountryOrPlace" method="post">
+            <!-- Add place -->
+            <div class="form-group mb-3">
+                <a asp-controller="Places" asp-action="Create" asp-route-tripName="@Model.Title" class="btn btn-outline-primary w-100">
+                    Add place
+                </a>
+            </div>
+
+            <!-- Select next country -->
+            <div class="form-group mb-3 d-flex align-items-end">
+                <div class="w-100">
+                    <label for="nextCountry"><strong>Select next country</strong></label>
+                    <select class="form-control" id="nextCountry" name="nextCountry">
+                        <option value="">-- Select a country --</option>
+                        @foreach (var country in countries)
+                        {
+                            <option value="@country">@country</option>
+                        }
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-outline-primary ms-2" style="height: 38px;">Add</button>
+            </div>
+
+            <div class="form-group mt-4">
+                <button type="submit" class="btn btn-success w-100">Generate trip</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- RIGHT SIDE: Timeline -->
+    <div class="col-md-5 bg-light">
+        <div class="p-3">
+            <h4>Your Trip Timeline</h4>
+            <div class="timeline">
+                @foreach (var country in Model.Countries)
+                {
+                    <div class="timeline-step">
+                        <span class="dot"></span>
+                        <span class="step-title">
+                            <strong>@country.Name</strong>
+                        </span>
+
+                        @if (Model.Places != null && Model.Places.Any())
+                        {
+                            <ul class="ms-4">
+                                @foreach (var place in Model.Places)
+                                {
+                                    if(place.CoutryAlphaCode == country.AlphaCode)
+                                    {
+                                    <li class="text-danger">📍 @place.Name</li>
+                                    }
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <div class="ms-4 text-secondary"><em>No places added yet</em></div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@* <div class="container-fluid mt-4">
     <div class="row">
-        <!-- LEFT SIDE: Map -->
+        <!-- Map Section -->
         <div class="col-md-7" style="height: 90vh;">
             <div class="card h-100">
                 <div class="card-header">
                     <input id="citySearchBox" class="form-control" placeholder="Search for a city..." />
                     <ul id="citySuggestions" class="dropdown-menu show"></ul>
                 </div>
+
+                <!-- DropDown for countries -->
+                <div class="dropdown w-50 mx-auto">
+                    <button type="button" id="countryDropdown" class="form-control text-start">
+                        Select a country
+                    </button>
+                    <ul id="countryList" class="list-group" style="display: none; max-height: 200px; overflow-y: auto; border: 1px solid #ccc; border-top: none;">
+                        @foreach (var country in countries)
+                        {
+                            <li class="list-group-item country-option" style="cursor: pointer;">@country</li>
+                        }
+                    </ul>
+                    <input type="hidden" name="CoutryAlphaCode" id="selectedCountryInput" />
+
                 <div class="card-body p-0">
                     <div id="cityMap" style="width: 100%; height: 100%;"></div>
                 </div>
             </div>
         </div>
 
-        <!-- RIGHT SIDE: Timeline -->
+        <!-- Timeline / Progress Section -->
         <div class="col-md-5 bg-light" style="height: 90vh; overflow-y: auto;">
             <div class="p-4">
-                <h4 class="mb-4">Your Trip Progress</h4>
-                <div class="timeline">
+                <h4>Your Trip Timeline</h4>
+                <div class="timeline" id="timeline">
                     <div class="timeline-step active">
                         <span class="dot"></span>
-                        <span class="step-title">Selected Country: <strong>@selectedCountry</strong></span>
-                    </div>
-                    <div class="timeline-step">
-                        <span class="dot"></span>
-                        <span class="step-title">Select Starting City</span>
-                    </div>
-                    <div class="timeline-step">
-                        <span class="dot"></span>
-                        <span class="step-title">Add More Cities</span>
-                    </div>
-                    <div class="timeline-step">
-                        <span class="dot"></span>
-                        <span class="step-title">Finalize Trip</span>
+                        <span class="step-title">Selected Country: <strong> @selectedCountry </strong></span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
+ *@
 @section Scripts {
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
     <script>
-        let selectedCountryName = '@selectedCountry';
-        let map = L.map('cityMap').setView([20, 0], 2); // Placeholder
+        document.addEventListener("DOMContentLoaded", async function () {
+            const selectedCountry = @selectedCountry; // or from Model
+            const map = L.map('cityMap').setView([20, 0], 2);
+            let route = [];
+            let polyline = null;
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: 'Map data © OpenStreetMap contributors'
-        }).addTo(map);
+            // Add tile layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: 'Map data © OpenStreetMap contributors'
+            }).addTo(map);
 
-        function zoomToCountry(countryName) {
-            if (countryName === "Italy") {
-                map.setView([41.8719, 12.5674], 6);
-            }
-            else if (countryName === "France") {
-                map.setView([46.6034, 1.8883], 6);
-            }
-            // Add more or integrate real geo-lookup
-        }
+            // Get GeoJSON borders and zoom to country
+            const geoData = await fetch('/Trips/GetCountries').then(res => res.json());
+            const countryLayer = L.geoJSON(geoData, {
+                style: { color: "#000", weight: 1, fillOpacity: 0.3 },
+                onEachFeature: (feature, layer) => {
+                    if (feature.properties.name === selectedCountry) {
+                        layer.setStyle({ color: "blue", weight: 3, fillOpacity: 0.5 });
+                        map.fitBounds(layer.getBounds());
+                        // Restrict max zoom-out
+                        map.setMaxBounds(layer.getBounds());
+                    }
+                }
+            }).addTo(map);
 
-        zoomToCountry(selectedCountryName);
+            // City search using GeoNames
+            const searchBox = document.getElementById('citySearchBox');
+            const suggestions = document.getElementById('citySuggestions');
+            const timeline = document.getElementById("timeline");
 
-        document.getElementById('citySearchBox').addEventListener('input', function () {
-            const query = this.value.toLowerCase();
-            const suggestionsBox = document.getElementById('citySuggestions');
-            suggestionsBox.innerHTML = '';
+            searchBox.addEventListener('input', async function () {
+                const query = this.value.trim();
+                if (!query) return suggestions.innerHTML = '';
 
-            if (query.length === 0) {
-                suggestionsBox.style.display = 'none';
-                return;
-            }
+                const countryCode = getCountryCode(selectedCountry); // Implement ISO code mapping
+                const username = 'demo'; // 🔁 Replace with your GeoNames username
+                const url = `https://secure.geonames.org/searchJSON?q=${query}&maxRows=10&featureClass=P&country=${countryCode}&username=${username}`;
 
-            const cities = ["Rome", "Milan", "Naples", "Florence", "Turin"]; // Example cities
-            const matches = cities.filter(c => c.toLowerCase().includes(query));
+                try {
+                    const res = await fetch(url);
+                    const data = await res.json();
 
-            if (matches.length > 0) {
-                suggestionsBox.style.display = 'block';
-                matches.forEach(city => {
-                    const li = document.createElement('li');
-                    li.textContent = city;
-                    li.addEventListener('click', () => {
-                        document.getElementById('citySearchBox').value = city;
-                        suggestionsBox.style.display = 'none';
-                        // Optional: Zoom to city
+                    suggestions.innerHTML = '';
+                    data.geonames.forEach(city => {
+                        const li = document.createElement('li');
+                        li.textContent = city.name;
+                        li.classList.add('dropdown-item');
+                        li.addEventListener('click', () => {
+                            searchBox.value = city.name;
+                            suggestions.innerHTML = '';
+                            const latlng = [city.lat, city.lng];
+                            addCity(city.name, latlng);
+                        });
+                        suggestions.appendChild(li);
                     });
-                    suggestionsBox.appendChild(li);
+                } catch (err) {
+                    console.error('GeoNames error:', err);
+                }
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!searchBox.contains(e.target) && !suggestions.contains(e.target)) {
+                    suggestions.innerHTML = '';
+                }
+            });
+
+            map.on('click', function (e) {
+                const latlng = [e.latlng.lat, e.latlng.lng];
+                const label = `Lat: ${latlng[0].toFixed(2)}, Lng: ${latlng[1].toFixed(2)}`;
+                addCity(label, latlng);
+            });
+
+            function addCity(label, latlng) {
+                L.marker(latlng).addTo(map).bindPopup(label).openPopup();
+                route.push(latlng);
+                updatePolyline();
+                updateTimeline(label);
+            }
+
+            function updatePolyline() {
+                if (polyline) map.removeLayer(polyline);
+                polyline = L.polyline(route, {
+                    color: 'blue',
+                    weight: 4,
+                    opacity: 0.6
+                }).addTo(map);
+            }
+
+            function updateTimeline(label) {
+                const step = document.createElement('div');
+                step.className = 'timeline-step city';
+                step.innerHTML = `<span class="dot"></span><span class="step-title">City: <strong>${label}</strong></span>`;
+                timeline.appendChild(step);
+            }
+
+            // Map country names to ISO codes
+            function getCountryCode(name) {
+                const codes = {
+                    'Italy': 'IT',
+                    'France': 'FR',
+                    'Germany': 'DE',
+                    'Canada': 'CA',
+                    'Spain': 'ES',
+                    // add more as needed
+                };
+                return codes[name] || '';
+            }
+                 
+            // 🌍 Country dropdown functionality
+            document.getElementById("countryDropdown").addEventListener("click", function () {
+                const list = document.getElementById("countryList");
+                list.style.display = list.style.display === "none" ? "block" : "none";
+            });
+
+            document.querySelectorAll(".country-option").forEach(function (item) {
+                item.addEventListener("click", function () {
+                    const countryName = this.textContent;
+                    document.getElementById("countryDropdown").textContent = countryName;
+                    document.getElementById("selectedCountryInput").value = countryName;
+                    document.getElementById("countryList").style.display = "none";
                 });
-            } else {
-                suggestionsBox.style.display = 'none';
-            }
-        });
+            });
 
-        map.on('click', function (e) {
-            L.marker(e.latlng).addTo(map);
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!document.getElementById('citySearchBox').contains(e.target)) {
-                document.getElementById('citySuggestions').style.display = 'none';
-            }
+            // Close dropdown on outside click
+            document.addEventListener("click", function (event) {
+                const dropdown = document.getElementById("countryDropdown");
+                const list = document.getElementById("countryList");
+                if (!dropdown.contains(event.target) && !list.contains(event.target)) {
+                    list.style.display = "none";
+                }
+            });
         });
     </script>
 }
+
 
