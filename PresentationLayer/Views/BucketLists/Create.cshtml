@@ -1,4 +1,4 @@
-﻿@model BusinessLayer.BucketList
+﻿@* @model BusinessLayer.BucketList
 
 @{
     ViewData["Title"] = "Create";
@@ -35,3 +35,157 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+ *@
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TripTale - Create BucketList</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:wght@400&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" />
+    <link rel="stylesheet" href="~/css/BucketListCreate/reset.css" />
+    <link rel="stylesheet" href="~/css/BucketListCreate/main.css" />
+    @* <link rel="stylesheet" href="css/header.css" /> *@
+    <link rel="stylesheet" href="~/css/BucketListCreate/bucketlist.css" />
+    @* <link rel="stylesheet" href="css/footer.css" /> *@
+    <link rel="stylesheet" href="~/css/BucketListCreate/responsive.css" />
+    @* <link rel="stylesheet" href="~/css/BucketListCreate/index.css" />  *@
+</head>
+<body>
+    <div class="main-container">
+        <div class="create-trip-start">
+            @* <header class="site-header">
+                <div class="logo">
+                    <h1 class="triptale">tRIPtALE</h1>
+                </div>
+                <nav class="main-navigation">
+                    <ul class="nav-links">
+                        <li><a href="#" class="home">Home</a></li>
+                        <li><a href="#" class="start-planning">Start Planning</a></li>
+                        <li><a href="#" class="bucketlist">BucketList</a></li>
+                        <li><a href="#" class="stories">Stories</a></li>
+                    </ul>
+                </nav>
+                <div class="user-profile">
+                    <div class="user"></div>
+                </div>
+            </header> *@
+
+            <main class="bucket-list-create">
+                <section class="page-header">
+                    <div class="header-content">
+                        <h2 class="create-bucketlist">Create BucketList</h2>
+                        <p class="start-journey-now">Start your journey now.</p>
+                    </div>
+                </section>
+
+                <section class="bucketlist-form">
+                    <div class="form-group">
+                        <label for="bucketlist-name">BucketList Name</label>
+                        <input type="text" id="bucketlist-name" class="input-field" placeholder="Enter your bucketlist name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="country-select" class="choose-country">Choose a country:</label>
+                        <select id="country-select" class="country-dropdown">
+                            <option value="" selected disabled>Select a country</option>
+                            <option value="france">France</option>
+                            <option value="italy">Italy</option>
+                            <option value="spain">Spain</option>
+                            <option value="japan">Japan</option>
+                            <option value="australia">Australia</option>
+                        </select>
+                    </div>
+
+                    <div class="places-container">
+                        <div class="country-display">
+                            <div class="image-background"></div>
+                            <div class="country-sidebar">
+                                <h3 class="country-name">Country name</h3>
+
+                                @* <ul class="places-list">
+                                    <li class="place-item">
+                                        <span class="dash">-</span>
+                                        <span class="place-name">Place1</span>
+                                    </li>
+                                    <li class="place-item">
+                                        <span class="dash">-</span>
+                                        <span class="place-name">Place2</span>
+                                    </li>
+                                    <li class="place-item">
+                                        <span class="dash">-</span>
+                                        <span class="place-name">Place3</span>
+                                    </li>
+                                </ul> *@
+
+                                <div class="image-preview">
+                                    <div class="preview-box"></div>
+                                    <span class="image-label">image</span>
+                                </div>
+                            </div>
+                            <div class="country-main">
+                                <div class="country-tabs">
+                                    <button class="country-tab active">Country name1</button>
+                                    <button class="country-tab">Country name1</button>
+                                    <button class="country-tab">Country name1</button>
+                                    <button class="country-tab">Country name1</button>
+                                </div>
+                                <div class="place-inputs">
+                                    <div class="input-group">
+                                        <input type="text" class="place-input" id="place-autocomplete" placeholder="Enter a place">
+                                        <button class="add-place-btn" id="add-place">+</button>
+                                    </div>
+                                    <div class="input-group">
+                                        <input type="url" class="image-url-input" id="image-url" placeholder="Enter image URL">
+                                        <button class="add-btn" id="add-image">ADD</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="save-button" id="save-bucketlist">
+                            Save BucketList
+                        </button>
+                    </div>
+                </section>
+            </main>
+@* 
+            <footer class="site-footer">
+                <div class="footer-content">
+                    <div class="footer-brand">
+                        <h2 class="footer-title">Rhodes</h2>
+                    </div>
+                    <div class="footer-sections">
+                        <div class="footer-section">
+                            <h3 class="section-title">Address</h3>
+                            <p class="address-text">8, Rue de la Paix, 75002 Paris, France</p>
+                        </div>
+                        <div class="footer-section">
+                            <h3 class="section-title">Contact</h3>
+                            <p class="contact-phone">+33 1 23 45 67 89</p>
+                            <p class="contact-email">contact@email.com</p>
+                        </div>
+                        <div class="footer-section">
+                            <h3 class="section-title">Follow us</h3>
+                            <p class="social-link">Facebook</p>
+                            <p class="social-link">Instagram</p>
+                        </div>
+                    </div>
+                    <div class="footer-bottom">
+                        <p class="copyright">©2024 Rhodes. <br>All rights reserved.</p>
+                        <div class="footer-links">
+                            <a href="#" class="terms-conditions">Terms & Conditions</a>
+                            <a href="#" class="privacy-policy">Privacy Policy</a>
+                        </div>
+                    </div>
+                </div>
+            </footer> *@
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+</html>

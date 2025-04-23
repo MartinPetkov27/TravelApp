@@ -4,12 +4,110 @@
 @{
     ViewData["Title"] = "Log in";
 }
+<style>
+    /* Add this class to your form element */
+    .login-form {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
 
+    /* Main page styling */
+    body {
+        background-color: #f5f5f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    /* Title styling */
+    h1 {
+        text-align: left;
+        font-size: 50px;
+        margin-bottom: 10px;
+        margin-top:10px;
+        font-weight: 600;
+    }
+
+    /* Form elements */
+    .form-floating {
+        margin-bottom: 20px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+    }
+
+    /* Login button */
+    #login-submit {
+        width: 100%;
+        padding: 12px;
+        background-color: black;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    /* Links section */
+    .row > div:first-child section > div:last-child {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    /* Hide external login section */
+    .col-md-6 {
+        display: none;
+    }
+
+    /* Remember me checkbox */
+    .checkbox {
+        display: none;
+    }
+
+    /* Error messages */
+    .text-danger {
+        color: #dc3545;
+        font-size: 14px;
+        margin-top: 5px;
+        display: block;
+    }
+
+    /* "Forgot password" and other links */
+    #forgot-password,
+    #resend-confirmation {
+        display: none;
+    }
+
+    /* Register link styling */
+    a[asp-page="./Register"] {
+        color: black;
+        text-decoration: underline;
+    }
+</style>
 <h1>@ViewData["Title"]</h1>
 <div class="row">
     <div class="col-md-4">
         <section>
-            <form id="account" method="post">
+            <form id="account" method="post" class="login-form">
                 <h2>Use a local account to log in.</h2>
                 <hr />
                 <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>

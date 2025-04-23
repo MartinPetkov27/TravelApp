@@ -103,7 +103,8 @@ namespace DataLayer
                     return null;
                 }
 
-                IdentityResult result = await userManager.PasswordValidators[0].ValidateAsync(userManager, user, password);
+                IdentityResult result = await userManager.PasswordValidators[0]
+                    .ValidateAsync(userManager, user, password);
 
                 if (result.Succeeded)
                 {

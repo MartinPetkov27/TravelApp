@@ -1,0 +1,185 @@
+/* Bucket list section styles */
+.bucket-list-section {
+    background-color: var(--primary-color);
+    padding: 2rem 4rem 4rem;
+    color: var(--text-light);
+}
+
+/* Intro section */
+.intro-section {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.choose-bucket-list {
+    color: #ffffff;
+    font-family: DM Serif Display, var(--default-font-family);
+    font-size: 64px;
+    font-weight: 400;
+    line-height: 76.8px;
+    margin-bottom: 1rem;
+}
+
+.start-journey-now {
+    color: #f7f5ef;
+    font-family: Quicksand, var(--default-font-family);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 16.8px;
+    text-transform: uppercase;
+    letter-spacing: 4.2px;
+}
+
+/* Search section */
+.search-section {
+    margin-bottom: 4rem;
+}
+
+.search-container {
+    width: 100%;
+    max-width: 1326px;
+    margin: 0 auto;
+}
+
+.search-input {
+    width: 100%;
+    padding: 16px;
+    background: var(--accent-color);
+    color: var(--text-light);
+    font-family: Quicksand, var(--default-font-family);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 22px;
+    border-radius: 8px;
+}
+
+    .search-input::placeholder {
+        color: var(--text-light);
+    }
+
+/* Featured bucket list */
+.featured-bucketlist {
+    margin-bottom: 2rem;
+}
+
+.bucketlist-preview {
+    position: relative;
+    width: 100%;
+    height: 620px;
+    background: var(--background-light);
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.image-background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: url(https://codia-f2c.s3.us-west-1.amazonaws.com/image/2025-04-23/4UHSPd2Zjw.png) no-repeat center;
+    background-size: cover;
+}
+
+.bucketlist-card {
+    position: absolute;
+    width: 328px;
+    height: 574px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--primary-color);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+}
+
+.country-name {
+    color: var(--text-light);
+    font-family: Quicksand, var(--default-font-family);
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 44.8px;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.menu-separator {
+    width: 100%;
+    padding: 8px 16px;
+    margin-bottom: 2rem;
+}
+
+.preview-images {
+    width: 274px;
+    height: 263px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-description {
+    color: var(--text-dark);
+    font-family: Quicksand, var(--default-font-family);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 22.4px;
+    text-align: center;
+    text-decoration: underline;
+}
+
+.navigation-controls {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    padding: 0 2rem;
+}
+
+.arrow-prev, .arrow-next {
+    width: 50px;
+    height: 50px;
+    background-size: cover;
+    border-radius: 4px;
+    border: none;
+}
+
+.arrow-prev {
+    background: url(https://codia-f2c.s3.us-west-1.amazonaws.com/image/2025-04-23/HfpqMSX1P4.png) no-repeat center;
+}
+
+.arrow-next {
+    background: url(https://codia-f2c.s3.us-west-1.amazonaws.com/image/2025-04-23/xZtBBJcy2e.png) no-repeat center;
+}
+
+/* Action section */
+.action-section {
+    width: 100%;
+    max-width: 1326px;
+    margin: 0 auto;
+}
+
+.save-button {
+    width: 100%;
+    height: 38px;
+    background: var(--secondary-color);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .save-button span {
+        color: #ffffff;
+        font-family: Poppins, var(--default-font-family);
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 19.2px;
+        text-transform: uppercase;
+        letter-spacing: 1.6px;
+    }

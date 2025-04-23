@@ -1,0 +1,85 @@
+:root {
+    --primary-color: #2f4f4f;
+    --secondary-color: #4a6c6c;
+    --accent-color: #60a1a0;
+    --text-light: #f7f5ef;
+    --text-dark: #1e1e1e;
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 20px;
+    --spacing-xs: 8px;
+    --spacing-sm: 16px;
+    --spacing-md: 24px;
+    --spacing-lg: 32px;
+    --spacing-xl: 48px;
+    --font-heading: "DM Serif Display", serif;
+    --font-body: "Quicksand", sans-serif;
+    --font-button: "Poppins", sans-serif;
+    --font-small: "Montserrat", sans-serif;
+    --shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    --container-width: 1440px;
+}
+
+body {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+}
+
+.main-container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+}
+
+.create-trip-start {
+    position: relative;
+    width: 100%;
+    background: var(--primary-color);
+    overflow: hidden;
+}
+
+/* Common form elements */
+.input-field,
+select {
+    width: 100%;
+    padding: var(--spacing-sm);
+    background: var(--secondary-color);
+    color: var(--text-light);
+    border-radius: var(--border-radius-md);
+    font-family: var(--font-body);
+    font-weight: 700;
+}
+
+    .input-field::placeholder,
+    select::placeholder {
+        color: var(--text-light);
+        opacity: 0.7;
+    }
+
+button {
+    background: var(--accent-color);
+    color: var(--text-light);
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+    font-family: var(--font-button);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1.6px;
+    transition: background-color 0.3s ease;
+}
+
+    button:hover {
+        background-color: #4d8382;
+    }
+
+label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    font-family: var(--font-body);
+    font-weight: 500;
+}
+
+.form-group {
+    margin-bottom: var(--spacing-md);
+}

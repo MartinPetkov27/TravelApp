@@ -1,0 +1,42 @@
+/* Main container styles */
+.main-container {
+    position: relative;
+    max-width: 1440px;
+    width: 100%;
+    margin: 0 auto;
+    background-color: var(--background-light);
+    overflow: hidden;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    font-weight: normal;
+}
+
+/* Common components */
+.rule {
+    width: 100%;
+    height: 1px;
+    background: #d9d9d9;
+}
+
+/* Buttons */
+.save-button,
+.arrow-prev,
+.arrow-next {
+    transition: all 0.3s ease;
+}
+
+    .save-button:hover,
+    .arrow-prev:hover,
+    .arrow-next:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+    }
+
+    .save-button:active,
+    .arrow-prev:active,
+    .arrow-next:active {
+        transform: translateY(0);
+    }

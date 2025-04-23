@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BusinessLayer.BucketList>
+﻿@* @model IEnumerable<BusinessLayer.BucketList>
 
 @{
     ViewData["Title"] = "Index";
@@ -39,3 +39,126 @@
 }
     </tbody>
 </table>
+ *@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TripTale - Bucket List</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:wght@400&display=swap" />
+    <link rel="stylesheet" href="~/css/BucketListIndex/reset.css" />
+    <link rel="stylesheet" href="~/css/BucketListIndex/main.css" />
+    @* <link rel="stylesheet" href="css/header.css" /> *@
+    <link rel="stylesheet" href="~/css/BucketListIndex/bucketlist.css" />
+    @* <link rel="stylesheet" href="css/footer.css" /> *@
+    <link rel="stylesheet" href="~/css/BucketListIndex/responsive.css" />
+</head>
+<body>
+    <div class="main-container">
+       @*  <header class="site-header">
+            <div class="logo">
+                <h1 class="trip-tale">tRIPtALE</h1>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#" class="home">Home</a></li>
+                    <li><a href="#" class="start-planning">Start Planning</a></li>
+                    <li><a href="#" class="bucket-list-nav active">BucketList</a></li>
+                    <li><a href="#" class="stories">Stories</a></li>
+                </ul>
+            </nav>
+            <div class="user-profile">
+                <div class="user-avatar"></div>
+            </div>
+        </header> *@
+
+        <main class="bucket-list-section">
+            <section class="intro-section">
+                <h2 class="choose-bucket-list">Choose a BucketList</h2>
+                <p class="start-journey-now">Start your journey now.</p>
+            </section>
+
+            <section class="search-section">
+                <a class="save-button" href="~/BucketLists/Create"> <span>Create a BucketList</span></a>
+                <br />
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Search for a bucketList..." aria-label="Search for bucket lists">
+                </div>
+            </section>
+
+            <section class="featured-bucketlist">
+                <div class="bucketlist-preview">
+                    <div class="image-background"></div>
+                    <div class="bucketlist-card">
+                        <h3 class="country-name">BucketList Name</h3>
+                        <div class="menu-separator"><div class="rule"></div></div>
+                        <div class="preview-images">
+                            <div class="image-description">
+                                4 images from the<br>first 4 places in the<br>bucketList
+                            </div>
+                        </div>
+                    </div>
+                    <div class="navigation-controls">
+                        <button class="arrow-prev" aria-label="Previous bucket list">
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="arrow-next" aria-label="Next bucket list">
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="action-section">
+                <button class="save-button">
+                    <span>Open BucketList</span>
+                </button>
+            </section>
+        </main>
+
+      @*   <footer class="site-footer">
+            <div class="footer-content">
+                <div class="footer-branding">
+                    <h2 class="footer-logo">Rhodes</h2>
+                </div>
+
+                <div class="footer-sections">
+                    <div class="footer-section">
+                        <h3 class="section-title">Address</h3>
+                        <p class="address-text">8, Rue de la Paix, 75002 Paris, France</p>
+                    </div>
+
+                    <div class="footer-section">
+                        <h3 class="section-title">Contact</h3>
+                        <p class="contact-phone">+33 1 23 45 67 89</p>
+                        <p class="contact-email">contact@email.com</p>
+                    </div>
+
+                    <div class="footer-section">
+                        <h3 class="section-title">Follow us</h3>
+                        <div class="social-links">
+                            <a href="#" class="social-link">Facebook</a>
+                            <a href="#" class="social-link">Instagram</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="copyright">
+                    <p>©2024 Rhodes. All rights reserved.</p>
+                </div>
+                <div class="footer-links">
+                    <a href="#" class="terms-conditions">Terms & Conditions</a>
+                    <a href="#" class="privacy-policy">Privacy Policy</a>
+                </div>
+            </div>
+        </footer> *@
+    </div>
+    <script src="js/main.js"></script>
+</body>
+</html>

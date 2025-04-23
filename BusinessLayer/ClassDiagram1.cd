@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="BusinessLayer.User" Collapsed="true">
+    <Position X="0.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAECAAAACCAAAAAAAQAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.AspNetCore.Identity.IdentityUser" Collapsed="true">
+    <Position X="0.5" Y="1" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="BusinessLayer.Trip">
+    <Position X="4.5" Y="1" Width="1.5" />
+    <AssociationLine Name="Countries" Type="BusinessLayer.Country" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="4.812" Y="3.901" />
+        <Point X="4.812" Y="5.375" />
+        <Point X="3.25" Y="5.375" />
+        <Point X="3.25" Y="5.75" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>EAQDAAAABAAgAEAAAAAAAQgAAAAAAAAAAEAAAIAAAAA=</HashCode>
+      <FileName>Trip.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="User" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Countries" />
+      <Property Name="Places" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="BusinessLayer.Story">
+    <Position X="7" Y="1" Width="1.5" />
+    <AssociationLine Name="User" Type="BusinessLayer.User" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.75" Y="1" />
+        <Point X="7.75" Y="0.75" />
+        <Point X="2.375" Y="0.75" />
+        <Point X="2.375" Y="2.129" />
+        <Point X="1.625" Y="2.129" />
+        <Point X="1.625" Y="2.25" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAADAAAEAgAAAEAAAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Story.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="User" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="BusinessLayer.Country">
+    <Position X="2.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAACAAACAAAAAAAAAQACAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Country.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BusinessLayer.BucketList">
+    <Position X="7.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAADAAAAAAAAAAAAAAAAAAwAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>BucketList.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Destinations" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="BusinessLayer.Place">
+    <Position X="5.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAEEAgAAAAAAIIAAQAgAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Place.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Country" />
+      <Property Name="Trip" />
+    </ShowAsAssociation>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

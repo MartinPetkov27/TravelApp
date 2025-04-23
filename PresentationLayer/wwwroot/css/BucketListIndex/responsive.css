@@ -1,0 +1,251 @@
+/* Responsive styles */
+
+/* Large screens (default) */
+@media screen and (min-width: 1441px) {
+    .main-container {
+        max-width: 100%;
+    }
+}
+
+/* Desktop */
+@media screen and (max-width: 1440px) {
+    .choose-bucket-list {
+        font-size: 56px;
+        line-height: 67px;
+    }
+}
+
+/* Small desktop / Large tablet */
+@media screen and (max-width: 1200px) {
+    .site-header {
+        padding: 1.5rem 2rem;
+    }
+
+    .bucket-list-section {
+        padding: 2rem 2rem 4rem;
+    }
+
+    .site-footer {
+        padding: 4rem 2rem 2rem;
+    }
+
+    .choose-bucket-list {
+        font-size: 48px;
+        line-height: 58px;
+    }
+
+    .bucketlist-card {
+        width: 300px;
+        height: 520px;
+    }
+
+    .preview-images {
+        width: 250px;
+        height: 240px;
+    }
+}
+
+/* Tablet */
+@media screen and (max-width: 992px) {
+    .site-header {
+        flex-wrap: wrap;
+    }
+
+    .logo {
+        order: 1;
+        flex-basis: 50%;
+    }
+
+    .user-profile {
+        order: 2;
+        flex-basis: 50%;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .main-nav {
+        order: 3;
+        flex-basis: 100%;
+        margin-top: 1rem;
+    }
+
+    .choose-bucket-list {
+        font-size: 42px;
+        line-height: 50px;
+    }
+
+    .bucketlist-preview {
+        height: 500px;
+    }
+
+    .bucketlist-card {
+        width: 280px;
+        height: 460px;
+    }
+
+    .preview-images {
+        width: 230px;
+        height: 220px;
+    }
+
+    .footer-content {
+        flex-direction: column;
+    }
+
+    .footer-sections {
+        gap: 2rem;
+    }
+}
+
+/* Mobile landscape */
+@media screen and (max-width: 768px) {
+    .site-header {
+        padding: 1rem;
+    }
+
+    .trip-tale {
+        font-size: 24px;
+    }
+
+    .main-nav ul {
+        gap: 20px;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .main-nav a {
+        font-size: 14px;
+    }
+
+    .bucket-list-section {
+        padding: 1.5rem 1rem 3rem;
+    }
+
+    .choose-bucket-list {
+        font-size: 36px;
+        line-height: 43px;
+    }
+
+    .start-journey-now {
+        font-size: 12px;
+        letter-spacing: 3px;
+    }
+
+    .bucketlist-preview {
+        height: 450px;
+    }
+
+    .bucketlist-card {
+        width: 260px;
+        height: 420px;
+        padding: 1.5rem;
+    }
+
+    .country-name {
+        font-size: 28px;
+        line-height: 34px;
+    }
+
+    .preview-images {
+        width: 210px;
+        height: 200px;
+    }
+
+    .image-description {
+        font-size: 14px;
+        line-height: 20px;
+    }
+
+    .navigation-controls {
+        padding: 0 1rem;
+    }
+
+    .arrow-prev, .arrow-next {
+        width: 40px;
+        height: 40px;
+    }
+
+    .site-footer {
+        padding: 3rem 1rem 1.5rem;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .footer-links {
+        justify-content: center;
+    }
+}
+
+/* Mobile portrait */
+@media screen and (max-width: 576px) {
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+    }
+
+    .main-nav ul {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .main-nav li {
+        flex-basis: 45%;
+        text-align: center;
+    }
+
+    .choose-bucket-list {
+        font-size: 32px;
+        line-height: 38px;
+    }
+
+    .bucketlist-preview {
+        height: 400px;
+    }
+
+    .bucketlist-card {
+        width: 240px;
+        height: 380px;
+        padding: 1rem;
+    }
+
+    .country-name {
+        font-size: 24px;
+        line-height: 29px;
+    }
+
+    .preview-images {
+        width: 200px;
+        height: 190px;
+    }
+
+    .footer-sections {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .footer-section {
+        width: 100%;
+    }
+}
+
+/* Extra small devices */
+@media screen and (max-width: 375px) {
+    .choose-bucket-list {
+        font-size: 28px;
+        line-height: 34px;
+    }
+
+    .bucketlist-card {
+        width: 220px;
+        height: 350px;
+    }
+
+    .preview-images {
+        width: 180px;
+        height: 170px;
+    }
+}

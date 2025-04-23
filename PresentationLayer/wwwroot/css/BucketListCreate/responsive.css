@@ -1,0 +1,138 @@
+/* Responsive styles */
+@media (max-width: 1440px) {
+    .main-container {
+        width: 100%;
+    }
+}
+
+@media (max-width: 1200px) {
+    .country-display {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .country-sidebar {
+        width: calc(100% - 46px);
+        height: auto;
+        margin: 23px;
+    }
+
+    .country-main {
+        margin: 0 23px 23px 23px;
+    }
+
+    .image-preview {
+        margin-top: var(--spacing-lg);
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .preview-box {
+        width: 100%;
+        max-width: 274px;
+    }
+}
+
+@media (max-width: 992px) {
+    .site-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .main-navigation {
+        margin: var(--spacing-md) 0;
+        width: 100%;
+    }
+
+    .nav-links {
+        justify-content: space-between;
+    }
+
+    .user-profile {
+        position: absolute;
+        top: var(--spacing-lg);
+        right: var(--spacing-lg);
+    }
+
+    .create-bucketlist {
+        font-size: 48px;
+    }
+
+    .footer-sections {
+        flex-direction: column;
+        gap: var(--spacing-lg);
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        flex-wrap: wrap;
+        gap: var(--spacing-md);
+    }
+
+    .create-bucketlist {
+        font-size: 36px;
+    }
+
+    .country-tabs {
+        flex-wrap: wrap;
+        gap: var(--spacing-sm);
+    }
+
+    .country-tab {
+        font-size: 18px;
+        flex: 1 0 40%;
+        text-align: center;
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .input-group {
+        flex-direction: column;
+    }
+
+    .add-place-btn,
+    .add-btn {
+        width: 100%;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+}
+
+@media (max-width: 576px) {
+    .site-header {
+        padding: var(--spacing-md);
+    }
+
+    .user-profile {
+        top: var(--spacing-md);
+        right: var(--spacing-md);
+    }
+
+    .nav-links li a {
+        font-size: 16px;
+    }
+
+    .create-bucketlist {
+        font-size: 32px;
+    }
+
+    .start-journey-now {
+        font-size: 12px;
+        letter-spacing: 3px;
+    }
+
+    .country-name {
+        font-size: 24px;
+    }
+
+    .country-tab {
+        font-size: 16px;
+        flex: 1 0 100%;
+    }
+
+    .bucketlist-form {
+        padding: 0 var(--spacing-md);
+    }
+}

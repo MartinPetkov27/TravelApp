@@ -1,0 +1,62 @@
+:root {
+    --default-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft Yahei UI", "Microsoft Yahei", "Source Han Sans CN", sans-serif;
+    /* Color variables */
+    --primary-color: #2f4f4f;
+    --secondary-color: #60a1a0;
+    --accent-color: #4a6c6c;
+    --text-light: #f7f5ef;
+    --text-dark: #1e1e1e;
+    --background-light: #f7f5f0;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    font-family: var(--default-font-family);
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+input,
+select,
+textarea,
+button {
+    font-family: inherit;
+    font-size: inherit;
+    outline: 0;
+    border: none;
+}
+
+button {
+    cursor: pointer;
+    background: none;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
