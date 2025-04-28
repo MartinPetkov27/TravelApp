@@ -18,16 +18,18 @@ namespace BusinessLayer
         public string Name { get; set; }
 
         public ICollection<Place> Destinations { get; set; }
-                
+        public ICollection<Country> Countries { get; set; }
+
         [ForeignKey("User")]
         public string UserId { get; set; }
         [Required]
         public User User { get; set; }
 
         public BucketList() { }
-        public BucketList( ICollection<Place> destination, User user)
+        public BucketList( ICollection<Place> destination, ICollection<Country> countries, User user)
         {
             Destinations = destination;
+            Countries = countries;
             User = user;
             UserId = user.Id;
         }

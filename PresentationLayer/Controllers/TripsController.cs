@@ -59,36 +59,37 @@ namespace PresentationLayer.Controllers
             return View("CreateTripStart", new CreateTripStartViewModel());
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> CreateTripStart(CreateTripStartViewModel viewModel)
         {
             if (!ModelState.IsValid)
-                return View(viewModel); // show errors if needed
-
-            //Country country = countryManager.GetCountryByName(viewModel.CountryName).Result;
-
-            //if (country == null)
-            //{
-            //    ModelState.AddModelError("CountryName", "Country not found.");
-            //    return View(viewModel);
-            //}
-
-            //var user = await userManager.GetUserAsync(User);
-
-            //if (user == null)
-            //{
-            //    return Unauthorized(); // Or redirect to login
-            //}
-
-            //Trip trip = new Trip();
-            //trip.Title = viewModel.Title;
-            //trip.User = user;
-            //trip.Countries = new List<Country> { country };
-
-            //await tripManager.CreateAsync(trip);
+                return View(viewModel); 
 
             return RedirectToAction("CreateTripSelectCities", new { countryName = viewModel.CountryName, title = viewModel.Title });
         }
+        // show errors if needed
+
+        //Country country = countryManager.GetCountryByName(viewModel.CountryName).Result;
+
+        //if (country == null)
+        //{
+        //    ModelState.AddModelError("CountryName", "Country not found.");
+        //    return View(viewModel);
+        //}
+
+        //var user = await userManager.GetUserAsync(User);
+
+        //if (user == null)
+        //{
+        //    return Unauthorized(); // Or redirect to login
+        //}
+
+        //Trip trip = new Trip();
+        //trip.Title = viewModel.Title;
+        //trip.User = user;
+        //trip.Countries = new List<Country> { country };
+
+        //await tripManager.CreateAsync(trip);
 
         [HttpPost]
         public async Task<IActionResult> CreateTripSelectCities(string countryName, string title)
@@ -105,6 +106,7 @@ namespace PresentationLayer.Controllers
                 Title = title,
                 Countries = new List<Country> { country }
             };
+            await tripManager.CreateAsync(trip);
             return View(trip);
         }
 

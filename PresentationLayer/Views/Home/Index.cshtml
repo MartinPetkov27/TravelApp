@@ -8,7 +8,8 @@
 </div>
  *@
 
-<!DOCTYPE html>
+@* Design2: *@
+@* <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -63,5 +64,257 @@
 <body>
     <div class="tagline">Discover the World<br>Discover Yourself</div>
     <div class="subtagline">Your journey to unforgettable experiences begins here.</div>
+</body>
+</html> *@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TripTale - Your Journey Begins Here</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:wght@400&display=swap" />
+    <link rel="stylesheet" href="~/css/Home/reset.css" />
+    <link rel="stylesheet" href="~/css/Home/variables.css" />
+    <link rel="stylesheet" href="~/css/Home/layout.css" />
+    <link rel="stylesheet" href="~/css/Home/header.css" />
+    <link rel="stylesheet" href="~/css/Home/sections.css" />
+    <link rel="stylesheet" href="~/css/Home/footer.css" />
+    <link rel="stylesheet" href="~/css/Home/responsive.css" />
+    <link rel="stylesheet" href="~/css/Home/header.css" />
+</head>
+<body>
+    <div class="main-container">
+        @*  <header class="site-header">
+            <div class="header-content">
+                <div class="logo">
+                    <h1 class="trip-tale">tRIPtALE</h1>
+                </div>
+                <nav class="main-navigation">
+                    <ul>
+                        <li><a href="#" class="home">Home</a></li>
+                        <li><a href="#" class="start-planning">Start Planning</a></li>
+                        <li><a href="#" class="bucket-list">BucketList</a></li>
+                        <li><a href="#" class="stories">Stories</a></li>
+                    </ul>
+                </nav>
+                <div class="login-button">
+                    <button class="btn-login">LOG IN</button>
+                </div>
+                <button class="mobile-menu-toggle" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+
+
+        </header> *@
+        <header class ="site-header">
+            <div class="hero-content">
+                <h2 class="discover-world">Discover the World, <br />Discover Yourself</h2>
+                <p class="journey-experiences">Your journey to unforgettable experiences begins here.</p>
+                <div class="line"></div>
+                <a href="#intro" class="btn-learn-more">
+                    <span>Learn more</span>
+                    <div class="arrow-icon"></div>
+                </a>
+            </div>
+        </header>
+
+        <main>
+            <section class="intro-section" id="intro">
+                <h2 class="section-title">Create your personalized journey now.</h2>
+                <div class="divider"></div>
+
+                <div class="intro-content">
+                    <p class="intro-text">
+                        Welcome to our travel agency, where your dreams of exploring the
+                        world become a reality. For over 20 years, we've been helping
+                        adventurers like you unearth the globe's hidden gems. Our team of
+                        experienced travel consultants craft personalized itineraries,
+                        taking care of all details, so you can focus on immersing yourself
+                        in new cultures, breathtaking landscapes, and unique
+                        adventures.
+                    </p>
+                    <p class="intro-text">
+                        Whether you're seeking relaxation on a white-sand beach, the
+                        thrill of scaling mountain peaks, or the charm of historic cities,
+                        we've got you covered. We believe travel is more than just
+                        sightseeing - it's an opportunity to grow, learn, and make lasting
+                        memories. So pack your bags, and let's create your perfect journey
+                        together.
+                    </p>
+                </div>
+                <div class="cta-container">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a asp-controller="Trips" asp-action="Create" class="btn-get-started">get started</a>
+                    }
+                    else
+                    {
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal" class="btn-get-started">get started</a>
+                    }
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#signUpModal" class="btn-sign-up">Sign up</a>
+                    }
+                    else
+                    {
+                        <a class="btn-sign-up" asp-area="Identity" asp-page="/Account/Register">Sign up</a>
+                    }
+                </div>
+            </section>
+
+            <div class="parallax-image image-1"></div>
+
+            <section class="stories-section">
+                <h2 class="section-title light">Explore the world via our brilliant story tellers</h2>
+                <div class="divider light"></div>
+
+                <div class="stories-container">
+                    <article class="story-card">
+                        <div class="story-image story-1">
+                            <div class="overlay"></div>
+                        </div>
+                        <div class="story-content">
+                            <h3 class="story-title">Story 1</h3>
+                            <p class="story-description">Experience the joy of shared discovery and camaraderie.</p>
+                        </div>
+                    </article>
+
+                    <article class="story-card">
+                        <div class="story-image story-2">
+                            <div class="overlay"></div>
+                        </div>
+                        <div class="story-content right">
+                            <h3 class="story-title">Story 2</h3>
+                            <p class="story-description">Enjoy travel your way, with every detail meticulously planned.</p>
+                        </div>
+                    </article>
+                </div>
+
+                <a href="~/Stories/Index#read-more" class="btn-learn-more wide">
+                    <span>Learn more about how you can create one</span>
+                    <div class="arrow-icon"></div>
+                </a>
+            </section>
+
+            <div class="parallax-image image-2"></div>
+
+            <section class="features-section">
+                <div class="features-content">
+                    <div class="features-intro">
+                        <h2 class="experience-title">
+                            Experience the Difference<br />Experience <br />TripTale
+                        </h2>
+                        <div class="divider"></div>
+                    </div>
+
+                    <div class="features-details">
+                        <div class="feature-group">
+                            <h3 class="feature-category">Services</h3>
+                            <ul class="feature-list">
+                                <li>Travel Planning</li>
+                                <li>Intriguing story telling</li>
+                                <li>Saving your future destination in a personal bucket list</li>
+                            </ul>
+                        </div>
+
+                      @*   <div class="feature-group">
+                            <h3 class="feature-category">Benefits</h3>
+                            <ul class="feature-list">
+                                <li>Global Network</li>
+                                <li>Seamless Logistics</li>
+                                <li>Personalized Itineraries</li>
+                            </ul>
+                        </div> *@
+                    </div>
+                </div>
+            </section>
+
+            <div class="parallax-image image-3"></div>
+        </main>
+
+        <footer class="site-footer">
+            <div class="footer-content">
+                <div class="footer-header">
+                    <div class="footer-logo">
+                        <h2 class="rhodes">TRIPTALE</h2>
+                    </div>
+
+                    <div class="footer-sections">
+                        <div class="footer-section">
+                            <h3 class="footer-title">Address</h3>
+                            <p class="footer-info">8, Rue de la Paix, 75002 Paris, France</p>
+                        </div>
+
+                        <div class="footer-section">
+                            <h3 class="footer-title">Contact</h3>
+                            @* <p class="footer-info">+33 1 23 45 67 89</p> *@
+                            <p class="footer-info">martinpetkov_e20@schoolmath.eu</p>
+                        </div>
+
+                        <div class="footer-section">
+                            <h3 class="footer-title">Follow us</h3>
+                            <p class="footer-info">Facebook</p>
+                            <p class="footer-info">Instagram</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer-copyright">
+                    <p class="rights-reserved">©2024 Triptales. <br />All rights reserved.</p>
+
+                    <div class="footer-links">
+                        <a href="#" class="terms-conditions">Terms & Conditions</a>
+                        <a href="#" class="privacy-policy">Privacy Policy</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    @* Dialog for authenticated users who wants to sign in*@
+    <div class="modal fade" id="signUpModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">You are already logged in!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Do you want to logout and log in with a different account?
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Logout">Log out</a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @* Dialog for unauthenticated users *@
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Login Required</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    You need to be logged in to start planning a trip.
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Login">Log In</a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
 </body>
 </html>

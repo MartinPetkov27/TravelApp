@@ -1,9 +1,10 @@
-﻿@model BusinessLayer.Place
+﻿@model PresentationLayer.ViewModels.CreatePlaceFromTripViewModel;
 
 @{
     ViewData["Title"] = "Create";
     var countries = ViewBag.Countries as List<string>;
     var tripName = ViewBag.TripName;
+    var selectedCountryName = ViewBag.SelectedCountryName;
 }
 @*
 <head>
@@ -15,14 +16,16 @@
         <form asp-action="Create" id="placeForm">
             <!-- Searchbox -->
             <div class="text-center mb-2">
-                <input id="pac-input" class="form-control w-50 mx-auto" type="text" placeholder="Search for a place" />
+                <label asp-for="Place.Name"></label>
+                <input asp-for="Place.Name" id="pac-input" class="form-control w-50 mx-auto" type="text" placeholder="Search for a place" />
+                <span asp-validation-for="Place.Name" class="text-danger"></span>
             </div>
             <hr />
-            <div class="form-group text-center">
+           @*  <div class="form-group text-center">
                 <label asp-for="Name"></label>
                 <input asp-for="Name" class="form-control w-50 mx-auto" />
                 <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
+            </div> *@
             <!-- 🌍 Custom Styled Country Selector -->
             @*  <div class="form-group text-center">
                     <label>Country</label>
@@ -39,35 +42,39 @@
                         <input type="hidden" name="CoutryAlphaCode" id="selectedCountryInput" />
                     </div>
                 </div> *@
+
             <!-- 🎒 Trip selection -->
             <div class="form-group mb-3">
                 <label for="TripName"><strong>Trip Name</strong></label>
                 <input type="text" class="form-control" id="TripName" name="TripName" value="@tripName" readonly />
             </div>
+
             <!-- 🧭 Coordinates -->
             <div class="form-group d-flex justify-content-center gap-2">
                 <div style="flex: 0.5;">
-                    <label asp-for="Latitude"></label>
-                    <input asp-for="Latitude" class="form-control" id="Latitude" style="width=40%" />
-                    <span asp-validation-for="Latitude" class="text-danger"></span>
+                    <label asp-for="Place.Latitude"></label>
+                    <input asp-for="Place.Latitude" class="form-control" id="Latitude" style="width:40%" />
+                    <span asp-validation-for="Place.Latitude" class="text-danger"></span>
                 </div>
                 <div style="flex: 0.5;">
-                    <label asp-for="Longitude"></label>
-                    <input asp-for="Longitude" class="form-control" id="Longitude" style="width=40%" />
-                    <span asp-validation-for="Longitude" class="text-danger"></span>
+                    <label asp-for="Place.Longitude"></label>
+                    <input asp-for="Place.Longitude" class="form-control" id="Longitude" style="width:40%" />
+                    <span asp-validation-for="Place.Longitude" class="text-danger"></span>
                 </div>
             </div>
+
             <!-- 📝 Description -->
             <div class="form-group text-center">
-                <label asp-for="Description"></label>
-                <input asp-for="Description" class="form-control w-50 mx-auto" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+                <label asp-for="Place.Description"></label>
+                <input asp-for="Place.Description" class="form-control w-50 mx-auto" />
+                <span asp-validation-for="Place.Description" class="text-danger"></span>
             </div>
             <div class="form-group text-center mt-3">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
+
     <!-- 🗺️ Google Map -->
     <div id="placeMap"></div>
 </div>
@@ -162,6 +169,18 @@
                 document.getElementById("countryDropdown").textContent = countryName;
                 document.getElementById("selectedCountryInput").value = countryName;
                 document.getElementById("countryList").style.display = "none";
+
+                // NEW: Zoom to selected country
+        const geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ address: countryName }, function(results, status) {
+            if (status === "OK") {
+                map.setCenter(results[0].geometry.location);
+                map.setZoom(5);
+                marker.setPosition(results[0].geometry.location);
+            } else {
+                alert("Could not find country: " + status);
+            }
+        });
             });
         });
 

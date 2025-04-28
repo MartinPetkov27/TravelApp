@@ -38,5 +38,14 @@
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="IndexAdmin">Back to List</a>
+    <a asp-action="Index" class="btn btn-primary">Back to List</a>
+    <div class="mt-4 d-flex justify-content-center gap-3">
+        <form asp-action="Approve" asp-route-id="@Model.Id" method="post" >
+            <button type="submit" class="btn btn-success btn-lg" style="background-color:green; color: white">Approve</button>
+        </form>
+
+        <form asp-action="Discard" asp-route-id="@Model.Id" method="post" >
+            <button type="submit" class="btn btn-danger btn-lg" style="background-color:red; color: white">Discard</button>
+        </form>
+    </div>
 </div>

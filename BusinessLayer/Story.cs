@@ -17,7 +17,11 @@ namespace BusinessLayer
         public string Title { get; set; }
 
         [Required]
-        public string Content { get; set; } 
+        public string Content { get; set; }
+        
+        public List<string>? ImageUrls { get; set; }
+
+        public string? MapsUrl { get; set; }
 
         public Status Status { get; set; }
 
@@ -27,12 +31,14 @@ namespace BusinessLayer
         public User User { get; set; }
 
         public Story() { }
-        public Story(string title, string content,  int userId, User user)
+        public Story(string title, string content,  int userId, User user, List<string> imageUrls, string mapsUrl)
         { 
             Title = title;
             Content = content;
             User = user;
             UserId = user.Id;
+            ImageUrls = imageUrls;
+            MapsUrl = mapsUrl;
         }
     }
 }

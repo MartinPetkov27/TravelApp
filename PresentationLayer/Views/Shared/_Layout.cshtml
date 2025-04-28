@@ -257,19 +257,96 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">HOME</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">START PLANNING</a>
-                        </li>
-                        @if (User.IsInRole("Administrator") || User.IsInRole("Historian") || User.IsInRole("User"))
+
+                        @* For unauthenticated users *@
+                        @if (!User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="BucketLists" asp-action="Index">BUCKETLIST</a>
+                                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">START PLANNING</a>
                             </li>
                         }
-                        @if (User.IsInRole("Administrator") || User.IsInRole("Historian"))
+                        @if (!User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="Stories" asp-action="Index">STORIES</a>
+                            </li>
+                        }
+
+                        @* For Users *@
+                        @if (User.IsInRole("User") && !User.IsInRole("Administrator"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Trips" asp-action="Index">START PLANING</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("User") && !User.IsInRole("Administrator"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="BucketLists" asp-action="Index">MY BUCKETLISTS</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("User") && !User.IsInRole("Administrator"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Stories" asp-action="Index">STORIES</a>
+                            </li>
+                        }
+
+                        @* For Historian *@
+                        @if (User.IsInRole("Historian"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Trips" asp-action="Index">START PLANING</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Historian"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="BucketLists" asp-action="Index">MY BUCKETLISTS</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Historian"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Stories" asp-action="Index">STORIES</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Historian"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Stories" asp-action="Index">MY STORIES</a>
+                            </li>
+                        }
+
+                        @* For admin *@
+                        @if (User.IsInRole("Administrator"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Users" asp-action="Index">All USERS</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Administrator"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Trips" asp-action="IndexAdmin">ALL TRIPS</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Administrator"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Stories" asp-action="IndexAdmin">ALL STORIES</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Administrator"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Stories" asp-action="IndexAdminPending">STORIES FOR MODERATION</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Administrator"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="BucketLists" asp-action="IndexAdmin">ALL BUCKETLISTS</a>
                             </li>
                         }
                     </ul>
@@ -296,6 +373,26 @@
             </div>
         </div>
     </footer> *@
+
+    @* Dialog for unauthenticated users *@
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Login Required</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    You need to be logged in to start planning a trip.
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Login">Log In</a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

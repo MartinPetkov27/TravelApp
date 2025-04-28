@@ -1,0 +1,220 @@
+/* Responsive styles */
+
+/* Large devices (desktops, less than 1440px) */
+@media (max-width: 1439px) {
+    .discover-world {
+        font-size: 70px;
+        line-height: 84px;
+    }
+
+    .parallax-image {
+        height: 700px;
+    }
+
+    .story-1, .story-2 {
+        width: 400px;
+        height: 400px;
+    }
+
+    .story-1 {
+        margin-left: 80px;
+    }
+}
+
+/* Medium devices (tablets, less than 992px) */
+@media (max-width: 991px) {
+    .header-content {
+        padding: 30px 40px;
+    }
+
+    .main-navigation {
+        display: none;
+    }
+
+    .mobile-menu-toggle {
+        display: flex;
+    }
+
+    .discover-world {
+        font-size: 60px;
+        line-height: 72px;
+    }
+
+    .intro-content {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .features-content {
+        flex-direction: column;
+        gap: 50px;
+    }
+
+    .features-intro, .features-details {
+        max-width: 100%;
+    }
+
+    .footer-header {
+        flex-direction: column;
+        gap: 40px;
+    }
+
+    .footer-sections {
+        flex-wrap: wrap;
+        gap: 40px;
+    }
+
+    .footer-copyright {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+
+    .btn-learn-more.wide {
+        width: 90%;
+    }
+
+    .parallax-image {
+        height: 600px;
+        background-attachment: scroll;
+    }
+}
+
+/* Small devices (landscape phones, less than 768px) */
+@media (max-width: 767px) {
+    .header-content {
+        padding: 20px;
+    }
+
+    .login-button {
+        display: none;
+    }
+
+    .discover-world {
+        font-size: 48px;
+        line-height: 58px;
+    }
+
+    .journey-experiences {
+        font-size: 12px;
+        letter-spacing: 3px;
+    }
+
+    .section-title {
+        font-size: 36px;
+        line-height: 43px;
+    }
+
+    .stories-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .story-card {
+        width: 100%;
+    }
+
+    .story-image {
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .story-1 {
+        margin-left: 0;
+    }
+
+    .story-content {
+        position: relative;
+        width: 100%;
+        text-align: center;
+        margin-top: 20px;
+    }
+
+        .story-content.right {
+            text-align: center;
+        }
+
+    .story-title {
+        font-size: 48px;
+        margin-bottom: 20px;
+    }
+
+    .experience-title {
+        font-size: 48px;
+        line-height: 58px;
+    }
+
+    .cta-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .parallax-image {
+        height: 400px;
+    }
+}
+
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 575px) {
+    .site-header {
+        height: 700px;
+    }
+
+    .discover-world {
+        font-size: 36px;
+        line-height: 43px;
+    }
+
+    .line {
+        margin: 80px 0 30px;
+    }
+
+    .intro-section, .stories-section {
+        padding: 80px 20px;
+    }
+
+    .features-section {
+        padding: 80px 20px;
+    }
+
+    .site-footer {
+        padding: 80px 20px 40px;
+    }
+
+    .footer-sections {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .footer-title {
+        margin-bottom: 10px;
+    }
+}
+
+/* Height-based media queries */
+@media (max-height: 800px) {
+    .site-header {
+        height: 700px;
+    }
+
+    .discover-world {
+        margin-top: 50px;
+    }
+
+    .line {
+        margin: 80px 0 30px;
+    }
+}
+
+/* For very small screens */
+@media (max-width: 360px) {
+    .discover-world {
+        font-size: 32px;
+        line-height: 38px;
+    }
+
+    .btn-learn-more, .btn-get-started {
+        width: 100%;
+    }
+}

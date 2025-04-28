@@ -1,4 +1,5 @@
-﻿@* @model BusinessLayer.BucketList
+﻿
+@* @model BusinessLayer.BucketList
 
 @{
     ViewData["Title"] = "Create";
@@ -36,6 +37,13 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
  *@
+
+@using BusinessLayer
+@model BusinessLayer.BucketList
+@{
+    ViewData["Title"] = "Create";
+    var countries = ViewBag.Countries as List<Country>;
+}
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
@@ -83,7 +91,7 @@
 
                 <section class="bucketlist-form">
                     <div class="form-group">
-                        <label for="bucketlist-name">BucketList Name</label>
+                        <label for="bucketlist-name">BucketList Name:</label>
                         <input type="text" id="bucketlist-name" class="input-field" placeholder="Enter your bucketlist name">
                     </div>
 
@@ -91,13 +99,29 @@
                         <label for="country-select" class="choose-country">Choose a country:</label>
                         <select id="country-select" class="country-dropdown">
                             <option value="" selected disabled>Select a country</option>
-                            <option value="france">France</option>
-                            <option value="italy">Italy</option>
-                            <option value="spain">Spain</option>
-                            <option value="japan">Japan</option>
-                            <option value="australia">Australia</option>
+                                @foreach (var country in countries)
+                                {
+                                    <option value="countryName" style="color:white">@country.Name</option>
+                                }
                         </select>
+                        <input type="hidden" name="countryName" id="selectedCountryInput" readonly />
+                        <input type="hidden" name="" id="selectedCountryCodeInput" readonly />
                     </div>
+                    @* <div class="form-group">
+                        <label for="countryDropdown" class="choose-country">Choose a country:</label>
+                        <div class="dropdown">
+                            <button type="button" id="countryDropdown" class="country-dropdown form-control text-start" style="background-color:#4a6c6c">
+                                Select a country
+                            </button>
+                            <ul id="countryList" class="list-group" style="display: none; max-height: 200px; overflow-y: auto; color:#4a6c6c; border: 1px solid #4a6c6c; border-top: none; margin-top: 5px;">
+                                @foreach (var country in countries)
+                                {
+                                    <li class="list-group-item country-option" style="cursor: pointer;">@country</li>
+                                }
+                            </ul>
+                            <input type="hidden" name="CoutryAlphaCode" id="selectedCountryInput" readonly />
+                        </div>
+                    </div> *@
 
                     <div class="places-container">
                         <div class="country-display">
@@ -119,19 +143,6 @@
                                         <span class="place-name">Place3</span>
                                     </li>
                                 </ul> *@
-
-                                <div class="image-preview">
-                                    <div class="preview-box"></div>
-                                    <span class="image-label">image</span>
-                                </div>
-                            </div>
-                            <div class="country-main">
-                                <div class="country-tabs">
-                                    <button class="country-tab active">Country name1</button>
-                                    <button class="country-tab">Country name1</button>
-                                    <button class="country-tab">Country name1</button>
-                                    <button class="country-tab">Country name1</button>
-                                </div>
                                 <div class="place-inputs">
                                     <div class="input-group">
                                         <input type="text" class="place-input" id="place-autocomplete" placeholder="Enter a place">
@@ -142,7 +153,33 @@
                                         <button class="add-btn" id="add-image">ADD</button>
                                     </div>
                                 </div>
+
+                                <div class="image-preview">
+                                    <div class="preview-box" id="preview-box">
+                                        <span class="image-label">image preview</span>
+                                    </div>
+                                </div>
                             </div>
+
+                            @* Tab of added countries and places *@
+                            <div class="country-main">
+                                <div class="country-tabs">
+                                    <button class="country-tab active">Country name1</button>
+                                    <button class="country-tab">Country name1</button>
+                                    <button class="country-tab">Country name1</button>
+                                    <button class="country-tab">Country name1</button>
+                                </div>
+                            </div>
+
+                            <div class="country-content">
+                                <ul class="places-list">
+                                    <!-- Here the places will be listed dynamically -->
+                                    <li class="place-item">Place 1</li>
+                                    <li class="place-item">Place 2</li>
+                                    <li class="place-item">Place 3</li>
+                                </ul>
+                            </div>
+
                         </div>
                     </div>
 
@@ -186,6 +223,127 @@
             </footer> *@
         </div>
     </div>
-    <script src="js/main.js"></script>
+    @* <script src="js/main.js">
+</script> *@
 </body>
 </html>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVCMcaodMWF5rbNUVo7YdZaAIHPC3draE&libraries=places"></script>
+ 
+    <script>
+            // 🔍 Autocomplete Search
+            const input = document.getElementById("place-autocomplete");
+            autocomplete = new google.maps.places.Autocomplete(input);
+
+            autocomplete.addListener("place_changed", () => {
+                const place = autocomplete.getPlace();
+                if (!place.geometry) {
+                    alert("No details available for input: '" + place.name + "'");
+                    return;
+                }
+            });
+
+        // 🌍 Country dropdown functionality
+        document.getElementById("country-select").addEventListener("click", function () {
+            const list = document.getElementById("countryList");
+            list.style.display = list.style.display === "none" ? "block" : "none";
+        });
+
+        document.querySelectorAll(".country-option").forEach(function (item) {
+            item.addEventListener("click", function () {
+                console.log('selected');
+
+                const countryName = this.textContent;
+                document.getElementById("country-select").textContent = countryName;
+                document.getElementById("selectedCountryInput").value = countryName;
+                document.getElementById("countryList").style.display = "none";
+                console.log('selecte3d');
+            });
+        });
+
+        //Get the value from the select tag
+        document.getElementById('country-select').addEventListener('change', function() {
+            const selectedCountry = this.value;
+            document.getElementById('selectedCountryInput').value = selectedCountry;
+
+        });
+
+        // Close dropdown on outside click
+        document.addEventListener("click", function (event) {
+            const dropdown = document.getElementById("country-select");
+            const list = document.getElementById("countryList");
+            if (!dropdown.contains(event.target) && !list.contains(event.target)) {
+                list.style.display = "none";
+            }
+        });
+
+        //Image preview update on placed url
+        window.onload = function() {
+            const imageUrlInput = document.getElementById('image-url');
+            const previewBox = document.getElementById('preview-box');
+
+            imageUrlInput.addEventListener('input', function () {
+                const url = imageUrlInput.value.trim();
+
+                if (url) {
+                    previewBox.innerHTML = `<img src="${url}" alt="Image Preview" style="max-width: 100%; max-height: 200px; border-radius: 8px;">`;
+                } else {
+                    previewBox.innerHTML = `<span class="image-label">Image preview will appear here</span>`;
+                }
+            });
+        };
+
+        //Add button functionality
+        document.getElementById('add-image').addEventListener('click', async function () {
+            const placeName = document.getElementById("place-autocomplete");
+            if(!placeName)placeName.value.trim();
+            const imageUrl = document.getElementById("image-url");
+            if(!imageUrl) imageUrl.value.trim();
+            const selectedCountryCode = document.getElementById("selectedCountryInput");
+            if(!selectedCountryCode)selectedCountryCode.value.trim();
+
+            if (!placeName || !imageUrl || !selectedCountryCode) {
+                alert("Please fill all fields: Place Name, Image URL, and Country!");
+                return;
+            }
+
+            const newPlace = {
+                name: placeName,
+                imageUrl: imageUrl,
+                coutryAlphaCode: selectedCountryCode // careful spelling!
+            };
+
+            try {
+                const response = await fetch('/Places/CreateFromBucketList', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(newPlace)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to create Place.'+response);
+                }
+
+                const createdPlace = await response.json();
+                console.log("Place saved successfully:", createdPlace);
+
+                // Add the createdPlace to bucketList.destinations
+                bucketList.destinations.push(createdPlace);
+
+                // Optionally clear the inputs
+                document.getElementById('place-autocomplete').value = "";
+                document.getElementById('image-url').value = "";
+
+            } catch (error) {
+                console.error(error);
+                alert('Error creating place.');
+            }
+        });
+
+    </script>
+}

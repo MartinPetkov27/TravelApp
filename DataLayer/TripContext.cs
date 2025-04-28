@@ -21,6 +21,27 @@ namespace DataLayer
         {
             try
             {
+                if (item.Countries != null && item.Countries.Count > 0)
+                {
+                    var attachedCountries = new List<Country>(item.Countries.Count);
+
+                    foreach (var country in item.Countries)
+                    {
+                        var existingCountry = await dbContext.Countries.FindAsync(country.AlphaCode);
+
+                        if (existingCountry != null)
+                        {
+                            attachedCountries.Add(existingCountry);
+                        }
+                        else
+                        {
+                            attachedCountries.Add(country);
+                        }
+                    }
+
+                    item.Countries = attachedCountries;
+                }
+
                 dbContext.Trips.Add(item);
                 await dbContext.SaveChangesAsync();
             }

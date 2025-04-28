@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using BusinessLayer;
 using DataLayer;
 using ServiceLayer;
+using PresentationLayer.ViewModels;
 
 namespace PresentationLayer.Controllers
 {
@@ -48,13 +49,16 @@ namespace PresentationLayer.Controllers
         }
 
         // GET: Places/Create
-        public async Task<IActionResult> Create(string tripName)
+        public async Task<IActionResult> CreateFromTrip(CreatePlaceFromTripViewModel viewModel)
         {
             var countries = await countryManager.ReadAllAsync();
-            ViewBag.Countries = countries.Select(c => c.Name).ToList(); // Or .Distinct() if needed
+            Trip trip = await tripManager.GetIdByName(viewModel.TripName);
+            int tripId = trip.Id;
+            string selectedCountryName = trip.Countries.Skip(viewModel.CountryIndex).FirstOrDefault()?.Name;
 
-            ViewBag.TripName = tripName;
-            int tripId = await tripManager.GetIdByName(tripName);
+            ViewBag.Countries = countries.Select(c => c.Name).ToList(); // Or .Distinct() if needed
+            ViewBag.SelectedCountry = selectedCountryName;
+
             return View();
         }
 
@@ -71,6 +75,23 @@ namespace PresentationLayer.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(place);
+        }
+
+        [HttpPost]
+        [Route("Places/CreateFromBucketList")]
+        public async Task<IActionResult> CreateFromBucketList([FromBody] Place place)
+        {
+            if (place == null || string.IsNullOrEmpty(place.Name) || string.IsNullOrEmpty(place.CoutryAlphaCode))
+            {
+                return BadRequest("Invalid place data.");
+            }
+
+            // Optionally, fetch the Country entity based on CoutryAlphaCode if needed
+            place.Country = await countryManager.ReadAsync(place.CoutryAlphaCode);
+
+            await placeManager.CreateAsync(place);
+
+            return Ok(place); // Return the created Place (with ID) to frontend
         }
 
         // GET: Places/Edit/5

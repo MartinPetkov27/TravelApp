@@ -1,0 +1,30 @@
+:root {
+    --default-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft Yahei UI", "Microsoft Yahei", "Source Han Sans CN", sans-serif;
+    --font-poppins: Poppins, var(--default-font-family);
+    --font-quicksand: Quicksand, var(--default-font-family);
+    --font-montserrat: Montserrat, var(--default-font-family);
+    --font-dm-serif: "DM Serif Display", var(--default-font-family);
+    /* Colors */
+    --color-primary: #2f4f4f;
+    --color-primary-light: rgba(96, 161, 160, 0.85);
+    --color-primary-transparent: rgba(96, 161, 160, 0.45);
+    --color-white: #ffffff;
+    --color-off-white: #f7f5ef;
+    --color-text-dark: #4c4c4c;
+    --color-beige: #e2dac5;
+    /* Spacing */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 2rem;
+    --spacing-lg: 3rem;
+    --spacing-xl: 5rem;
+    /* Container widths */
+    --container-max-width: 1440px;
+    --container-width-lg: 90%;
+    --container-width-md: 85%;
+    --container-width-sm: 90%;
+    /* Border radius */
+    --border-radius-sm: 4px;
+    /* Transitions */
+    --transition: all 0.3s ease;
+}

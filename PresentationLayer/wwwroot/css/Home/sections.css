@@ -1,0 +1,158 @@
+/* Intro Section */
+.intro-section {
+    padding: 150px 20px;
+    max-width: 1240px;
+    margin: 0 auto;
+}
+
+.intro-content {
+    display: flex;
+    gap: 56px;
+    margin-top: 100px;
+}
+
+.intro-text {
+    flex: 1;
+    color: var(--color-text-dark);
+    font-family: var(--font-quicksand);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 22.4px;
+}
+
+.cta-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 56px;
+    margin-top: 60px;
+}
+
+/* Stories Section */
+.stories-section {
+    background-color: var(--color-primary);
+    padding: 150px 20px;
+    color: var(--color-white);
+}
+
+.stories-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 60px;
+    max-width: 1240px;
+    margin: 100px auto 87px;
+}
+
+.story-card {
+    flex: 1;
+    min-width: 300px;
+    position: relative;
+    display: flex;
+}
+
+.story-image {
+    width: 470px;
+    height: 460px;
+    background-position: center;
+    background-size: cover;
+    position: relative;
+}
+
+.story-1 {
+    background-image: url(https://codia-f2c.s3.us-west-1.amazonaws.com/image/2025-04-26/6x0WoNTFj7.png);
+    margin-left: 108px;
+}
+
+.story-2 {
+    background-image: url(https://codia-f2c.s3.us-west-1.amazonaws.com/image/2025-04-26/zRgg1bdUey.png);
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.45);
+}
+
+.story-content {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 270px;
+}
+
+    .story-content.right {
+        left: auto;
+        right: 0;
+        text-align: right;
+    }
+
+.story-title {
+    font-family: var(--font-dm-serif);
+    font-size: 64px;
+    font-weight: 400;
+    line-height: 70px;
+    margin-bottom: 100px;
+}
+
+.story-description {
+    font-family: var(--font-quicksand);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 22.4px;
+}
+
+/* Features Section */
+.features-section {
+    padding: 160px 20px;
+}
+
+.features-content {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1240px;
+    margin: 0 auto;
+}
+
+.features-intro {
+    max-width: 407px;
+}
+
+.experience-title {
+    font-family: var(--font-dm-serif);
+    font-size: 64px;
+    font-weight: 400;
+    line-height: 76.8px;
+    color: var(--color-primary);
+}
+
+.features-details {
+    margin-top: 70px;
+    max-width: 389px;
+}
+
+.feature-group {
+    margin-bottom: 40px;
+}
+
+.feature-category {
+    font-family: var(--font-quicksand);
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 28px;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    margin-bottom: 12px;
+}
+
+.feature-list li {
+    font-family: var(--font-quicksand);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 22px;
+    color: var(--color-text-dark);
+    margin-bottom: 8px;
+}

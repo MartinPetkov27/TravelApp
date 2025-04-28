@@ -15,10 +15,12 @@ namespace PresentationLayer.Controllers
     public class BucketListsController : Controller
     {
         private readonly BucketListManager bucketListManager;
+        private readonly CountryManager countryManager;
 
-        public BucketListsController(BucketListManager bucketListManager)
+        public BucketListsController(BucketListManager bucketListManager, CountryManager countryManager)
         {
             this.bucketListManager = bucketListManager;
+            this.countryManager = countryManager;
         }
 
         // GET: BucketLists
@@ -45,8 +47,12 @@ namespace PresentationLayer.Controllers
         }
 
         // GET: BucketLists/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var countries = await countryManager.ReadAllAsync();
+            ViewBag.Countries = countries.ToList();
+
+
             return View();
         }
 
@@ -55,7 +61,7 @@ namespace PresentationLayer.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,UserId")] BucketList bucketList)
+        public async Task<IActionResult> Create(/*[Bind("Id,Name,UserId")]*/ BucketList bucketList)
         {
             if (ModelState.IsValid)
             {

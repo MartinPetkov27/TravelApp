@@ -15,16 +15,15 @@ namespace BusinessLayer
         //Eeach place has an unique code(it consists of 7/8 characters)
 
         [Key]
-        [MaxLength(10, ErrorMessage = "The username should not be longer that 10 symbols.")]
         public int Id { get; set; }
         
         [Required]
         public string Name { get; set; }
 
-        [Required]
+        ///[Required]
         public double Latitude { get; set; }
 
-        [Required]
+        //[Required]
         public double Longitude { get; set; }
 
         [ForeignKey("Country")]
@@ -34,10 +33,12 @@ namespace BusinessLayer
 
         [ForeignKey("Trip")]
         public int TripId { get; set; }
-        [Required]
+        //[Required]
         public Trip Trip { get; set; }
 
         public string Description { get; set; }
+
+        public string ImageUrl { get; set; }
 
         public Place() { }
 
@@ -48,6 +49,13 @@ namespace BusinessLayer
             Longitude = longitude; 
             Country = country;
             CoutryAlphaCode = country.AlphaCode;
+        }
+        public Place(string name, Country country, string imageUrl)
+        {
+            Name = name;
+            Country = country;
+            CoutryAlphaCode = country.AlphaCode;
+            ImageUrl = imageUrl;
         }
     }
 }

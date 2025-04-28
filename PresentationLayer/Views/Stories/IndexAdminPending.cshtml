@@ -1,0 +1,60 @@
+﻿@model IEnumerable<BusinessLayer.Story>
+@using BusinessLayer;
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Stories</h1>
+
+@if (!Model.Any(s => s.Status == Status.Pending))
+{
+    <h2>There are no pending stories.</h2>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Content)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Status)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.User)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                @if (item.Status == Status.Pending)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            content...
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Status)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.User.Email)
+                        </td>
+                        <td>
+                            <a asp-action="Examine" asp-route-id="@item.Id">Examine</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}

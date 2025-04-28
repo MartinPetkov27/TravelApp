@@ -1,10 +1,12 @@
 ﻿@model BusinessLayer.Trip
+@using BusinessLayer;
 
 @{
     ViewData["Title"] = "Select Cities";
-    var selectedCountry = Model.Countries?.FirstOrDefault()?.Name ?? "Unknown Country";
+    string selectedCountryAlphaCode = Model.FirstCountryAlphaCode?? "Unknown";
+    string selectedCountry = ViewBag.SelectedCountry as string;
     var countries = ViewBag.Countries as List<string>;
-	
+    int countriesIndex = 0;
 }
 
 <head>
@@ -34,7 +36,7 @@
         <form asp-action="AddCountryOrPlace" method="post">
             <!-- Add place -->
             <div class="form-group mb-3">
-                <a asp-controller="Places" asp-action="Create" asp-route-tripName="@Model.Title" class="btn btn-outline-primary w-100">
+                <a asp-controller="Places" asp-action="Create" asp-route-tripName="@Model.Title class="btn btn-outline-primary w-100">
                     Add place
                 </a>
             </div>
@@ -65,12 +67,12 @@
         <div class="p-3">
             <h4>Your Trip Timeline</h4>
             <div class="timeline">
-                @foreach (var country in Model.Countries)
+                @* @if (Model.Countries == null)
                 {
                     <div class="timeline-step">
                         <span class="dot"></span>
                         <span class="step-title">
-                            <strong>@country.Name</strong>
+                            <strong>@selectedCountry</strong>
                         </span>
 
                         @if (Model.Places != null && Model.Places.Any())
@@ -78,9 +80,9 @@
                             <ul class="ms-4">
                                 @foreach (var place in Model.Places)
                                 {
-                                    if(place.CoutryAlphaCode == country.AlphaCode)
+                                    if (place.CoutryAlphaCode == country.AlphaCode)
                                     {
-                                    <li class="text-danger">📍 @place.Name</li>
+                                        <li class="text-danger">📍 @place.Name</li>
                                     }
                                 }
                             </ul>
@@ -88,9 +90,38 @@
                         else
                         {
                             <div class="ms-4 text-secondary"><em>No places added yet</em></div>
-                        }
+                        } 
                     </div>
                 }
+                else
+                { *@
+                    @foreach (var country in Model.Countries)
+                    {
+                        <div class="timeline-step">
+                            <span class="dot"></span>
+                            <span class="step-title">
+                                <strong>@country.Name</strong>
+                            </span>
+
+                            @if (Model.Places != null && Model.Places.Any())
+                            {
+                                <ul class="ms-4">
+                                    @foreach (var place in Model.Places)
+                                    {
+                                        if (place.CoutryAlphaCode == country.AlphaCode)
+                                        {
+                                            <li class="text-danger">📍 @place.Name</li>
+                                        }
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <div class="ms-4 text-secondary"><em>No places added yet</em></div>
+                            }
+                        </div>
+                    }
+               @*  } *@
             </div>
         </div>
     </div>

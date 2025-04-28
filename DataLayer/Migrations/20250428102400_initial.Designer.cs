@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataLayer.Migrations
 {
     [DbContext(typeof(TravelAppDbContext))]
-    [Migration("20250413080237_Initial")]
-    partial class Initial
+    [Migration("20250428102400_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,6 +54,9 @@ namespace DataLayer.Migrations
                     b.Property<string>("AlphaCode")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int?>("BucketListId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Capital")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -72,6 +75,8 @@ namespace DataLayer.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("AlphaCode");
+
+                    b.HasIndex("BucketListId");
 
                     b.ToTable("Countries");
                 });
@@ -93,6 +98,10 @@ namespace DataLayer.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -132,6 +141,12 @@ namespace DataLayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.PrimitiveCollection<string>("ImageUrls")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MapsUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -159,11 +174,13 @@ namespace DataLayer.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("EndingDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("FirstCountryAlphaCode")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("StartingDate")
                         .HasColumnType("datetime2");
@@ -173,7 +190,6 @@ namespace DataLayer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -419,6 +435,13 @@ namespace DataLayer.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("BusinessLayer.Country", b =>
+                {
+                    b.HasOne("BusinessLayer.BucketList", null)
+                        .WithMany("Countries")
+                        .HasForeignKey("BucketListId");
+                });
+
             modelBuilder.Entity("BusinessLayer.Place", b =>
                 {
                     b.HasOne("BusinessLayer.BucketList", null)
@@ -457,9 +480,7 @@ namespace DataLayer.Migrations
                 {
                     b.HasOne("BusinessLayer.User", "User")
                         .WithMany("Trips")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
@@ -532,6 +553,8 @@ namespace DataLayer.Migrations
 
             modelBuilder.Entity("BusinessLayer.BucketList", b =>
                 {
+                    b.Navigation("Countries");
+
                     b.Navigation("Destinations");
                 });
 

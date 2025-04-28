@@ -1,0 +1,269 @@
+﻿@model BusinessLayer.Story
+
+@{
+    ViewData["Title"] = "Create";
+    string? firstImageUrl = Model.ImageUrls?.FirstOrDefault();
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Story Create</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:wght@400&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" />
+    <link rel="stylesheet" href="~/css/storyRead.css" />
+</head>
+<style>
+    html {
+        scroll-behavior: smooth;
+    }
+</style>
+<body>
+    <div class="main-container">
+        <div class="story-create-edit-1">
+            <div class="section"></div>
+
+            <div class="header" id="header-target-1">
+                <div class="bg"></div>
+                
+                <div class="bg-2"></div>
+                
+                <div class="rectangle"></div>
+
+                @* Text editor *@
+                <textarea  id="textEditor1" class="rectangle-3 editor" readonly maxlength="2000" placeholder="Start your Story...(max lenght - 2000 characters)"></textarea>
+
+                @* A arrow button for scrolling down *@
+                <a href="#header-6-target-2">
+                    <div class="arrow-down"></div>
+                </a>
+
+                <div class="rectangle-5"></div>
+            </div>
+
+            <div class="header-6" id="header-6-target-2">
+                <div class="frame"></div>
+                
+                <div class="rectangle-7"></div>
+                
+                @* Text editor *@
+                <textarea id="textEditor2" class="rectangle-3 editor-2" readonly maxlength="2000" placeholder="Start your Story...(max lenght - 2000 characters)"></textarea>
+             
+
+                @* A arrow button for scrolling down *@
+                <a href="#finish-story-target">
+                    <div class="arrow-down-9"></div>
+                </a>
+            </div>
+
+            @* the map must be places here *@
+           @*  <div class="section-a">
+
+                <div id="placeMap"></div>
+            </div> *@
+            <div id="placeMap" style="width: 100%; height: 500px;">
+                <iframe width="100%"
+                        height="100%"
+                        frameborder="0"
+                        style="border:0"
+                        src="@Model.MapsUrl"
+                        allowfullscreen
+                        loading="lazy">
+                </iframe>
+            </div>
+            @* <div class="footer">
+                <div class="flex-row-fa">
+                    <span class="rhodes">Rhodes</span><span class="address">Address</span><span class="contact">Contact</span><span class="follow-us">Follow us</span>
+                </div>
+                <div class="flex-row-a">
+                    <div class="rectangle-b"></div>
+                    <div class="rectangle-c"></div>
+                    <div class="rectangle-d"></div>
+                </div>
+                <div class="flex-row">
+                    <span class="phone-number">+33 1 23 45 67 89</span><span class="facebook">Facebook</span><span class="rights-reserved">©2024 Rhodes. <br />All rights reserved.</span><span class="address-e">8, Rue de la Paix, 75002 Paris, France</span><span class="email">contact@email.com</span><span class="instagram">Instagram</span>
+                </div>
+                <div class="frame-f">
+                    <span class="terms-conditions">Terms & Conditions</span><span class="privacy-policy">privacy policy</span>
+                </div>
+            </div> *@
+
+            @* Title and text arrount the title input *@
+            <div class="header-10">
+                    @if (!string.IsNullOrEmpty(firstImageUrl))
+                    {
+                        <div class="frame-11" style="background-image: url('@firstImageUrl'); background-size: cover; background-position: center;"></div>
+                    }
+                    else
+                    {
+                        <div class="frame-11"></div> <!-- Empty div if no image available -->
+                    }
+                <textarea class="write-your-way" readonly>@Model.Title</textarea>
+            </div>
+            <div class="frame-14">
+                    <span class="good-story-title">Uncover New Destinations</span>
+                <div class="rectangle-15"></div>
+            </div>
+            <span class="story-title">
+                    Explore the world in style with our meticulously crafted itineraries. We bring your dream destinations to life with our exceptional service.
+
+                    Whether it's a solo adventure, family getaway, or a romantic escape, our travel experts ensure a seamless, hassle-free travel experience.
+            </span>
+            
+            @* Get Started button *@
+            <div class="button">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a asp-controller="Trips" asp-action="Create" class="btn-get-started">get started</a>
+                    }
+                    else
+                    {
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal" class="btn-get-started">get started</a>
+                    }
+            </div> 
+            
+            @* A arrow button for scrolling down *@
+            <a href="#header-target-1">
+                <div class="arrow-down-17"></div>
+            </a>
+
+             @*Text arround the imageUrl and the submit button *@   
+            <span class="text-1d">
+                Embrace the call of the unknown and light the flame for adventure
+                into your readers by adding a 3D map view of the place that you are
+                narrating for.
+            </span>
+            <div class="frame-18">
+                <span class="finish-story" id="finish-story-target">Ready to finish your story in the best way?</span>
+                <div class="rectangle-19"></div>
+            </div>
+           
+
+            @* <button href="#placeMap" type="submit" class="unnamed-1b">
+                <span class="save-story">Explore 3D map</span>
+            </button> *@
+            <a href="#placeMap" class="unnamed-1b" style="text-decoration: none;">
+                <span class="save-story">Explore 3D map</span>
+            </a>
+        </div>
+    </div>
+    
+    @* Dialog for unauthenticated users *@
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Login Required</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    You need to be logged in to start planning a trip.
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Login">Log In</a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+@section Scripts {
+      @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/storyCreate.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVCMcaodMWF5rbNUVo7YdZaAIHPC3draE&libraries=places"></script>
+
+    <script>
+        const firstInput = document.getElementById('image-url-1');
+        const secondInput = document.getElementById('image-url-2');
+        const thirdInput = document.getElementById('image-url-3');
+
+        firstInput.addEventListener('input', function() {
+            if (firstInput.value.trim() !== '') {
+                secondInput.disabled = false;
+            } else {
+                secondInput.disabled = true;
+            }
+        });
+         secondInput.addEventListener('input', function() {
+            if (secondInput.value.trim() !== '') {
+                thirdInput.disabled = false;
+            } else {
+                thirdInput.disabled = true;
+            }
+        });
+
+        //map
+            let map, marker;
+
+        function initMap() {
+            const mapsUrl = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MapsUrl));
+
+            const location = extractLatLngFromUrl(mapsUrl) || { lat: 20, lng: 0 };
+
+            map = new google.maps.Map(document.getElementById("placeMap"), {
+                center: location,
+                zoom: 18,
+                tilt: 45,
+                mapTypeId: 'satellite'
+            });
+
+            marker = new google.maps.Marker({
+                position: location,
+                map: map,
+                title: "Location",
+                draggable: false
+            });
+        }
+
+        function extractLatLngFromUrl(url) {
+          
+
+            let match = url.match(regex) || url.match(regexSimple);
+
+            if (match) {
+                return {
+                    lat: parseFloat(match[1]),
+                    lng: parseFloat(match[2])
+                };
+            } else {
+                console.warn("Could not extract coordinates from URL:", url);
+                return null;
+            }
+        }
+
+        window.onload = initMap;
+
+        //devinding the text
+                window.onload = function() {
+            const fullText = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Content));
+
+            const splitTexts = smartSplitText(fullText);
+
+            document.getElementById("textEditor1").value = splitTexts[0];
+            document.getElementById("textEditor2").value = splitTexts[1];
+        };
+
+        function smartSplitText(text) {
+            const middle = Math.floor(text.length / 2);
+
+            let splitPoint = text.indexOf('.', middle);
+            if (splitPoint === -1) splitPoint = text.indexOf('!', middle);
+            if (splitPoint === -1) splitPoint = text.indexOf('?', middle);
+
+            if (splitPoint === -1) splitPoint = middle;
+
+            splitPoint += 1; // after punctuation
+
+            const firstHalf = text.slice(0, splitPoint).trim();
+            const secondHalf = text.slice(splitPoint).trim();
+
+            return [firstHalf, secondHalf];
+        }
+    </script>
+}
