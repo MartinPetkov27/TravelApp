@@ -12,6 +12,7 @@ namespace ServiceLayer
     {
         private readonly StoryContext storyContext;
 
+        //Methods for managing the storyContext for CRUD operations in Story
         public StoryManager(StoryContext storyContext)
         { 
             this.storyContext = storyContext;

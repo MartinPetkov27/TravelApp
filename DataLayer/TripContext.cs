@@ -17,6 +17,7 @@ namespace DataLayer
             this.dbContext = dbContext;
         }
 
+        //Create method for the Trip
         public async Task CreateAsync(Trip item)
         {
             try
@@ -50,6 +51,8 @@ namespace DataLayer
                 throw;
             }
         }
+
+        //Read method for the Trip
         public async Task<Trip> ReadAsync(int key, bool useNavigationalProperties = false, bool isReadOnly = true)
         {
             try
@@ -73,6 +76,8 @@ namespace DataLayer
                 throw;
             }
         }
+
+        //ReadAll method for the Trip
         public async Task<ICollection<Trip>> ReadAllAsync(bool useNavigationalProperties = false, bool isReadOnly = true)
         {
             try
@@ -96,6 +101,8 @@ namespace DataLayer
                 throw;
             }
         }
+
+        //Update method for the Trip
         public async Task UpdateAsync(Trip item, bool useNavigationalProperties = false)
         {
             try
@@ -167,6 +174,8 @@ namespace DataLayer
                     }
                     tripFromDb.Countries = countries;
                     #endregion
+
+                    await dbContext.SaveChangesAsync();
                 }
             }
             catch (Exception)
@@ -174,6 +183,8 @@ namespace DataLayer
                 throw;
             }
         }
+
+        //Delete method for the Trip
         public async Task DeleteAsync(int key)
         {
             try

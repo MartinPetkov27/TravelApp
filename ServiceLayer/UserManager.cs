@@ -12,6 +12,7 @@ namespace ServiceLayer
     {
         private readonly UserContext userContext;
 
+        //Methods for managing the userContext for CRUD operations in User
         public UserManager(UserContext userContext)
         {
             this.userContext = userContext;

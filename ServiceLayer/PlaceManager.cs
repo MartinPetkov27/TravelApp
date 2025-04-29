@@ -12,6 +12,7 @@ namespace ServiceLayer
     {
         private readonly PlaceContext placeContext;
 
+        //Methods for managing the placeContext for CRUD operations in Place 
         public PlaceManager(PlaceContext placeContext)
         { 
             this.placeContext = placeContext;

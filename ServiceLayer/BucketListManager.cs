@@ -7,6 +7,7 @@ namespace ServiceLayer
     {
         private readonly BucketListContext bucketListContext;
 
+        //Methods for managing the bucketListContext for CRUD operaatin in BucketList
         public BucketListManager(BucketListContext context)
         {
             bucketListContext = context;

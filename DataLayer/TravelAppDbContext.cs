@@ -27,6 +27,7 @@ namespace DataLayer
             base.OnConfiguring(optionsBuilder);
         }
 
+        //Manages the relations between tables
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
@@ -65,6 +66,7 @@ namespace DataLayer
             base.OnModelCreating(modelBuilder);
         }
 
+        //managese the tables
         public DbSet<User> Users { get; set; }
         public DbSet<Trip> Trips { get; set; }
         public DbSet<BucketList> BucketLists { get; set; }

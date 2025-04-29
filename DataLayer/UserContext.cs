@@ -17,6 +17,8 @@ namespace DataLayer
         { 
             this.dbContext = dbContext; 
         }
+
+        //Create method for the User
         public async Task CreateAsync(User item)
         {
             try
@@ -87,6 +89,8 @@ namespace DataLayer
                 throw;
             }
         }
+
+        //Read method for the User
         public async Task<User> ReadAsync(string key, bool useNavigationalProperties = false, bool isReadOnly = true)
         {
             try
@@ -107,6 +111,8 @@ namespace DataLayer
                 throw;
             }
         }
+
+        //ReadAll method for the User
         public async Task<ICollection<User>> ReadAllAsync(bool useNavigationalProperties = false, bool isReadOnly = true)
         {
             try
@@ -130,6 +136,8 @@ namespace DataLayer
                 throw;
             }
         }
+
+        //Update method for the User
         public async Task UpdateAsync(User item, bool useNavigationalProperties = false)
         {
             User userFromDb = await ReadAsync(item.Id, useNavigationalProperties, false);
@@ -205,6 +213,8 @@ namespace DataLayer
 
             await dbContext.SaveChangesAsync();
         }
+
+        //Delete method for the User
         public async Task DeleteAsync(string key)
         {
             try

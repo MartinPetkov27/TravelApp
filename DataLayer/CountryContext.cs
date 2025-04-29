@@ -18,6 +18,7 @@ namespace DataLayer
             this.dbContext = dbContext;   
         }
 
+        //Create method for the Country
         public async Task CreateAsync(Country item)
         {
             try
@@ -30,6 +31,8 @@ namespace DataLayer
                 throw;
             }
         }
+
+        //Read method for the Country
         public async Task<Country> ReadAsync(string key, bool useNavigationalProperties = false, bool isReadOnly = true)
         {
             try
@@ -49,6 +52,8 @@ namespace DataLayer
                 throw;
             }
         }
+
+        //ReadAll method for the Country
         public async Task<ICollection<Country>> ReadAllAsync(bool useNavigationalProperties = false, bool isReadOnly = true)
         {
             try
@@ -67,6 +72,8 @@ namespace DataLayer
                 throw;
             }
         }
+
+        //Update method for the Country
         public async Task UpdateAsync(Country item, bool useNavigationalProperties = false)
         {
             try
@@ -86,6 +93,8 @@ namespace DataLayer
                 throw;
             }
         }
+
+        //Delete method for the Country
         public async Task DeleteAsync(string key)
         {
             try

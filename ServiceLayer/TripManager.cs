@@ -12,6 +12,7 @@ namespace ServiceLayer
     {
         private readonly TripContext tripContext;
 
+        //Methods for managing the tripContext for CRUD operations in Trip
         public TripManager(TripContext tripContext)
         {
             this.tripContext = tripContext;

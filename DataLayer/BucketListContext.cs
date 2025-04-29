@@ -17,6 +17,8 @@ namespace DataLayer
         { 
             this.dbContext = dbContext;
         }
+
+        //Create method for the BucketList
         public async Task CreateAsync(BucketList item)
         {
             try
@@ -46,6 +48,8 @@ namespace DataLayer
                 throw;
             }
         }
+
+        //Read method for the BucketList
         public async Task<BucketList> ReadAsync(int key, bool useNavigationalProperties = false, bool isReadOnly = true)
         {
             try
@@ -70,6 +74,8 @@ namespace DataLayer
                 throw;
             }
         }
+
+        //ReadAll method for the BucketList
         public async Task<ICollection<BucketList>> ReadAllAsync(bool useNavigationalProperties = false, bool isReadOnly = true)
         {
             try
@@ -94,6 +100,8 @@ namespace DataLayer
                 throw;
             }
         }
+
+        //Update method for the BucketList
         public async Task UpdateAsync(BucketList item, bool useNavigationalProperties = false)
         {
             try
@@ -131,6 +139,7 @@ namespace DataLayer
             }
         }
 
+        //Delete method for the BucketList
         public async Task DeleteAsync(int key)
         {
             try

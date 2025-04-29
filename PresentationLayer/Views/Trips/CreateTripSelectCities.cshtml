@@ -16,15 +16,6 @@
 
     </style>
 </head>
-
-@* <h1>Create Trip - Explore @selectedCountry  </h1>
-<h4>@Model.Title</h4>
-<hr />
-
-<div>
-    <a asp-action="Create">Back to Your Trips</a>
-</div> *@
-
 <h1>Create Trip - Explore @selectedCountry</h1>
 <h5>Holiday to @selectedCountry</h5>
 <hr />
@@ -64,16 +55,6 @@
         <div class="form-group mt-4">
             <button class="btn btn-success w-100">Generate trip</button>
         </div>
-
-       @*  <form asp-controller="Trips" asp-action="FinalizeTrip" method="post">
-            @Html.AntiForgeryToken()
-
-            <input type="hidden" name="title" value="@Model.Title" />
-
-            <div class="form-group mt-4">
-                <button type="submit" class="btn btn-success w-100">Finalize trip</button>
-            </div>
-        </form> *@
     </div>
 
     <!-- RIGHT SIDE: Timeline -->
@@ -111,50 +92,6 @@
         </div>
     </div>
 </div>
-@* <div class="container-fluid mt-4">
-    <div class="row">
-        <!-- Map Section -->
-        <div class="col-md-7" style="height: 90vh;">
-            <div class="card h-100">
-                <div class="card-header">
-                    <input id="citySearchBox" class="form-control" placeholder="Search for a city..." />
-                    <ul id="citySuggestions" class="dropdown-menu show"></ul>
-                </div>
-
-                <!-- DropDown for countries -->
-                <div class="dropdown w-50 mx-auto">
-                    <button type="button" id="countryDropdown" class="form-control text-start">
-                        Select a country
-                    </button>
-                    <ul id="countryList" class="list-group" style="display: none; max-height: 200px; overflow-y: auto; border: 1px solid #ccc; border-top: none;">
-                        @foreach (var country in countries)
-                        {
-                            <li class="list-group-item country-option" style="cursor: pointer;">@country</li>
-                        }
-                    </ul>
-                    <input type="hidden" name="CoutryAlphaCode" id="selectedCountryInput" />
-
-                <div class="card-body p-0">
-                    <div id="cityMap" style="width: 100%; height: 100%;"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Timeline / Progress Section -->
-        <div class="col-md-5 bg-light" style="height: 90vh; overflow-y: auto;">
-            <div class="p-4">
-                <h4>Your Trip Timeline</h4>
-                <div class="timeline" id="timeline">
-                    <div class="timeline-step active">
-                        <span class="dot"></span>
-                        <span class="step-title">Selected Country: <strong> @selectedCountry </strong></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
- *@
 @section Scripts {
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
     <script>

@@ -28,6 +28,11 @@ namespace PresentationLayer.Controllers
         {
             return View(await bucketListManager.ReadAllAsync(true, true));
         }
+        // GET: Trips
+        public async Task<IActionResult> IndexAdmin()
+        {
+            return View(await bucketListManager.ReadAllAsync(true, true));
+        }
 
         // GET: BucketLists/Details/5
         public async Task<IActionResult> Details(int? id)

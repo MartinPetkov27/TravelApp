@@ -51,6 +51,7 @@ namespace DataLayer
 
         #region CRUD Operations
 
+        //Create method for Idenity
         public async Task<Tuple<IdentityResult, User>> CreateUserAsync(string username, string password, string email, string firstName, string lastName, string phoneNumber, RoleType role)
         {
             try
@@ -92,6 +93,7 @@ namespace DataLayer
             }
         }
 
+        //LogIn method
         public async Task<User> LogInUserAsync(string username, string password)
         {
             try
@@ -121,6 +123,7 @@ namespace DataLayer
             }
         }
 
+        //Read method for the User
         public async Task<User> ReadUserAsync(string key, bool useNavigationalProperties = false)
         {
             try
@@ -158,6 +161,7 @@ namespace DataLayer
             }
         }
 
+        //ReadAll method for Idenity
         public async Task<IEnumerable<User>> ReadAllUsersAsync(bool useNavigationalProperties = false)
         {
             try
@@ -176,6 +180,7 @@ namespace DataLayer
             }
         }
 
+        //Update method for Idenity
         public async Task UpdateUserAsync(string id, string username, string email, string firstName, string lastName, string phoneNumber)
         {
             try
@@ -198,6 +203,7 @@ namespace DataLayer
             }
         }
 
+        //Delet method for Idenity
         public async Task DeleteUserByNameAsync(string username)
         {
             try

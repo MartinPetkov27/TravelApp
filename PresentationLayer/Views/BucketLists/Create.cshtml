@@ -1,42 +1,4 @@
 ﻿
-@* @model BusinessLayer.BucketList
-
-@{
-    ViewData["Title"] = "Create";
-}
-
-<h1>Create</h1>
-
-<h4>BucketList</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
- *@
 
 @using BusinessLayer
 @model BusinessLayer.BucketList
@@ -64,23 +26,6 @@
 <body>
     <div class="main-container">
         <div class="create-trip-start">
-            @* <header class="site-header">
-                <div class="logo">
-                    <h1 class="triptale">tRIPtALE</h1>
-                </div>
-                <nav class="main-navigation">
-                    <ul class="nav-links">
-                        <li><a href="#" class="home">Home</a></li>
-                        <li><a href="#" class="start-planning">Start Planning</a></li>
-                        <li><a href="#" class="bucketlist">BucketList</a></li>
-                        <li><a href="#" class="stories">Stories</a></li>
-                    </ul>
-                </nav>
-                <div class="user-profile">
-                    <div class="user"></div>
-                </div>
-            </header> *@
-
             <main class="bucket-list-create">
                 <section class="page-header">
                     <div class="header-content">
@@ -107,42 +52,13 @@
                         <input type="hidden" name="countryName" id="selectedCountryInput" readonly />
                         <input type="hidden" name="" id="selectedCountryCodeInput" readonly />
                     </div>
-                    @* <div class="form-group">
-                        <label for="countryDropdown" class="choose-country">Choose a country:</label>
-                        <div class="dropdown">
-                            <button type="button" id="countryDropdown" class="country-dropdown form-control text-start" style="background-color:#4a6c6c">
-                                Select a country
-                            </button>
-                            <ul id="countryList" class="list-group" style="display: none; max-height: 200px; overflow-y: auto; color:#4a6c6c; border: 1px solid #4a6c6c; border-top: none; margin-top: 5px;">
-                                @foreach (var country in countries)
-                                {
-                                    <li class="list-group-item country-option" style="cursor: pointer;">@country</li>
-                                }
-                            </ul>
-                            <input type="hidden" name="CoutryAlphaCode" id="selectedCountryInput" readonly />
-                        </div>
-                    </div> *@
-
+  
                     <div class="places-container">
                         <div class="country-display">
                             <div class="image-background"></div>
                             <div class="country-sidebar">
                                 <h3 class="country-name">Country name</h3>
 
-                                @* <ul class="places-list">
-                                    <li class="place-item">
-                                        <span class="dash">-</span>
-                                        <span class="place-name">Place1</span>
-                                    </li>
-                                    <li class="place-item">
-                                        <span class="dash">-</span>
-                                        <span class="place-name">Place2</span>
-                                    </li>
-                                    <li class="place-item">
-                                        <span class="dash">-</span>
-                                        <span class="place-name">Place3</span>
-                                    </li>
-                                </ul> *@
                                 <div class="place-inputs">
                                     <div class="input-group">
                                         <input type="text" class="place-input" id="place-autocomplete" placeholder="Enter a place">
@@ -190,41 +106,9 @@
                     </div>
                 </section>
             </main>
-@* 
-            <footer class="site-footer">
-                <div class="footer-content">
-                    <div class="footer-brand">
-                        <h2 class="footer-title">Rhodes</h2>
-                    </div>
-                    <div class="footer-sections">
-                        <div class="footer-section">
-                            <h3 class="section-title">Address</h3>
-                            <p class="address-text">8, Rue de la Paix, 75002 Paris, France</p>
-                        </div>
-                        <div class="footer-section">
-                            <h3 class="section-title">Contact</h3>
-                            <p class="contact-phone">+33 1 23 45 67 89</p>
-                            <p class="contact-email">contact@email.com</p>
-                        </div>
-                        <div class="footer-section">
-                            <h3 class="section-title">Follow us</h3>
-                            <p class="social-link">Facebook</p>
-                            <p class="social-link">Instagram</p>
-                        </div>
-                    </div>
-                    <div class="footer-bottom">
-                        <p class="copyright">©2024 Rhodes. <br>All rights reserved.</p>
-                        <div class="footer-links">
-                            <a href="#" class="terms-conditions">Terms & Conditions</a>
-                            <a href="#" class="privacy-policy">Privacy Policy</a>
-                        </div>
-                    </div>
-                </div>
-            </footer> *@
         </div>
     </div>
-    @* <script src="js/main.js">
-</script> *@
+
 </body>
 </html>
 @section Scripts {
@@ -234,7 +118,7 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVCMcaodMWF5rbNUVo7YdZaAIHPC3draE&libraries=places"></script>
  
     <script>
-            // 🔍 Autocomplete Search
+            // Autocomplete Search
             const input = document.getElementById("place-autocomplete");
             autocomplete = new google.maps.places.Autocomplete(input);
 
@@ -246,7 +130,7 @@
                 }
             });
 
-        // 🌍 Country dropdown functionality
+        // Country dropdown functionality
         document.getElementById("country-select").addEventListener("click", function () {
             const list = document.getElementById("countryList");
             list.style.display = list.style.display === "none" ? "block" : "none";

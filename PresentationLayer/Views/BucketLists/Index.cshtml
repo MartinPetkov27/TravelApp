@@ -1,46 +1,4 @@
-﻿@* @model IEnumerable<BusinessLayer.BucketList>
-
-@{
-    ViewData["Title"] = "Index";
-}
-
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Email)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
- *@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
@@ -59,22 +17,6 @@
 </head>
 <body>
     <div class="main-container">
-       @*  <header class="site-header">
-            <div class="logo">
-                <h1 class="trip-tale">tRIPtALE</h1>
-            </div>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="#" class="home">Home</a></li>
-                    <li><a href="#" class="start-planning">Start Planning</a></li>
-                    <li><a href="#" class="bucket-list-nav active">BucketList</a></li>
-                    <li><a href="#" class="stories">Stories</a></li>
-                </ul>
-            </nav>
-            <div class="user-profile">
-                <div class="user-avatar"></div>
-            </div>
-        </header> *@
 
         <main class="bucket-list-section">
             <section class="intro-section">
@@ -120,44 +62,7 @@
             </section>
         </main>
 
-      @*   <footer class="site-footer">
-            <div class="footer-content">
-                <div class="footer-branding">
-                    <h2 class="footer-logo">Rhodes</h2>
-                </div>
-
-                <div class="footer-sections">
-                    <div class="footer-section">
-                        <h3 class="section-title">Address</h3>
-                        <p class="address-text">8, Rue de la Paix, 75002 Paris, France</p>
-                    </div>
-
-                    <div class="footer-section">
-                        <h3 class="section-title">Contact</h3>
-                        <p class="contact-phone">+33 1 23 45 67 89</p>
-                        <p class="contact-email">contact@email.com</p>
-                    </div>
-
-                    <div class="footer-section">
-                        <h3 class="section-title">Follow us</h3>
-                        <div class="social-links">
-                            <a href="#" class="social-link">Facebook</a>
-                            <a href="#" class="social-link">Instagram</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <div class="copyright">
-                    <p>©2024 Rhodes. All rights reserved.</p>
-                </div>
-                <div class="footer-links">
-                    <a href="#" class="terms-conditions">Terms & Conditions</a>
-                    <a href="#" class="privacy-policy">Privacy Policy</a>
-                </div>
-            </div>
-        </footer> *@
+    
     </div>
     <script src="js/main.js"></script>
 </body>

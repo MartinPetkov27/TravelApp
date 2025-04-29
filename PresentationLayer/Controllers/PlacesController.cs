@@ -48,6 +48,7 @@ namespace PresentationLayer.Controllers
             return View(place);
         }
 
+        //For adding place to a current trip
         // GET: Places/Create
         public async Task<IActionResult> CreateFromTrip(string tripName, int countryIndex)
         {

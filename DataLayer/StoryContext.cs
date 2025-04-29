@@ -17,6 +17,7 @@ namespace DataLayer
             this.dbContext = dbContext;
         }
 
+        //Create method for the Story
         public async Task CreateAsync(Story item)
         {
             try
@@ -29,6 +30,8 @@ namespace DataLayer
                 throw;
             }
         }
+
+        //Read method for the Story
         public async Task<Story> ReadAsync(int key, bool useNavigationalProperties = false, bool isReadOnly = true)
         {
             try
@@ -52,6 +55,8 @@ namespace DataLayer
                 throw;
             }
         }
+
+        //ReadAll method for the Story
         public async Task<ICollection<Story>> ReadAllAsync(bool useNavigationalProperties = false, bool isReadOnly = true)
         {
             try
@@ -75,6 +80,8 @@ namespace DataLayer
                 throw;
             }
         }
+
+        //Update method for the Story
         public async Task UpdateAsync(Story item, bool useNavigationalProperties = false)
         {
             try
@@ -106,6 +113,8 @@ namespace DataLayer
                 throw;
             }
         }
+
+        //Delete method for the Story
         public async Task DeleteAsync(int key)
         {
             try

@@ -36,7 +36,11 @@ namespace PresentationLayer.Controllers
         {
             return View(await tripManager.ReadAllAsync(true, true));
         }
-
+        // GET: Trips
+        public async Task<IActionResult> IndexAdmin()
+        {
+            return View(await tripManager.ReadAllAsync(true, true));
+        }
         // GET: Trips/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -59,6 +63,7 @@ namespace PresentationLayer.Controllers
             return View("CreateTripStart", new CreateTripStartViewModel());
         }
 
+        //For the page for choosing starting country
         [HttpGet]
         public async Task<IActionResult> CreateTripStart(CreateTripStartViewModel viewModel)
         {
@@ -67,30 +72,8 @@ namespace PresentationLayer.Controllers
 
             return RedirectToAction("CreateTripSelectCities", new { countryName = viewModel.CountryName, title = viewModel.Title });
         }
-        // show errors if needed
 
-        //Country country = countryManager.GetCountryByName(viewModel.CountryName).Result;
-
-        //if (country == null)
-        //{
-        //    ModelState.AddModelError("CountryName", "Country not found.");
-        //    return View(viewModel);
-        //}
-
-        //var user = await userManager.GetUserAsync(User);
-
-        //if (user == null)
-        //{
-        //    return Unauthorized(); // Or redirect to login
-        //}
-
-        //Trip trip = new Trip();
-        //trip.Title = viewModel.Title;
-        //trip.User = user;
-        //trip.Countries = new List<Country> { country };
-
-        //await tripManager.CreateAsync(trip);
-
+        //Funtions available : add place, add country, generate trip 
         [HttpGet]
         public async Task<IActionResult> CreateTripSelectCities(string Title, string CountryName )
         {
@@ -122,6 +105,7 @@ namespace PresentationLayer.Controllers
             return View(trip);
         }
 
+        //For adding countries
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddCountryToTrip(string title, string nextCountry)
@@ -222,7 +206,7 @@ namespace PresentationLayer.Controllers
                     return NotFound();
                 }
 
-                var trip = await tripManager.ReadAsync((int)id, true, true);
+                var trip = await tripManager.ReadAsync((int)id, false, true);
                 if (trip == null)
                 {
                     return NotFound();
@@ -236,7 +220,7 @@ namespace PresentationLayer.Controllers
             [ValidateAntiForgeryToken]
             public async Task<IActionResult> DeleteConfirmed(int id)
             {
-                var trip = await tripManager.ReadAsync(id);
+                var trip = await tripManager.ReadAsync(id, false, true);
                 if (trip != null)
                 {
                     await tripManager.DeleteAsync(id);
