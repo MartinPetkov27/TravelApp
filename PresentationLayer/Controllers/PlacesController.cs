@@ -49,15 +49,71 @@ namespace PresentationLayer.Controllers
         }
 
         // GET: Places/Create
-        public async Task<IActionResult> CreateFromTrip(CreatePlaceFromTripViewModel viewModel)
+        public async Task<IActionResult> CreateFromTrip(string tripName, int countryIndex)
         {
             var countries = await countryManager.ReadAllAsync();
-            Trip trip = await tripManager.GetIdByName(viewModel.TripName);
+
+            Trip trip = await tripManager.GetTripByNameAsync(tripName);
             int tripId = trip.Id;
-            string selectedCountryName = trip.Countries.Skip(viewModel.CountryIndex).FirstOrDefault()?.Name;
+
+            string? selectedCountryName = trip.Countries.Skip(countryIndex).FirstOrDefault()?.Name;
+            string? selectedCountryAlphaCode = trip.Countries.Skip(countryIndex).FirstOrDefault()?.AlphaCode;
 
             ViewBag.Countries = countries.Select(c => c.Name).ToList(); // Or .Distinct() if needed
+            ViewBag.TripName = tripName;
             ViewBag.SelectedCountry = selectedCountryName;
+            ViewBag.SelectedCountryAlphaCode = selectedCountryAlphaCode;
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateFromTrip(Place place, string TripName)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(place); // If something is wrong, re-show form
+            }
+
+            // Find the trip
+            Trip trip = await tripManager.GetTripByNameAsync(TripName);
+
+            if (trip == null)
+            {
+                return NotFound("Trip not found");
+            }
+
+            // Find country (you can improve this if needed)
+            var country = await countryManager.GetCountryByAlphaCode(place.CoutryAlphaCode);
+
+            if (country == null)
+            {
+                return NotFound("Country not found");
+            }
+
+            // Set navigation properties manually
+            place.TripId = trip.Id;
+            place.Trip = trip;
+            place.Country = country;
+            place.CoutryAlphaCode = country.AlphaCode;
+
+            // Save the place
+            await placeManager.CreateAsync(place);
+
+            // Redirect somewhere, maybe back to trip page?
+            //return RedirectToAction("Details", "Trips", new { id = trip.Id });
+            ViewBag.TripId = trip.Id;
+            ViewBag.TripName = trip.Title;
+
+            return View("CreateSuccess");
+        }
+        [HttpGet]
+        public IActionResult CreateSuccess(string tripName, string countryName, int tripId)
+        {
+            ViewBag.TripName = tripName;
+            ViewBag.CountryName = countryName;
+            ViewBag.TripId = tripId;
 
             return View();
         }

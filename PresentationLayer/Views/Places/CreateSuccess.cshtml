@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Place Created";
+}
+
+<div class="text-center mt-5">
+    <h1 class="text-success">✅ Place Created Successfully!</h1>
+    <p class="lead mt-3">You can now continue editing your trip or add more places.</p>
+
+    <div class="mt-4">
+        <a asp-controller="Trips" asp-action="CreateTripSelectCities" asp-route-countryName="@ViewBag.CountryName" asp-route-title="@ViewBag.TripName" class="btn btn-primary">
+            Continue editing your trip
+        </a>
+        <a asp-controller="Places" asp-action="CreateFromTrip" asp-route-tripName="@ViewBag.TripName" asp-route-countryIndex="0" class="btn btn-outline-success ms-2">Add Another Place</a>
+    </div>
+</div>

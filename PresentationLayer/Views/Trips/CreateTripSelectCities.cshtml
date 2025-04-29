@@ -1,4 +1,4 @@
-﻿@model BusinessLayer.Trip
+﻿@model BusinessLayer.Trip;
 @using BusinessLayer;
 
 @{
@@ -33,21 +33,25 @@
 <div class="row mt-4">
     <!-- LEFT SIDE -->
     <div class="col-md-7">
-        <form asp-action="AddCountryOrPlace" method="post">
+       
             <!-- Add place -->
             <div class="form-group mb-3">
-                <a asp-controller="Places" asp-action="Create" asp-route-tripName="@Model.Title class="btn btn-outline-primary w-100">
+                <a asp-controller="Places" asp-action="CreateFromTrip" asp-route-tripName="@Model.Title" asp-route-countryIndex="@countriesIndex" class="btn btn-outline-primary w-100">
                     Add place
                 </a>
             </div>
+        
 
-            <!-- Select next country -->
+        <!-- Select next country -->
+        <form id="addCountryForm" asp-controller="Trips" asp-action="AddCountryToTrip" method="post">
+            <input type="hidden" name="title" value="@Model.Title" />
+
             <div class="form-group mb-3 d-flex align-items-end">
                 <div class="w-100">
                     <label for="nextCountry"><strong>Select next country</strong></label>
                     <select class="form-control" id="nextCountry" name="nextCountry">
                         <option value="">-- Select a country --</option>
-                        @foreach (var country in countries)
+                        @foreach (var country in ViewBag.Countries as List<string>)
                         {
                             <option value="@country">@country</option>
                         }
@@ -55,11 +59,21 @@
                 </div>
                 <button type="submit" class="btn btn-outline-primary ms-2" style="height: 38px;">Add</button>
             </div>
+        </form>
+
+        <div class="form-group mt-4">
+            <button class="btn btn-success w-100">Generate trip</button>
+        </div>
+
+       @*  <form asp-controller="Trips" asp-action="FinalizeTrip" method="post">
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" name="title" value="@Model.Title" />
 
             <div class="form-group mt-4">
-                <button type="submit" class="btn btn-success w-100">Generate trip</button>
+                <button type="submit" class="btn btn-success w-100">Finalize trip</button>
             </div>
-        </form>
+        </form> *@
     </div>
 
     <!-- RIGHT SIDE: Timeline -->
@@ -67,34 +81,6 @@
         <div class="p-3">
             <h4>Your Trip Timeline</h4>
             <div class="timeline">
-                @* @if (Model.Countries == null)
-                {
-                    <div class="timeline-step">
-                        <span class="dot"></span>
-                        <span class="step-title">
-                            <strong>@selectedCountry</strong>
-                        </span>
-
-                        @if (Model.Places != null && Model.Places.Any())
-                        {
-                            <ul class="ms-4">
-                                @foreach (var place in Model.Places)
-                                {
-                                    if (place.CoutryAlphaCode == country.AlphaCode)
-                                    {
-                                        <li class="text-danger">📍 @place.Name</li>
-                                    }
-                                }
-                            </ul>
-                        }
-                        else
-                        {
-                            <div class="ms-4 text-secondary"><em>No places added yet</em></div>
-                        } 
-                    </div>
-                }
-                else
-                { *@
                     @foreach (var country in Model.Countries)
                     {
                         <div class="timeline-step">
@@ -121,7 +107,6 @@
                             }
                         </div>
                     }
-               @*  } *@
             </div>
         </div>
     </div>

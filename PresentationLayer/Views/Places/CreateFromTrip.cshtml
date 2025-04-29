@@ -1,0 +1,251 @@
+﻿@model BusinessLayer.Place;
+
+@{
+    ViewData["Title"] = "Create";
+    var countries = ViewBag.Countries as List<string>;
+    var tripName = ViewBag.TripName;
+    var selectedCountryName = ViewBag.SelectedCountryName;
+    var selectedCountryAlphaCode = ViewBag.SelectedCountryAlphaCode;
+}
+
+<head>
+    @* <link rel="stylesheet" href="~/css/site.css" /> *@
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+</head>
+<div class="map-container">
+    <div class="overlay-form">
+        <h1 class="text-center">Create a Place</h1>
+        <form asp-action="CreateFromTrip" method="post" id="placeForm">
+            @Html.AntiForgeryToken()
+            <!-- Searchbox -->
+            <div class="text-center mb-2">
+                <label asp-for="Name">Place name:</label>
+                <input asp-for="Name" id="pac-input" class="form-control w-50 mx-auto" type="text" placeholder="Search for a place" style="width:100%!important" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+                <input asp-for="CoutryAlphaCode" type="hidden" id="countryAlphaCode" value="@selectedCountryAlphaCode" />
+            </div>
+            <hr />
+           @*  <div class="form-group text-center">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control w-50 mx-auto" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div> *@
+            <!-- 🌍 Custom Styled Country Selector -->
+            @*  <div class="form-group text-center">
+                    <label>Country</label>
+                    <div class="dropdown w-50 mx-auto">
+                        <button type="button" id="countryDropdown" class="form-control text-start">
+                            Select a country
+                        </button>
+                        <ul id="countryList" class="list-group" style="display: none; max-height: 200px; overflow-y: auto; border: 1px solid #ccc; border-top: none;">
+                            @foreach (var country in countries)
+                            {
+                                <li class="list-group-item country-option" style="cursor: pointer;">@country</li>
+                            }
+                        </ul>
+                        <input type="hidden" name="CoutryAlphaCode" id="selectedCountryInput" />
+                    </div>
+                </div> *@
+
+            <!-- 🎒 Trip selection -->
+            <div class="form-group mb-3">
+                <label for="TripName"><strong>Trip Name</strong></label>
+                <input type="text" class="form-control" id="TripName" name="TripName" value="@tripName" readonly />
+            </div>
+
+            <!-- 🧭 Coordinates -->
+            <div class="form-group d-flex justify-content-center gap-2">
+                <div style="flex: 0.5;">
+                    <label asp-for="Latitude"></label>
+                    <input asp-for="Latitude" class="form-control" id="Latitude" style="width:40%#TripName" />
+                    <span asp-validation-for="Latitude" class="text-danger"></span>
+                </div>
+                <div style="flex: 0.5;">
+                    <label asp-for="Longitude"></label>
+                    <input asp-for="Longitude" class="form-control" id="Longitude" style="width:40%#TripName" />
+                    <span asp-validation-for="Longitude" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- 📝 Description -->
+            <div class="form-group text-center">
+                <label asp-for="Description"></label>
+                <input asp-for="Description" class="form-control w-50 mx-auto" style="width:100%!important" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <!-- 🗓️ Date Range Picker -->
+            <div class="form-group text-center mt-3">
+                <label for="DateRange"><strong>Select Dates</strong></label>
+                <input type="text" id="DateRange" name="DateRange" class="form-control w-50 mx-auto" placeholder="Select date range" style="width: 100%!important" />
+                <input asp-for="StartingDate" type="hidden" id="StartDate" name="StartDate" />
+                <input asp-for="EndingDate" type="hidden" id="EndDate" name="EndDate" />
+            </div>
+            <!-- 🗓️ Submit button -->
+            <div class="form-group text-center mt-3">
+                <button asp-action="CreateFromTrip" type="submit" class="btn btn-primary w-50">
+                    Create Place
+                </button>
+            </div>
+            <div class="text-center mt-2">
+                <a asp-action="CreateTripSelectCities">Back to trip creation</a>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- 🗺️ Google Map -->
+    <div id="placeMap"></div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVCMcaodMWF5rbNUVo7YdZaAIHPC3draE&libraries=places"></script>
+
+<script>
+    //date range picker:
+                   flatpickr("#DateRange", {
+            mode: "range",
+            dateFormat: "Y-m-d",
+            minDate: "today",
+            onClose: function(selectedDates, dateStr, instance) {
+                if (selectedDates.length > 0) {
+                    document.getElementById('StartDate').value = selectedDates[0].toISOString().slice(0, 10);
+                }
+                if (selectedDates.length > 1) {
+                    document.getElementById('EndDate').value = selectedDates[1].toISOString().slice(0, 10);
+                }
+            }
+        });
+            //aler for validating EndDate > StartDate
+                    document.getElementById("placeForm").addEventListener("submit", function (e) {
+            const startDate = document.getElementById("StartDate").value;
+            const endDate = document.getElementById("EndDate").value;
+
+            if (startDate && endDate) {
+                const start = new Date(startDate);
+                const end = new Date(endDate);
+
+                if (start > end) {
+                    e.preventDefault(); // ❌ Stop form submission
+                    alert("End Date must be after Start Date!");
+                }
+            }
+        });
+
+    let map, marker, autocomplete;
+
+    const selectedCountryName = "@ViewBag.SelectedCountry"; // or however you inject it from Razor
+
+    function initMap() {
+        const defaultLocation = { lat: 20, lng: 0 };
+        map = new google.maps.Map(document.getElementById("placeMap"), {
+            zoom: 2,
+            center: defaultLocation
+        });
+
+        marker = new google.maps.Marker({
+            position: defaultLocation,
+            map: map,
+            draggable: true
+        });
+
+        // Autocomplete Search
+        const input = document.getElementById("pac-input");
+        autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.bindTo("bounds", map);
+
+        autocomplete.addListener("place_changed", () => {
+            const place = autocomplete.getPlace();
+            if (!place.geometry) {
+                alert("No details available for input: '" + place.name + "'");
+                return;
+            }
+
+            if (place.geometry.viewport) {
+                map.fitBounds(place.geometry.viewport);
+            } else {
+                map.setCenter(place.geometry.location);
+                map.setZoom(10);
+            }
+
+            marker.setPosition(place.geometry.location);
+            document.getElementById("Latitude").value = place.geometry.location.lat().toFixed(6);
+            document.getElementById("Longitude").value = place.geometry.location.lng().toFixed(6);
+        });
+
+        map.addListener("click", function (e) {
+            marker.setPosition(e.latLng);
+            map.panTo(e.latLng);
+            document.getElementById("Latitude").value = e.latLng.lat().toFixed(6);
+            document.getElementById("Longitude").value = e.latLng.lng().toFixed(6);
+        });
+
+        document.getElementById("Latitude").addEventListener("change", updateFromInputs);
+        document.getElementById("Longitude").addEventListener("change", updateFromInputs);
+
+        function updateFromInputs() {
+            const lat = parseFloat(document.getElementById("Latitude").value);
+            const lng = parseFloat(document.getElementById("Longitude").value);
+            if (!isNaN(lat) && !isNaN(lng)) {
+                const latLng = new google.maps.LatLng(lat, lng);
+                marker.setPosition(latLng);
+                map.panTo(latLng);
+                map.setZoom(6);
+            }
+        }
+
+        // 🌎 Zoom immediately on page load if country is available
+        if (selectedCountryName && selectedCountryName.trim() !== "") {
+            const geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ address: selectedCountryName }, function(results, status) {
+                if (status === "OK") {
+                    map.setCenter(results[0].geometry.location);
+                    map.setZoom(5);
+                    marker.setPosition(results[0].geometry.location);
+                } else {
+                    console.error("Could not find country:", status);
+                }
+            });
+        }
+    }
+
+    window.onload = initMap;
+
+    // Country dropdown functionality
+    document.querySelectorAll(".country-option").forEach(function (item) {
+        item.addEventListener("click", function () {
+            const countryName = this.textContent;
+            document.getElementById("countryDropdown").textContent = countryName;
+            document.getElementById("selectedCountryInput").value = countryName;
+            document.getElementById("countryList").style.display = "none";
+
+            const geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ address: countryName }, function(results, status) {
+                if (status === "OK") {
+                    map.setCenter(results[0].geometry.location);
+                    map.setZoom(5);
+                    marker.setPosition(results[0].geometry.location);
+                } else {
+                    alert("Could not find country: " + status);
+                }
+            });
+        });
+    });
+
+    // Close dropdown on outside click
+    document.addEventListener("click", function (event) {
+        const dropdown = document.getElementById("countryDropdown");
+        const list = document.getElementById("countryList");
+        if (!dropdown.contains(event.target) && !list.contains(event.target)) {
+            list.style.display = "none";
+        }
+    });
+</script>
+}

@@ -32,14 +32,14 @@ namespace BusinessLayer
         //public int StartingPlaceId { get; set; }
         [Required]
         [NotMapped]
-        public Place StartingPlace { get; set; }
+        public Place? StartingPlace { get; set; }
 
         ////ending place
         //[ForeignKey("EndingPlace")]
         //public int EndingPlaceId { get; set; }
         [Required]
         [NotMapped]
-        public Place EndingPlace { get; set; }
+        public Place? EndingPlace { get; set; }
 
         //places
         public ICollection<Place> Places { get; set; }

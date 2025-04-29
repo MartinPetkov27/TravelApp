@@ -91,23 +91,62 @@ namespace PresentationLayer.Controllers
 
         //await tripManager.CreateAsync(trip);
 
-        [HttpPost]
-        public async Task<IActionResult> CreateTripSelectCities(string countryName, string title)
+        [HttpGet]
+        public async Task<IActionResult> CreateTripSelectCities(string Title, string CountryName )
         {
             var countries = await countryManager.ReadAllAsync();
             ViewBag.Countries = countries.Select(c => c.Name).ToList();
 
-            var country = countryManager.GetCountryByName(countryName).Result;
+            var trip = (await tripManager.ReadAllAsync(true, true))
+            .FirstOrDefault(t => t.Title == Title);
 
-            if (country == null) return NotFound();
-
-            var trip = new Trip
+            if (trip == null)
             {
-                Title = title,
-                Countries = new List<Country> { country }
-            };
-            await tripManager.CreateAsync(trip);
+                // If trip doesn't exist yet, you can optionally create it
+                var country = await countryManager.GetCountryByName(CountryName);
+
+                if (country == null) return NotFound();
+
+                var user = await userManager.GetUserAsync(User);
+                if (user == null) return Unauthorized();
+
+                trip = new Trip
+                {
+                    Title = Title,
+                    Countries = new List<Country> { country },
+                    User = user
+                };
+                await tripManager.CreateAsync(trip);
+            }
+
             return View(trip);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddCountryToTrip(string title, string nextCountry)
+        {
+            var trip = (await tripManager.ReadAllAsync(true, true))
+                .FirstOrDefault(t => t.Title == title);
+
+            if (trip == null)
+            {
+                return NotFound("Trip not found");
+            }
+
+            if (!string.IsNullOrEmpty(nextCountry))
+            {
+                var country = await countryManager.GetCountryByName(nextCountry);
+
+                if (country != null && !trip.Countries.Any(c => c.AlphaCode == country.AlphaCode))
+                {
+                    trip.Countries.Add(country);
+
+                    await tripManager.UpdateAsync(trip, true);
+                }
+            }
+
+            return RedirectToAction("CreateTripSelectCities", new { Title = title, CountryName = trip.Countries.First().Name });
         }
 
         // POST: Trips/Create

@@ -20,6 +20,41 @@ namespace DataLayer
         {
             try
             {
+                if (item.Country != null)
+                {
+                    var attachedCountry = item.Country;
+
+                  
+                        var existingCountry = await dbContext.Countries.FindAsync(item.Country.AlphaCode);
+
+                        if (existingCountry != null)
+                        {
+                            attachedCountry = existingCountry;
+                        }
+                        else
+                        {
+                            attachedCountry = item.Country;
+                        }
+
+                    item.Country= attachedCountry;
+                }
+
+
+                if (item.Trip != null)
+                {
+                    var attachedTrip = item.Trip;
+                    var existingTrip = await dbContext.Trips.FindAsync(item.Trip.Id);
+                    if (existingTrip != null)
+                    {
+                        attachedTrip = existingTrip;
+                    }
+                    else
+                    {
+                        attachedTrip = item.Trip;
+                    }
+                    item.Trip = attachedTrip;
+                }
+
                 dbContext.Places.Add(item);
                 await dbContext.SaveChangesAsync();
             }

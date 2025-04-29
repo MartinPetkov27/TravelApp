@@ -127,8 +127,16 @@ namespace DataLayer
                         }
                     }
                     tripFromDb.Places = places;
-                    tripFromDb.StartingPlace = places[0];
-                    tripFromDb.EndingPlace = places[places.Count-1];
+                    if (places.Count > 0)
+                    {
+                        tripFromDb.StartingPlace = places[0];
+                        tripFromDb.EndingPlace = places[places.Count - 1];
+                    }
+                    else
+                    {
+                        tripFromDb.StartingPlace = null;
+                        tripFromDb.EndingPlace = null;
+                    }
                     #endregion
 
                     #region User

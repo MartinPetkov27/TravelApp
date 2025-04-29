@@ -36,6 +36,11 @@ namespace ServiceLayer
             var countries = await countryContext.ReadAllAsync(false, true);
             return countries.FirstOrDefault(c => c.Name.Equals(countryName, StringComparison.OrdinalIgnoreCase));
         }
+        public async Task<Country> GetCountryByAlphaCode(string alphaCode)
+        {
+            var countries = await countryContext.ReadAllAsync(false, true);
+            return countries.FirstOrDefault(c => c.AlphaCode.Equals(alphaCode, StringComparison.OrdinalIgnoreCase));
+        }
 
         public async Task UpdateAsync(Country item, bool useNavigationalProperties = false)
         {

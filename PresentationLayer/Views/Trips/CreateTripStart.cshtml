@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 
-<form id="tripForm" asp-controller="Trips" asp-action="CreateTripSelectCities" method="post">
+<form id="tripForm" asp-controller="Trips" asp-action="CreateTripSelectCities" method="get">
     <div class="form-group">
         <label asp-for="Title" class="control-label"></label>
         <input asp-for="Title" class="form-control" id="titleInput" placeholder="Trip title" />
@@ -42,6 +42,9 @@
 <div class="mt-3">
     <button type="submit" form="tripForm" class="btn btn-primary">Continue to Select Cities</button>
 </div>
+
+@* <a asp-action="CreateTripSelectCities" asp-route-Title="@Model.Title" asp-route-CountryName="@Model.CountryName">Continue Editing Trip</a>
+ *@
 <div>
     <a asp-action="Index">Back to your trips.</a>
 </div>
