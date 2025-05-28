@@ -13,22 +13,34 @@ using static PresentationLayer.Models.GeoNamesCountryDTO;
 using System.Net.Http;
 using PresentationLayer.ViewModels;
 using Microsoft.AspNetCore.Identity;
+using System.Net.Http.Headers;
+using System.Text.Json;
+
 
 namespace PresentationLayer.Controllers
 {
+   
     public class TripsController : Controller
     {
         private readonly UserManager<User> userManager;
+        private readonly UserManager userManagerService;
         private readonly TripManager tripManager;
         private readonly GeoNamesService geoNamesService;
         private readonly CountryManager countryManager;
+        private readonly IHttpClientFactory httpClientFactory;
+        private readonly IConfiguration config;
+        //private readonly TripGeneratorController tripGeneratorController;
 
-        public TripsController(TripManager tripManager, GeoNamesService geoNamesService, CountryManager countryManager, UserManager<User> userManager)
+        public TripsController(TripManager tripManager, GeoNamesService geoNamesService, CountryManager countryManager, UserManager<User> userManager, /*TripGeneratorController tripGeneratorController,*/ IHttpClientFactory httpClientFactory, IConfiguration config, UserManager userManagerService)
         {
             this.tripManager = tripManager;
             this.geoNamesService = geoNamesService;
             this.countryManager = countryManager;
             this.userManager = userManager;
+            //this.tripGeneratorController = tripGeneratorController;
+            this.httpClientFactory = httpClientFactory;
+            this.config = config;
+            this.userManagerService = userManagerService;
         }
 
         // GET: Trips
@@ -75,7 +87,7 @@ namespace PresentationLayer.Controllers
 
         //Funtions available : add place, add country, generate trip 
         [HttpGet]
-        public async Task<IActionResult> CreateTripSelectCities(string Title, string CountryName )
+        public async Task<IActionResult> CreateTripSelectCities(string Title, string CountryName)
         {
             var countries = await countryManager.ReadAllAsync();
             ViewBag.Countries = countries.Select(c => c.Name).ToList();
@@ -96,11 +108,30 @@ namespace PresentationLayer.Controllers
                 trip = new Trip
                 {
                     Title = Title,
-                    Countries = new List<Country> { country },
-                    User = user
+                    Countries = new List<Country>(),
+                    CountryIndexMap = new Dictionary<int, string>(),
+                    User = user,
+                    //StartingDate = trip.Places.OrderBy(p => p.StartingDate).FirstOrDefault().StartingDate,
+                    //EndingDate = trip.Places.OrderBy(p => p.EndingDate).LastOrDefault().EndingDate
                 };
+                trip.Countries.Add(null); // or new Country() if you prefer
+                trip.Countries[0] = country;
+                trip.CountryIndexMap.Add(1, country.Name);
+                trip.UserId = user.Id;
+                trip.User = user;
                 await tripManager.CreateAsync(trip);
             }
+
+            //var lastEndingDate = trip.Places.OrderByDescending(p => p.EndingDate).FirstOrDefault()?.EndingDate;
+
+            //if (lastEndingDate.HasValue)
+            //{
+            //    ViewBag.LastEndingDate = lastEndingDate.Value.AddDays(1).ToString("yyyy-MM-dd"); // Allow next place to start one day later
+            //}
+            //else
+            //{
+            //    ViewBag.LastEndingDate = DateTime.Today.ToString("yyyy-MM-dd"); // fallback if no places yet
+            //}
 
             return View(trip);
         }
@@ -124,14 +155,100 @@ namespace PresentationLayer.Controllers
 
                 if (country != null && !trip.Countries.Any(c => c.AlphaCode == country.AlphaCode))
                 {
-                    trip.Countries.Add(country);
-
+                    trip.Countries.ToList();
+                    trip.Countries.Add(null);
+                    trip.Countries[trip.Countries.Count-1] = country;
+                    
+                    trip.CountryIndexMap.Add(trip.Countries.Count, country.Name);
+                    
                     await tripManager.UpdateAsync(trip, true);
                 }
             }
 
             return RedirectToAction("CreateTripSelectCities", new { Title = title, CountryName = trip.Countries.First().Name });
         }
+
+
+        //public IActionResult GenerateTrip(string continent, string targetGroup, int duration, string criteria)
+        //{
+        //    // TEMPORARY: Just return the input values as JSON so we know it's working
+        //    var result = new
+        //    {
+        //        Continent = continent,
+        //        TargetGroup = targetGroup,
+        //        Duration = duration,
+        //        Criteria = criteria
+        //    };
+
+        //    return Json(result);
+        //}
+
+        //[HttpPost("generate")]
+        //public async Task<IActionResult> GenerateTrip([FromBody] TripCriteria criteria)
+        //{
+            //metoda shte ide w tripManagera i shte bude vikan tuk
+            
+            //return await tripGeneratorController.GenerateTrip(criteria);
+
+//            var prompt = $@"
+//Generate a simple trip plan for the following:
+//- Continent: {criteria.Continent}
+//- Target Group: {criteria.TargetGroup}
+//- Duration: {criteria.Duration} days
+//- Theme: {criteria.Criteria}
+
+//Return only a JSON array like this:
+//[
+//  {{
+//    ""country"": ""Italy"",
+//    ""places"": [""Rome"", ""Florence"", ""Venice""]
+//  }},
+//  {{
+//    ""country"": ""France"",
+//    ""places"": [""Paris"", ""Nice""]
+//  }}
+//]";
+
+//            using var http = new HttpClient();
+//            http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "your-openai-api-key");
+
+//            var requestBody = new
+//            {
+//                model = "gpt-4",
+//                messages = new[]
+//                {
+//            new { role = "user", content = prompt }
+//        },
+//                temperature = 0.7
+//            };
+
+//            var response = await http.PostAsJsonAsync("https://api.openai.com/v1/chat/completions", requestBody);
+
+//            if (!response.IsSuccessStatusCode)
+//                return StatusCode((int)response.StatusCode, "OpenAI API call failed");
+
+//            var resultJson = await response.Content.ReadAsStringAsync();
+
+//            // Extract assistant's message
+//            var result = JsonDocument.Parse(resultJson);
+//            var content = result.RootElement
+//                .GetProperty("choices")[0]
+//                .GetProperty("message")
+//                .GetProperty("content")
+//                .GetString();
+
+//            // Try to parse what the AI returned as actual JSON
+//            try
+//            {
+//                var jsonElement = System.Text.Json.JsonSerializer.Deserialize<JsonElement>(content);
+//                return Ok(jsonElement); // ✅ Return as parsed JSON array
+//            }
+//            catch
+//            {
+//                return Ok(new { rawResponse = content }); // 🧪 fallback: return plain text
+//            }
+        //}
+
 
         // POST: Trips/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.

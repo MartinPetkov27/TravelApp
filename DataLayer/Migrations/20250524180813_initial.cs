@@ -306,7 +306,7 @@ namespace DataLayer.Migrations
                         column: x => x.TripId,
                         principalTable: "Trips",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

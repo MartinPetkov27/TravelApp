@@ -460,7 +460,7 @@ namespace DataLayer.Migrations
                     b.HasOne("BusinessLayer.Trip", "Trip")
                         .WithMany("Places")
                         .HasForeignKey("TripId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Country");

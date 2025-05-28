@@ -143,7 +143,8 @@ namespace PresentationLayer.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                Tuple<IdentityResult, User> result = await _identityContext.CreateUserAsync(Input.Username, Input.Password, Input.Email, Input.FirstName, Input.LastName, Input.PhoneNumber, RoleType.User);
+                Tuple<IdentityResult, User> result = await _identityContext.CreateUserAsync(Input.Username, 
+                    Input.Password, Input.Email, Input.FirstName, Input.LastName, Input.PhoneNumber, RoleType.User);
 
                 if (result.Item1.Succeeded)
                 {

@@ -6,18 +6,21 @@
     var tripName = ViewBag.TripName;
     var selectedCountryName = ViewBag.SelectedCountryName;
     var selectedCountryAlphaCode = ViewBag.SelectedCountryAlphaCode;
-}
+    string lastEndingDate = ViewBag.LastEndingDate;
+ }
 
 <head>
     <!-- Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
     <!-- Flatpickr JS -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 <div class="map-container">
+    @* <input type="hidden" id="selectedCountryName" value="@selectedCountryName" /> *@
     <div class="overlay-form">
+
         <h1 class="text-center">Create a Place</h1>
+
         <form asp-action="CreateFromTrip" method="post" id="placeForm">
             @Html.AntiForgeryToken()
             <!-- Searchbox -->
@@ -55,12 +58,17 @@
                 <input asp-for="Description" class="form-control w-50 mx-auto" style="width:100%!important" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
+            <!-- Lastly picked date -->
+            <div class="form-group text-center">
+                <label>Lastly picked date</label>
+                <input  class="form-control w-50 mx-auto" style="width:100%!important" placeholder=" @lastEndingDate" disabled/>
+            </div>
             <!-- Date Range Picker -->
             <div class="form-group text-center mt-3">
                 <label for="DateRange"><strong>Select Dates</strong></label>
                 <input type="text" id="DateRange" name="DateRange" class="form-control w-50 mx-auto" placeholder="Select date range" style="width: 100%!important" />
-                <input asp-for="StartingDate" type="hidden" id="StartDate" name="StartDate" />
-                <input asp-for="EndingDate" type="hidden" id="EndDate" name="EndDate" />
+                <input asp-for="StartingDate" type="hidden" id="StartDate" name="StartingDate" />
+                <input asp-for="EndingDate" type="hidden" id="EndDate" name="EndingDate" />
             </div>
             <!-- Submit button -->
             <div class="form-group text-center mt-3">
@@ -69,10 +77,88 @@
                 </button>
             </div>
             <div class="text-center mt-2">
-                <a asp-action="CreateTripSelectCities">Back to trip creation</a>
+                <a asp-controller="Trips" asp-action="CreateTripSelectCities">Back to trip creation</a>
+            </div>
+        </form>
+
+        <!-- PopUp for the mismatching coordinates and couuntry name-->
+        @if (TempData["CountryMismatch"] != null)
+        {
+            <div class="modal fade" id="countryMismatchModal" tabindex="-1" role="dialog" aria-labelledby="countryMismatchLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-warning">
+                            <h5 class="modal-title" id="countryMismatchLabel">Country Mismatch</h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body text-danger">
+                            @TempData["CountryMismatch"]
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-        </form>
+            <text>
+                <script>
+                    window.onload = function () {
+                        var modal = new bootstrap.Modal(document.getElementById('countryMismatchModal'));
+                        modal.show();
+                    };
+                </script>
+            </text>
+        }
+
+        <!-- Popup Modal -->
+        <div id="countryMismatchModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p>The selected coordinates do <strong>not</strong> belong to the selected country.</p>
+            </div>
+            <style>
+                .modal {
+                    display: none; /* Hidden by default */
+                    position: fixed;
+                    z-index: 999;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    overflow: auto;
+                    background-color: rgba(0, 0, 0, 0.4);
+                }
+
+                .modal-content {
+                    background-color: #fff;
+                    margin: 15% auto;
+                    padding: 20px;
+                    border-radius: 8px;
+                    width: 80%;
+                    max-width: 400px;
+                    text-align: center;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                }
+
+                .close {
+                    color: #aaa;
+                    float: right;
+                    font-size: 24px;
+                    font-weight: bold;
+                    cursor: pointer;
+                }
+
+                    .close:hover,
+                    .close:focus {
+                        color: #000;
+                        text-decoration: none;
+                    }
+            </style>
+        </div>
+
     </div>
 
     <!-- Google Map -->
@@ -84,14 +170,17 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVCMcaodMWF5rbNUVo7YdZaAIHPC3draE&libraries=places"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVCMcaodMWF5rbNUVo7YdZaAIHPC3draE&libraries=places&language=en" async defer></script>
 
 <script>
     //date range picker:
+        const lastEndingDate = "@ViewBag.LastEndingDate";
+            console.log("JavaScript lastEndingDate:", lastEndingDate);
+
                    flatpickr("#DateRange", {
             mode: "range",
             dateFormat: "Y-m-d",
-            minDate: "today",
+            minDate:   "today",
             onClose: function(selectedDates, dateStr, instance) {
                 if (selectedDates.length > 0) {
                     document.getElementById('StartDate').value = selectedDates[0].toISOString().slice(0, 10);
@@ -164,6 +253,12 @@
             document.getElementById("Latitude").value = e.latLng.lat().toFixed(6);
             document.getElementById("Longitude").value = e.latLng.lng().toFixed(6);
         });
+        
+        document.getElementById("pac-input").addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault(); // Prevent form submit
+            }
+        });
 
         document.getElementById("Latitude").addEventListener("change", updateFromInputs);
         document.getElementById("Longitude").addEventListener("change", updateFromInputs);
@@ -221,9 +316,75 @@
     document.addEventListener("click", function (event) {
         const dropdown = document.getElementById("countryDropdown");
         const list = document.getElementById("countryList");
-        if (!dropdown.contains(event.target) && !list.contains(event.target)) {
+        //just changed:
+            if (dropdown && list && !dropdown.contains(event.target) && !list.contains(event.target)) {
             list.style.display = "none";
         }
     });
+
+    //Coordinates validation:
+          document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("placeForm");
+            const expectedCountryName = "@ViewBag.SelectedCountry".trim().toLowerCase();
+            // const expectedCountryName = document.getElementById("selectedCountryName").value.trim().toLowerCase();
+            const modal = document.getElementById("countryMismatchModal");
+            const closeBtn = document.querySelector(".modal .close");
+
+            closeBtn.onclick = function () {
+                modal.style.display = "none";
+            };
+
+            window.onclick = function (event) {
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                }
+            };
+
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                const lat = parseFloat(document.getElementById("Latitude").value);
+                const lng = parseFloat(document.getElementById("Longitude").value);
+
+                if (isNaN(lat) || isNaN(lng)) {
+                    alert("Please enter valid coordinates.");
+                    return;
+                }
+
+                const geocoder = new google.maps.Geocoder();
+                const latlng = { lat, lng };
+
+                geocoder.geocode({ location: latlng }, function (results, status) {
+                    if (status === "OK" && results[0]) {
+                        let countryName = null;
+
+                        for (const component of results[0].address_components) {
+                            if (component.types.includes("country")) {
+                                countryName = component.long_name.toLowerCase(); // full name like "Germany"
+                                break;
+                            }
+                        }
+
+                        console.log("Expected Country:", expectedCountryName);
+                        console.log("Detected Country:", countryName);
+
+                        if (
+                            countryName &&
+                            expectedCountryName &&
+                            countryName.trim().toLowerCase() !== expectedCountryName.trim().toLowerCase()
+                        ) {
+                            console.log("Mismatch detected, showing modal.");
+                            modal.style.display = "block";
+                        } else {
+                            console.log("Match detected, submitting form.");
+                            form.submit();
+                        }
+
+                    } else {
+                        alert("Failed to validate location. Please try again.");
+                    }
+                });
+            });
+        });
 </script>
 }

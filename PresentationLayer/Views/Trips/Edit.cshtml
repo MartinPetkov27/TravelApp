@@ -4,46 +4,90 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1>Edit Trip</h1>
 
-<h4>Trip</h4>
+<h4>@Model.Title</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+
+<div class="row mt-4">
+
+    <!-- LEFT SIDE -->
+    <div class="col-md-7">
+        <div class="row">
+            <div class="col-md-4">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
+                    <div class="form-group">
+                        <label asp-for="Title" class="control-label"></label>
+                        <input asp-for="Title" class="form-control" />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label"></label>
+                        <input asp-for="Description" class="form-control" />
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="StartingDate" class="control-label"></label>
+                        <input asp-for="StartingDate" class="form-control" value="@Model.StartingDate"/>
+                        <span asp-validation-for="StartingDate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="EndingDate" class="control-label"></label>
+                        <input asp-for="EndingDate" class="form-control" />
+                        <span asp-validation-for="EndingDate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="User.Email" class="control-label"></label>
+                        <input asp-for="User.Email" class="form-control" disabled></input>
+                        <span asp-validation-for="User.Email" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+    </div>
+
+    <!-- RIGHT SIDE: Timeline -->
+    <div class="col-md-5 bg-light">
+        <div class="p-3">
+            <h4>Your Trip Timeline</h4>
+            <div class="timeline">
+                @for (var i = 0; i < Model.Countries.Count; i++)
+                {
+                    <div class="timeline-step">
+                        <span class="dot"></span>
+                        <span class="step-title">
+                            <strong>@Model.Countries.Skip(i).FirstOrDefault().Name</strong>
+                        </span>
+
+                        @if (Model.Places != null && Model.Places.Any())
+                        {
+                            <ul class="ms-4">
+                                @foreach (var place in Model.Places)
+                                {
+                                    if (place.CoutryAlphaCode == @Model.Countries.Skip(i).FirstOrDefault().AlphaCode)
+                                    {
+                                        <li class="text-danger">📍 @place.Name</li>
+                                    }
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <div class="ms-4 text-secondary"><em>No places added yet</em></div>
+                        }
+                    </div>
+                }
             </div>
-            <div class="form-group">
-                <label asp-for="StartingDate" class="control-label"></label>
-                <input asp-for="StartingDate" class="form-control" />
-                <span asp-validation-for="StartingDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EndingDate" class="control-label"></label>
-                <input asp-for="EndingDate" class="form-control" />
-                <span asp-validation-for="EndingDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
-                <span asp-validation-for="UserId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
+
 
 <div>
     <a asp-action="Index">Back to List</a>

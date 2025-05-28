@@ -9,6 +9,8 @@ using BusinessLayer;
 using DataLayer;
 using ServiceLayer;
 using PresentationLayer.ViewModels;
+using System.Globalization;
+using System.Numerics;
 
 namespace PresentationLayer.Controllers
 {
@@ -64,6 +66,18 @@ namespace PresentationLayer.Controllers
             ViewBag.TripName = tripName;
             ViewBag.SelectedCountry = selectedCountryName;
             ViewBag.SelectedCountryAlphaCode = selectedCountryAlphaCode;
+           
+            DateTime? lastEndingDate = trip.Places
+                .Where(p => p.EndingDate.HasValue)
+                .OrderByDescending(p => p.EndingDate)
+                .FirstOrDefault()?.EndingDate;
+
+            if (lastEndingDate == null)
+            {
+                lastEndingDate = DateTime.Today;
+            }
+
+            ViewBag.LastEndingDate = lastEndingDate.Value.ToShortDateString();
 
             return View();
         }
@@ -76,6 +90,9 @@ namespace PresentationLayer.Controllers
             {
                 return View(place); // If something is wrong, re-show form
             }
+
+            Console.WriteLine("StartingDate: " + place.StartingDate);
+            Console.WriteLine("EndingDate: " + place.EndingDate);
 
             // Find the trip
             Trip trip = await tripManager.GetTripByNameAsync(TripName);
@@ -93,6 +110,21 @@ namespace PresentationLayer.Controllers
                 return NotFound("Country not found");
             }
 
+            //double latitude = Convert.ToDouble(place.Latitude, CultureInfo.InvariantCulture);
+            //double longitude = Convert.ToDouble(place.Longitude, CultureInfo.InvariantCulture);
+
+            ////Check for the real country of the selected place
+            //var actualCountryName = await countryManager.GetCountryNameFromCoordinates(latitude, longitude);
+
+            //if (actualCountryName == null || !actualCountryName.Equals(country.Name, StringComparison.OrdinalIgnoreCase))
+            //{
+            //    TempData["CountryMismatch"] = $"The coordinates belong to {actualCountryName}, but you selected {country.Name}.";
+            //    return View("CreateNoSuccess");
+            //}
+
+
+            
+
             // Set navigation properties manually
             place.TripId = trip.Id;
             place.Trip = trip;
@@ -107,10 +139,21 @@ namespace PresentationLayer.Controllers
             ViewBag.TripId = trip.Id;
             ViewBag.TripName = trip.Title;
 
+            //update trip ending and lasting date.
+
             return View("CreateSuccess");
         }
         [HttpGet]
         public IActionResult CreateSuccess(string tripName, string countryName, int tripId)
+        {
+            ViewBag.TripName = tripName;
+            ViewBag.CountryName = countryName;
+            ViewBag.TripId = tripId;
+
+            return View();
+        }
+        [HttpGet]
+        public IActionResult CreateNoSuccess(string tripName, string countryName, int tripId)
         {
             ViewBag.TripName = tripName;
             ViewBag.CountryName = countryName;

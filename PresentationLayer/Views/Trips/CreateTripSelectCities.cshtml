@@ -7,31 +7,37 @@
     string selectedCountry = ViewBag.SelectedCountry as string;
     var countries = ViewBag.Countries as List<string>;
     int countriesIndex = 0;
+
+    // string startDate = Model.Places.FirstOrDefault().StartingDate?.ToString("yyyy-MM-dd");
 }
 
 <head>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-    <style>
 
-    </style>
+    <!-- Dates/Flatpickr CSS-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
-<h1>Create Trip - Explore @selectedCountry</h1>
-<h5>Holiday to @selectedCountry</h5>
+<br />
+<br />
+<br />
+<h5>@Model.Title</h5>
 <hr />
 <a asp-action="Create">Back to Your Trips</a>
 
 <div class="row mt-4">
     <!-- LEFT SIDE -->
     <div class="col-md-7">
-       
-            <!-- Add place -->
-            <div class="form-group mb-3">
-                <a asp-controller="Places" asp-action="CreateFromTrip" asp-route-tripName="@Model.Title" asp-route-countryIndex="@countriesIndex" class="btn btn-outline-primary w-100">
-                    Add place
-                </a>
-            </div>
-        
+
+        <!-- Add place -->
+        <div class="form-group mb-3">
+            <a asp-controller="Places" asp-action="CreateFromTrip" asp-route-tripName="@Model.Title" asp-route-countryIndex="@countriesIndex" class="btn btn-outline-primary w-100">
+                Add place
+            </a>
+        </div>
+
 
         <!-- Select next country -->
         <form id="addCountryForm" asp-controller="Trips" asp-action="AddCountryToTrip" method="post">
@@ -52,9 +58,113 @@
             </div>
         </form>
 
-        <div class="form-group mt-4">
-            <button class="btn btn-success w-100">Generate trip</button>
+        <!-- Trip Description -->
+        <div class="form-group text-center">
+            <label asp-for="Description">Description:</label>
+            <input asp-for="Description" class="form-control w-50 mx-auto" style="width:100%!important" placeholder="Enter trip description here" />
+            <span asp-validation-for="Description" class="text-danger"></span>
         </div>
+
+        <!-- Disabled autofill starting and ending dates-->
+        <div class="form-group text-center mt-3">
+            <label for="DateRange"><strong>Date Range</strong></label>
+            <input type="text" id="DateRange" class="form-control w-50 mx-auto" placeholder="Loading..." readonly />
+        </div>
+        @*   <div class="form-group text-center mt-3">
+            <label for="DateRange"><strong>Date Range</strong></label>
+            <input type="text" id="DateRange" name="DateRange" class="form-control w-50 mx-auto" placeholder="Select date range" />
+            <input asp-for="StartingDate" type="hidden" id="StartDate" name="StartDate" />
+            <input asp-for="EndingDate" type="hidden" id="EndDate" name="EndDate" /> 
+        </div> *@
+
+        <!-- Generate Trip Button -->
+        <div class="form-group mt-4">
+            <button class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#generateTripModal">
+                Generate Trip
+            </button>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="generateTripModal" tabindex="-1" aria-labelledby="generateTripLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="generateTripLabel">Generate a Custom Trip</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="container my-5">
+                        <div class="row justify-content-center">
+                            <div class="col-md-8">
+                                <form asp-controller="Trips" asp-action="GenerateTrip" id="tripCriteriaForm" class="p-4 rounded shadow bg-light">
+                                    <h4 class="mb-4 text-primary fw-bold text-center">Create Your Dream Trip</h4>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="continent" class="form-label fw-semibold">🌍 Continent</label>
+                                            <select class="form-select" id="continent" name="continent" required>
+                                                <option value="">Select a continent...</option>
+                                                <option value="Europe">Europe</option>
+                                                <option value="Asia">Asia</option>
+                                                <option value="Africa">Africa</option>
+                                                <option value="North America">North America</option>
+                                                <option value="South America">South America</option>
+                                                <option value="Oceania">Oceania</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label for="targetGroup" class="form-label fw-semibold">👥 Target Group</label>
+                                            <select class="form-select" id="targetGroup" name="targetGroup" required>
+                                                <option>Families</option>
+                                                <option>Couples</option>
+                                                <option>Solo Travelers</option>
+                                                <option>Students</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="duration" class="form-label fw-semibold">📅 Trip Duration (days)</label>
+                                            <input type="number" class="form-control" id="duration" name="duration" min="1" max="30" placeholder="e.g. 7" required />
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label for="criteria" class="form-label fw-semibold">🏞️ Trip Criteria</label>
+                                            <select class="form-select" id="criteria" name="criteria" required>
+                                                <option value="interesting_places">Interesting Places</option>
+                                                <option value="cultural">Cultural</option>
+                                                <option value="historical">Historical</option>
+                                                <option value="natural">Natural</option>
+                                                <option value="architecture">Architecture</option>
+                                                <option value="religion">Religious</option>
+                                                <option value="museums">Museums</option>
+                                                <option value="foods">Food & Drink</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-grid mt-4">
+                                        <button type="submit" class="btn btn-success btn-lg">
+                                            🚀 Generate Trip
+                                        </button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        @* <button class="btn btn-primary" id="generateTripBtn">Generate</button> *@
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Of modal for generate trip -->
+
     </div>
 
     <!-- RIGHT SIDE: Timeline -->
@@ -62,32 +172,59 @@
         <div class="p-3">
             <h4>Your Trip Timeline</h4>
             <div class="timeline">
-                    @foreach (var country in Model.Countries)
-                    {
-                        <div class="timeline-step">
-                            <span class="dot"></span>
-                            <span class="step-title">
-                                <strong>@country.Name</strong>
-                            </span>
+               @*  @for(var i = 1; i <= Model.CountryIndexMap.Count; i++)
+                {
+                    <div class="timeline-step">
+                        <span class="dot"></span>
+                        <span class="step-title">
+                            <strong>@Model.CountryIndexMap[i]</strong>
+                        </span>
 
-                            @if (Model.Places != null && Model.Places.Any())
-                            {
-                                <ul class="ms-4">
-                                    @foreach (var place in Model.Places)
+                        @if (Model.Places != null && Model.Places.Any())
+                        {
+                            <ul class="ms-4">
+                                @foreach (var place in Model.Places)
+                                {
+                                    if (place.CoutryAlphaCode == @Model.Countries[i].AlphaCode)
                                     {
-                                        if (place.CoutryAlphaCode == country.AlphaCode)
-                                        {
-                                            <li class="text-danger">📍 @place.Name</li>
-                                        }
+                                        <li class="text-danger">📍 @place.Name</li>
                                     }
-                                </ul>
-                            }
-                            else
-                            {
-                                <div class="ms-4 text-secondary"><em>No places added yet</em></div>
-                            }
-                        </div>
-                    }
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <div class="ms-4 text-secondary"><em>No places added yet</em></div>
+                        }
+                    </div>
+                } *@
+
+                @foreach (var country in Model.Countries)
+                {
+                    <div class="timeline-step">
+                        <span class="dot"></span>
+                        <span class="step-title">
+                            <strong>@country.Name</strong>
+                        </span>
+
+                        @if (Model.Places != null && Model.Places.Any())
+                        {
+                            <ul class="ms-4">
+                                @foreach (var place in Model.Places)
+                                {
+                                    if (place.CoutryAlphaCode == country.AlphaCode)
+                                    {
+                                        <li class="text-danger">📍 @place.Name [@place.StartingDate.Value.ToShortDateString() - @place.EndingDate.Value.ToShortDateString()]</li>
+                                    }
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <div class="ms-4 text-secondary"><em>No places added yet</em></div>
+                        }
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -226,7 +363,71 @@
                     list.style.display = "none";
                 }
             });
-        });
+
+                // These would typically be rendered from server-side variables
+            // Example: var startDate = '@Model.StartingDate'; or passed via ViewData/Model
+            var startDate = startDate; // e.g. "2025-06-01"
+            var endDate = '@Model.EndingDate';     // e.g. "2025-06-10"
+
+            const dateRangeInput = document.getElementById("DateRange");
+
+            if (startDate && endDate) {
+                flatpickr("#DateRange", {
+                    mode: "range",
+                    dateFormat: "Y-m-d",
+                    defaultDate: [startDate, endDate],
+                    clickOpens: true,
+                    allowInput: false,
+                    disable: [
+                        function () { return true; } // disables all selectable dates
+                    ]
+                });
+
+                // Set static value manually to display correctly
+                dateRangeInput.value = `${startDate} to ${endDate}`;
+                } else {
+                    // Show placeholder when no date is available
+                    dateRangeInput.placeholder = "Choose a place first.";
+                }
+            });
+
+
+            //Setup the Generate Button
+            document.getElementById("tripCriteriaForm").addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                const continent = document.getElementById("continent").value;
+                const targetGroup = document.getElementById("targetGroup").value;
+                const duration = parseInt(document.getElementById("duration").value);
+                const criteria = document.getElementById("criteria").value;
+
+                const payload = {
+                    continent,
+                    targetGroup,
+                    duration,
+                    criteria
+                };
+
+                fetch("/api/TripGenerator/generate", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error("Failed to call backend");
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Trip plan:", data);
+                    // 🔜 Display the trip plan in your modal or UI
+                })
+                .catch(error => {
+                    console.error("Fetch error:", error);
+                });
+            });
+            //END Setup the Generate Button END
     </script>
 }
 

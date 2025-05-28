@@ -17,6 +17,9 @@ var connectionString = builder.Configuration.GetConnectionString("TravelAppDbCon
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
+// Register the factory to inject IHttpClientFactory anywhere (OpenAI api)
+builder.Services.AddHttpClient();
+
 builder.Services.AddDbContext<TravelAppDbContext>(options => options.UseSqlServer(connectionString));
 
 //builder.Services.AddDefaultIdentity<User>(/*options => options.SignIn.RequireConfirmedAccount = true*/).AddEntityFrameworkStores<TravelAppDbContext>();

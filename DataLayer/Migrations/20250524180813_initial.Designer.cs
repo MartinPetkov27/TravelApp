@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataLayer.Migrations
 {
     [DbContext(typeof(TravelAppDbContext))]
-    [Migration("20250428204608_initial")]
+    [Migration("20250524180813_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -463,7 +463,7 @@ namespace DataLayer.Migrations
                     b.HasOne("BusinessLayer.Trip", "Trip")
                         .WithMany("Places")
                         .HasForeignKey("TripId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Country");

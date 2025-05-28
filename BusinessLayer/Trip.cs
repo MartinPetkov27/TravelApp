@@ -25,7 +25,10 @@ namespace BusinessLayer
 
         public string? FirstCountryAlphaCode { get; set; }
 
-        public ICollection<Country>? Countries { get; set; }
+        public List<Country>? Countries { get; set; }
+        
+        [NotMapped]
+        public Dictionary<int, string> CountryIndexMap { get; set; }
 
         ////starting place
         //[ForeignKey("StaritingPlace")]
@@ -51,22 +54,24 @@ namespace BusinessLayer
 
         //constructors
         public Trip() { }
-        public Trip( string title, string firstCountryAlphaCode, List<Country> countries, ICollection<Place> places, int userId, User user)
+        public Trip( string title, string firstCountryAlphaCode, List<Country> countries,Dictionary<int, string>countriesIndexMap, ICollection<Place> places, int userId, User user)
         {
             Title = title;
             FirstCountryAlphaCode = firstCountryAlphaCode;
             Countries = countries;
+            CountryIndexMap = countriesIndexMap;
             Places = places;
             StartingPlace = places.First();
             EndingPlace = places.Last();
             User = user;
             UserId = user.Id;
         }
-        public Trip(string title, string firstCountryAlphaCode, ICollection<Place> places, int userId, User user)
+        public Trip(string title, string firstCountryAlphaCode, Dictionary<int, string> countriesIndexMap, ICollection<Place> places, int userId, User user)
         {
             Title = title;
             FirstCountryAlphaCode = firstCountryAlphaCode;
             Countries = new List<Country>();
+            CountryIndexMap = countriesIndexMap;
             Places = places;
             StartingPlace = places.First();
             EndingPlace = places.Last();
