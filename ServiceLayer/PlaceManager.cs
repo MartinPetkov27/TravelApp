@@ -22,7 +22,7 @@ namespace ServiceLayer
         {
             await placeContext.CreateAsync(item);
         }
-        public async Task<Place> ReadAsync(int key, bool useNavigationalProperties = false, bool isReadOnly = true)
+        public async Task<Place> ReadAsync(int key, bool useNavigationalProperties, bool isReadOnly = true)
         {
             return await placeContext.ReadAsync(key, useNavigationalProperties, isReadOnly);
         }

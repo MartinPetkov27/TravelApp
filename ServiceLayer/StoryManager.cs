@@ -26,7 +26,7 @@ namespace ServiceLayer
         {
             return await storyContext.ReadAsync(key, useNavigationalProperties, isReadOnly);
         }
-        public async Task<ICollection<Story>> ReadAllAsync(bool useNAvigationalProperties = false, bool isReadOnly = true)
+        public async Task<ICollection<Story>> ReadAllAsync(bool useNAvigationalProperties, bool isReadOnly = true)
         {
             return await storyContext.ReadAllAsync(useNAvigationalProperties, isReadOnly);
         }

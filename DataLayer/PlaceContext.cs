@@ -67,7 +67,7 @@ namespace DataLayer
         }
 
         //Read method for the Place
-        public async Task<Place> ReadAsync(int key, bool useNavigationalProperties = false, bool isReadOnly = true)
+        public async Task<Place> ReadAsync(int key, bool useNavigationalProperties, bool isReadOnly = true)
         {
             try
             {
@@ -165,7 +165,7 @@ namespace DataLayer
         {
             try
             {
-                Place placeFromDb = await ReadAsync(key);
+                Place placeFromDb = await ReadAsync(key, false);
 
                 if (placeFromDb == null)
                 {

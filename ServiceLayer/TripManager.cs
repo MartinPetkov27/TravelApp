@@ -35,7 +35,7 @@ namespace ServiceLayer
         {
             await tripContext.CreateAsync(item);
         }
-        public async Task<Trip> ReadAsync(int key, bool useNavigationalProperties = false, bool isReadOnly = true)
+        public async Task<Trip> ReadAsync(int key, bool useNavigationalProperties, bool isReadOnly = true)
         {
             return await tripContext.ReadAsync(key, useNavigationalProperties, isReadOnly);
         }
@@ -48,7 +48,7 @@ namespace ServiceLayer
         {
             return await tripContext.ReadAllAsync(useNAvigationalProperties, isReadOnly);
         }
-        public async Task UpdateAsync(Trip item, bool useNaigationalProperties = false)
+        public async Task UpdateAsync(Trip item, bool useNaigationalProperties )
         {
             await tripContext.UpdateAsync(item, useNaigationalProperties);
         }

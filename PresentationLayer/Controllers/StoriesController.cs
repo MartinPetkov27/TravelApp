@@ -40,6 +40,24 @@ namespace PresentationLayer.Controllers
         {
             return View(await storyManager.ReadAllAsync(true, true));
         }
+        // GET: Stories
+        public async Task<IActionResult> IndexMoreStories()
+        {
+            return View(await storyManager.ReadAllAsync(true, true));
+        }
+        public async Task<IActionResult> MyStories()
+        {
+            var user = await userManager.GetUserAsync(User);
+            if (user == null) return Unauthorized();
+            var userId = user.Id;
+
+            var allStories = await storyManager.ReadAllAsync(true, true);
+            var myStories = allStories.Where(s => s.UserId == userId).ToList();
+
+            ViewBag.UserId = userId;
+
+            return View(await storyManager.ReadAllAsync(true, true));
+        }
 
         // GET: Stories/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -66,12 +84,69 @@ namespace PresentationLayer.Controllers
             }
 
             Story story = await storyManager.ReadAsync((int)id, true, true);
+
             if (story == null)
             {
                 return NotFound();
             }
 
+            if (story.Content.Length > 1000)
+            {
+                string[] arr = SmartSplitTextPreservingWords(story.Content);
+                TempData["firstHalfContent"] = arr[0];
+                TempData["secondHalfContent"] = arr[1];
+            }
+            else
+            {
+                TempData["firstHalfContent"] = story.Content;
+                TempData["secondHalfContent"] = "There is no more story :)";
+            }
+
             return View(story);
+        }
+
+        //metod for spliting Text
+        public static string[] SmartSplitTextPreservingWords(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return new[] { "", "" };
+
+            int middle = text.Length / 2;
+            int splitPoint = -1;
+
+            // Look to the right for space or punctuation
+            for (int i = middle; i < text.Length; i++)
+            {
+                if (char.IsWhiteSpace(text[i]) || ".!?".Contains(text[i]))
+                {
+                    splitPoint = i;
+                    break;
+                }
+            }
+
+            // If not found, look to the left
+            if (splitPoint == -1)
+            {
+                for (int i = middle - 1; i >= 0; i--)
+                {
+                    if (char.IsWhiteSpace(text[i]) || ".!?".Contains(text[i]))
+                    {
+                        splitPoint = i;
+                        break;
+                    }
+                }
+            }
+
+            // Fallback to middle if no better spot found
+            if (splitPoint == -1)
+            {
+                splitPoint = middle;
+            }
+
+            string firstHalf = text.Substring(0, splitPoint).Trim();
+            string secondHalf = text.Substring(splitPoint).Trim();
+
+            return new[] { firstHalf, secondHalf };
         }
         // GET: Stories/Details/5
         public async Task<IActionResult> Examine(int? id)
@@ -149,6 +224,8 @@ namespace PresentationLayer.Controllers
             };
 
             await storyManager.CreateAsync(newStory);
+            user.Stories.Add(newStory);
+            await userManager.UpdateAsync(user);
             return RedirectToAction(nameof(Index));
         }
 
@@ -173,12 +250,28 @@ namespace PresentationLayer.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Content,Status,UserId")] Story story)
+        public async Task<IActionResult> Edit(int Id, string Title, string Content, Status Status, string UserId, string ImageUrl1, string ImageUrl2, string ImageUrl3, string MapsUrl)
         {
-            if (id != story.Id)
+            var user = await userManager.GetUserAsync(User);
+            if (user == null) return Unauthorized();
+
+            var userId = user.Id;
+
+            //if (id != Id)
+            //{
+            //    return NotFound();
+            //}
+
+            Story story = new Story
             {
-                return NotFound();
-            }
+                Id = Id,
+                Title = Title,
+                Content = Content,
+                Status = Status,
+                UserId = userId,
+                ImageUrls = new List<string> { ImageUrl1, ImageUrl2, ImageUrl3 },
+                MapsUrl = MapsUrl
+            };
 
             if (ModelState.IsValid)
             {

@@ -1,0 +1,47 @@
+﻿@model PresentationLayer.ViewModels.DeleteCountryFromTripViewModel
+
+@{
+    ViewData["Title"] = "Delete";
+    string tripName = TempData["TripName"].ToString();
+    int tripId = Convert.ToInt32(TempData["TripId"]);
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete @Model.Country.Name from <br /> "@tripName"?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Country.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Country.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Country.Capital)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Country.Capital)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Country.Currency)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Country.Currency)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Country.Language)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Country.Language)
+        </dd>
+    </dl>
+
+    <form asp-controller="Countries" asp-action="DeleteCountryFromTripConfirmed" method="post">
+        <input type="hidden" asp-for="@Model.Country.Name" />
+        <input type="hidden" asp-for="@Model.TripId" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="EditTripCountries" asp-route-tripId="tripId">Back to Countries</a>
+    </form>
+</div>

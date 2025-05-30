@@ -1,7 +1,7 @@
 ﻿@model BusinessLayer.Story
 
 @{
-    ViewData["Title"] = "Edit";
+    // ViewData["Title"] = "Edit";
 }
 
 <h1>Edit</h1>
@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-controller="Stories" asp-action="Edit" method="post" asp-route-id="@Model.Id" asp-route-Title="@Model.Title" asp-route-Content="@Model.Content" asp-route-Status="@Model.Status" asp-route-ImageUrl1="@Model.ImageUrls[0]" asp-route-ImageUrl2="@Model.ImageUrls[1]" asp-route-ImageUrl3="@Model.ImageUrls[2]" asp-route-MapsUrl="@Model.MapsUrl">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
@@ -20,28 +20,42 @@
             </div>
             <div class="form-group">
                 <label asp-for="Content" class="control-label"></label>
-                <input asp-for="Content" class="form-control" />
+                <textarea asp-for="Content" class="form-control" rows="6" style="font-size: 1.1rem;"></textarea>
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" class="form-control"></select>
+                <input asp-for="Status" class="form-control" readonly value="@Model.Status"/>
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
+                <label asp-for="User" class="control-label"></label>
+                <input asp-for="UserId" class="form-control" asp-items="ViewBag.UserId" readonly value="@Model.User.Email"/>
                 <span asp-validation-for="UserId" class="text-danger"></span>
             </div>
+            @for (int i = 0; i < Model.ImageUrls.Count; i++)
+            {
+                <div class="form-group">
+                    <label asp-for="ImageUrls[i]" class="control-label">Image URL @i</label>
+                    <input asp-for="ImageUrls[i]" class="form-control" />
+                    <span asp-validation-for="ImageUrls[i]" class="text-danger"></span>
+                </div>
+            }
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <label asp-for="MapsUrl" class="control-label"></label>
+                <input asp-for="MapsUrl" class="form-control" value="@Model.MapsUrl"/>
+                <span asp-validation-for="MapsUrl" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group" >
+                <input type="submit" value="Save" class="btn btn-primary" style="background-color: #2f4f4f; color: white" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="MyStories" style="color: #60a1a0;">Back to List</a>
 </div>
 
 @section Scripts {

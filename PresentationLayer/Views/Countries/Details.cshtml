@@ -1,4 +1,4 @@
-﻿@model BusinessLayer.Country
+﻿@model PresentationLayer.ViewModels.EditTripPlacesByCountryViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -11,32 +11,35 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.Country.Name)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
+            @Html.DisplayFor(model => model.Country.Name)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Capital)
+            @Html.DisplayNameFor(model => model.Country.Capital)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Capital)
+            @Html.DisplayFor(model => model.Country.Capital)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Currency)
+            @Html.DisplayNameFor(model => model.Country.Currency)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Currency)
+            @Html.DisplayFor(model => model.Country.Currency)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Language)
+            @Html.DisplayNameFor(model => model.Country.Language)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Language)
+            @Html.DisplayFor(model => model.Country.Language)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.AlphaCode">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @* <a asp-action="Edit" asp-route-id="@Model?.AlphaCode">Edit</a> | *@
+   @*  <a asp-action="EditTripCountries" asp-route-tripId="@Model.TripId" style="color: #2f4f4f;">Back to List</a> *@
 </div>
+<a asp-controller="Places" asp-action="EditTripPlaces" asp-route-tripId="@Model.TripId" asp-route-countryName="@Model.Country.Name" class="btn btn-info" style="background-color: #2f4f4f; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+    Edit Places in @Model.Country.Name
+</a>

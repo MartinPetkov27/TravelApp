@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Details";
+    int tripId = ViewBag.TripId;
+    string countryName = ViewBag.CountryName.ToString();
 }
 
 <h1>Details</h1>
@@ -17,15 +19,33 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Latitude)
+            @Html.DisplayNameFor(model => model.StartingDate)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Latitude)
+            @(Model.StartingDate?.ToShortDateString())
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Longitude)
+            @Html.DisplayNameFor(model => model.EndingDate)
         </dt>
         <dd class = "col-sm-10">
+            @(Model.EndingDate?.ToShortDateString())
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Latitude)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Latitude)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Longitude)
+        </dt>
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Longitude)
         </dd>
         <dt class = "col-sm-2">
@@ -38,17 +58,11 @@
             @Html.DisplayNameFor(model => model.Trip)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Trip.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
+            @Html.DisplayFor(model => model.Trip.Title)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @* <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> | *@
+    <a asp-action="EditTripPlaces" asp-route-tripId="@tripId" asp-route-countryName="@countryName" style="color: #60a1a0; ">Back to List</a>
 </div>

@@ -1,0 +1,134 @@
+﻿@model IEnumerable<BusinessLayer.Country>
+
+@{
+    ViewData["Title"] = "Index";
+    int tripId = ViewBag.TripId;
+    List<string> countryNames = new List<string>();
+    foreach(var item in Model)
+    {
+        countryNames.Add(item.Name);
+    }
+}
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+
+<br />
+<br />
+<br />
+<h1>Countries of @Model.FirstOrDefault().Trips.FirstOrDefault().Title</h1>
+
+<hr />
+<div id="map" style="height: 500px;"></div>
+<hr />
+
+@* <p>
+    <a asp-controller="Trips" asp-action="Edit" asp-route-tripId="@tripId" style="color: #60a1a0;">Back to Edit</a>
+</p> *@ 
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Capital)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Currency)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Language)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Capital)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Currency)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Language)
+                </td>
+                <td>
+                   @*  <a asp-action="Edit" asp-route-id="@item.AlphaCode">Edit</a> | *@
+                    <a asp-action="Details" asp-route-id="@item.AlphaCode" asp-route-tripId="@tripId" style="color: #60a1a0;">Details</a> |
+                    <a asp-action="DeleteCountryFromTrip" asp-route-id="@item.AlphaCode" asp-route-tripId="@Model.FirstOrDefault().Trips.FirstOrDefault().Id" style="color: #60a1a0;">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div style="text-align: center; margin-top: 20px;">
+    <a asp-action="AddCountryToTrip" asp-route-tripId="@tripId" class="btn" style="background-color: #2f4f4f; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+        Add Country
+    </a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+
+    <script>
+        const preselectedCountries = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(countryNames));
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var map = L.map('map').setView([20, 0], 2);
+
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '© OpenStreetMap & CartoDB'
+            }).addTo(map);
+
+            let countryLayers = {};
+            let countryNames = [];
+
+            fetch('/Trips/GetCountries')
+                .then(response => response.json())
+                .then(data => {
+                    let countryLayer = L.geoJSON(data, {
+                        style: function (feature) {
+                            let name = feature.properties.name;
+                            if (preselectedCountries.map(c => c.toLowerCase()).includes(name.toLowerCase())) {
+                                return {
+                                    color: "blue",
+                                    weight: 2,
+                                    fillOpacity: 0.6
+                                };
+                            } else {
+                                return {
+                                    color: "#000",
+                                    weight: 1,
+                                    fillOpacity: 0.3
+                                };
+                            }
+                        },
+                        onEachFeature: function (feature, layer) {
+                            let countryName = feature.properties.name;
+                            countryLayers[countryName.toLowerCase()] = layer;
+                            countryNames.push(countryName);
+
+                            // Disable clicks only
+                            layer.on('click', function (e) {
+                                e.originalEvent.preventDefault();
+                                e.originalEvent.stopPropagation();
+                            });
+                        }
+                    }).addTo(map);
+                })
+                .catch(error => console.error('Error loading country data:', error));
+        });
+    </script>
+}

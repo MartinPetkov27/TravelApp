@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Delete";
+    int tripId = ViewBag.TripId;
+    string countryName = ViewBag.CountryName.ToString();
 }
 
 <h1>Delete</h1>
@@ -49,9 +51,9 @@
         </dd>
     </dl>
     
-    <form asp-action="Delete">
+    <form asp-action="Delete" asp-route-tripId="@tripId" asp-route-countryName="@countryName">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="submit" value="Delete" class="btn btn-danger" style="background-color: #2f4f4f; color: white" /> |
+        <a asp-action="EditTripPlaces" asp-route-tripId="@tripId" asp-route-countryName="@countryName" style="color: #60a1a0;">Back to List</a>
     </form>
 </div>

@@ -7,9 +7,9 @@
     <p class="lead mt-3">You can now continue editing your trip or add more places.</p>
 
     <div class="mt-4">
-        <a asp-controller="Trips" asp-action="CreateTripSelectCities" asp-route-countryName="@ViewBag.CountryName" asp-route-title="@ViewBag.TripName" class="btn btn-primary">
+        <a asp-controller="Trips" asp-action="CreateTripSelectCities" asp-route-title="@ViewBag.TripName" asp-route-countryName="@ViewBag.CountryName" class="btn btn-primary" style="background-color: #2f4f4f; color: white">
             Continue editing your trip
         </a>
-        <a asp-controller="Places" asp-action="CreateFromTrip" asp-route-tripName="@ViewBag.TripName" asp-route-countryIndex="0" class="btn btn-outline-success ms-2">Add Another Place</a>
+        <a asp-controller="Places" asp-action="CreateFromTrip" asp-route-tripName="@ViewBag.TripName" asp-route-countryIndex="0" class="btn btn-outline-success ms-2" style="background-color: #2f4f4f; color: white">Add Another Place</a>
     </div>
 </div>

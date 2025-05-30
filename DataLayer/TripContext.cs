@@ -53,7 +53,7 @@ namespace DataLayer
         }
 
         //Read method for the Trip
-        public async Task<Trip> ReadAsync(int key, bool useNavigationalProperties = false, bool isReadOnly = true)
+        public async Task<Trip> ReadAsync(int key, bool useNavigationalProperties, bool isReadOnly = true)
         {
             try
             {
@@ -103,7 +103,7 @@ namespace DataLayer
         }
 
         //Update method for the Trip
-        public async Task UpdateAsync(Trip item, bool useNavigationalProperties = false)
+        public async Task UpdateAsync(Trip item, bool useNavigationalProperties)
         {
             try
             {

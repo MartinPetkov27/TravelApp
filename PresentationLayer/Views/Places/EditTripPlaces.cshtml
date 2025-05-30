@@ -1,0 +1,164 @@
+﻿@model PresentationLayer.ViewModels.EditTripPlacesViewModel
+
+@{
+    // ViewData["Title"] = "Index";
+    string countryName = Model.Country.Name;
+    var placesData = Model.Places.Select(p => new
+    {
+        p.Name,
+        p.Latitude,
+        p.Longitude
+    }).ToList();
+}
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+
+<br />
+<br />
+<br />
+<h1>"@Model.Trip.Title" - Places</h1>
+
+<p>
+    <a asp-action="CreateFromEditTrip" asp-route-tripName="@Model.Trip.Title" asp-route-countryName="@Model.Country.Name" style="color: #60a1a0;">Create New</a>
+</p>
+@* <h4>Choose a country for editing:</h4> *@
+
+@* <input type="text" id="searchBox" placeholder="Search for a country..." class="form-control" autocomplete="off" />
+
+<!-- Dropdown list -->
+<ul id="suggestions" class="dropdown-menu"></ul> *@
+
+@* <select class="form-control" id="nextCountry" name="nextCountry">
+    <option value="">-- Select a country --</option>
+    @foreach (var country in Model.Trip.Countries)
+    {
+        <option value="@country.Name">@country.Name</option>
+    }
+</select>
+
+<!-- Hidden input to store selected country -->
+<input asp-for="CoutnryName" type="hidden" id="SelectedCountry" value=""/> *@
+
+@* <!-- Hidden input to store tripTitle -->
+<input  asp-for="#"  type="hidden" value="" /> *@
+
+@if (Model.Places.Count != 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Trip.Places.FirstOrDefault().Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Trip.Places.FirstOrDefault().StartingDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Trip.Places.FirstOrDefault().EndingDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Trip.Places.FirstOrDefault().Country)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Trip.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Trip.Places.FirstOrDefault().Description)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Places.OrderByDescending(p => p.StartingDate))
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @(item.StartingDate?.ToShortDateString())
+                    </td>
+                    <td>
+                        @(item.StartingDate?.ToShortDateString())
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Country.AlphaCode)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Trip.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @* <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> | *@
+                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-tripId="@Model.Trip.Id" asp-route-countryName="@Model.Country.Name" style="color: #60a1a0; ">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id" asp-route-tripId="@Model.Trip.Id" asp-route-countryName="@Model.Country.Name" style="color: #60a1a0;">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <hr />
+    <div id="map" style="height: 500px;"></div>
+    <hr />
+}
+else
+{
+    <h4>There are no places added in @Model.Country.Name</h4>
+}
+
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+
+    <script>
+        const countryName = "@countryName";
+        const places = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(placesData));
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+             const map = L.map('map').setView([20, 0], 2);
+
+             L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                 attribution: '© OpenStreetMap & CartoDB'
+             }).addTo(map);
+
+             // Add markers for each place
+             places.forEach(place => {
+                 if (place.Latitude && place.Longitude) {
+                     L.marker([place.Latitude, place.Longitude])
+                         .addTo(map)
+                         .bindPopup(`<b>${place.Name}</b>`);
+                 }
+             });
+
+             // Auto-zoom to country shape
+             fetch('/Trips/GetCountries')
+                 .then(response => response.json())
+                 .then(data => {
+                     const countryFeature = data.features.find(f =>
+                         f.properties.name.toLowerCase() === countryName.toLowerCase()
+                     );
+
+                     if (countryFeature) {
+                         const layer = L.geoJSON(countryFeature);
+                         map.fitBounds(layer.getBounds());
+                     } else {
+                         console.warn("Country not found:", countryName);
+                     }
+                 })
+                 .catch(error => console.error("Error loading countries:", error));
+         });
+    </script>
+}
+

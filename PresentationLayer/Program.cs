@@ -50,7 +50,8 @@ builder.Services.AddScoped<UserManager, UserManager>();
 builder.Services.AddScoped<UserContext, UserContext>();
 
 builder.Services.AddScoped<IdentityContext, IdentityContext>();
-builder.Services.AddScoped<IdentityManager, IdentityManager>(); 
+builder.Services.AddScoped<IdentityManager, IdentityManager>();
+
 
 #endregion
 

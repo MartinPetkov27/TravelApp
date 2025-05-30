@@ -6,16 +6,24 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using ServiceLayer;
+using Microsoft.AspNetCore.Identity;
 
 namespace PresentationLayer.Controllers
 {
 	public class UsersController : Controller
 	{
-		private readonly IdentityContext _context;
+        private readonly UserManager<User> _userManager;
+        private readonly IdentityContext _context;
+		private readonly IdentityManager identityManager;
 
-		public UsersController(IdentityContext context)
+		
+
+		public UsersController(IdentityContext context, IdentityManager identityManager, UserManager<User> _userManager)
 		{
+			this._userManager = _userManager;
 			_context = context;
+			this.identityManager = identityManager;
 		}
 
 		// GET: Users
@@ -115,25 +123,56 @@ namespace PresentationLayer.Controllers
 		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(string id, [Bind("Id,UserName,Email,FirstName,LastName,PhoneNumber")] User user)
+		public async Task<IActionResult> Edit(string id, [Bind("Id,UserName,Email,FirstName,LastName,PhoneNumber")] User user, string role)
 		{
 			if (id != user.Id)
 			{
 				return NotFound();
 			}
 
-			User userFromDb = await _context.ReadUserAsync(id);
-			user.Trips = userFromDb.Trips;
-			user.BucketLists = userFromDb.BucketLists;
-			user.Stories = userFromDb.Stories;
+			//User userFromDb = await _context.ReadUserAsync(id);
+			//user.Trips = userFromDb.Trips;
+			//user.BucketLists = userFromDb.BucketLists;
+			//user.Stories = userFromDb.Stories;
 
 			if (ModelState.IsValid)
 			{
 				try
 				{
-					await _context.UpdateUserAsync(user.Id, user.UserName, user.Email, user.FirstName,user.LastName, user.PhoneNumber);
-                } 
-				catch (DbUpdateConcurrencyException)
+                    // Fetch user from DB
+                    //User userFromDb = await _context.ReadUserAsync(id);
+
+                    //if (userFromDb == null)
+                    //{
+                    //    return NotFound();
+                    //}
+
+                    // Update basic fields
+                    //userFromDb.UserName = user.UserName;
+                    //userFromDb.Email = user.Email;
+                    //userFromDb.FirstName = user.FirstName;
+                    //userFromDb.LastName = user.LastName;
+                    //userFromDb.PhoneNumber = user.PhoneNumber;
+
+                    //await _context.SaveChangesAsync(); // Or your own update method
+
+					await identityManager.UpdateUserWithRolesAsync(user.Id, user.UserName, user.Email, user.FirstName, user.LastName, user.PhoneNumber, role);
+
+                    //// ==== Update Role ====
+                    //var currentRoles = await _userManager.GetRolesAsync(user);
+
+                    //if (currentRoles.Any())
+                    //{
+                    //    await _userManager.RemoveFromRolesAsync(user, currentRoles);
+                    //}
+
+                    //if (!string.IsNullOrEmpty(role))
+                    //{
+                    //    await _userManager.AddToRoleAsync(user, role);
+                    //}
+                    // ======================
+                }
+                catch (DbUpdateConcurrencyException)
 				{
 					if (!await UserExists(user.Id))
 					{

@@ -1,0 +1,47 @@
+﻿@model BusinessLayer.BucketList
+
+@{
+    ViewData["Title"] = "Add Places";
+}
+
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h1 class="display-4">Add a Place</h1>
+        </div>
+    </div>
+
+    <form method="post" class="row g-3 justify-content-center mb-5">
+        @* <div class="col-md-6">
+            <input asp-for="Name" class="form-control form-control-lg" placeholder="Enter place title..." />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div> *@
+        <div class="col-md-2 d-grid">
+            <a asp-action="AddPlace" class="btn btn-primary btn-lg fw-bold shadow">
+                ➕ ADD PLACE
+            </a>
+        </div>
+    </form>
+
+    @if (Model.Destinations != null)
+    {
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            @foreach (var place in Model.Destinations)
+            {
+                <div class="col">
+                    <div class="card shadow h-100 border-0">
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <h5 class="card-title">@place</h5>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center text-muted">
+            <p class="lead">No places added yet. Be the first!</p>
+        </div>
+    }
+</div>

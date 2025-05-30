@@ -23,22 +23,25 @@ namespace DataLayer
         {
             try
             {
-                List<Place> destinations = new List<Place>(item.Destinations.Count);
-
-                foreach (var destination in item.Destinations)
+                if (item.Destinations != null)
                 {
-                    Place destinationFromDb = await dbContext.Places.FindAsync(destination.Id);
+                    List<Place> destinations = new List<Place>(item.Destinations.Count);
 
-                    if (destinationFromDb is null)
+                    foreach (var destination in item.Destinations)
                     {
-                        destinations.Add(destination);
+                        Place destinationFromDb = await dbContext.Places.FindAsync(destination.Id);
+
+                        if (destinationFromDb is null)
+                        {
+                            destinations.Add(destination);
+                        }
+                        else
+                        {
+                            destinations.Add(destinationFromDb);
+                        }
                     }
-                    else
-                    {
-                        destinations.Add(destinationFromDb);
-                    }
+                    item.Destinations = destinations;
                 }
-                item.Destinations = destinations;
 
                 dbContext.BucketLists.Add(item);
                 dbContext.SaveChanges();
@@ -109,6 +112,16 @@ namespace DataLayer
                 BucketList bucketListFromDb = await ReadAsync(item.Id, useNavigationalProperties, false);
                 
                 bucketListFromDb.Name = item.Name;
+                bucketListFromDb.Place1 = item.Place1;
+                bucketListFromDb.Place2 = item.Place2;
+                bucketListFromDb.Place3 = item.Place3;
+                bucketListFromDb.Place4 = item.Place4;
+                bucketListFromDb.Place5 = item.Place5;
+                bucketListFromDb.ImageUrl1 = item.ImageUrl1;
+                bucketListFromDb.ImageUrl2  = item.ImageUrl2;
+                bucketListFromDb.ImageUrl3 = item.ImageUrl3;
+                bucketListFromDb.ImageUrl4 = item.ImageUrl4;
+                bucketListFromDb.ImageUrl5 = item.ImageUrl5;
 
                 if (useNavigationalProperties)
                 { 

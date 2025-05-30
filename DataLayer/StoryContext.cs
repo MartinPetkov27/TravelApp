@@ -25,8 +25,20 @@ namespace DataLayer
                 dbContext.Stories.Add(item);
                 await dbContext.SaveChangesAsync();
             }
-            catch (Exception)
+            catch (DbUpdateException ex)
             {
+                Console.WriteLine("DbUpdateException in CreateAsync:");
+                Console.WriteLine($"Message: {ex.Message}");
+                Console.WriteLine($"Inner Exception: {ex.InnerException?.Message}");
+                Console.WriteLine($"Base Exception: {ex.GetBaseException().Message}");
+                throw; // Optionally rethrow
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("General Exception in CreateAsync:");
+                Console.WriteLine($"Message: {ex.Message}");
+                Console.WriteLine($"Inner Exception: {ex.InnerException?.Message}");
+                Console.WriteLine($"Base Exception: {ex.GetBaseException().Message}");
                 throw;
             }
         }
@@ -57,7 +69,7 @@ namespace DataLayer
         }
 
         //ReadAll method for the Story
-        public async Task<ICollection<Story>> ReadAllAsync(bool useNavigationalProperties = false, bool isReadOnly = true)
+        public async Task<ICollection<Story>> ReadAllAsync(bool useNavigationalProperties, bool isReadOnly = true)
         {
             try
             {

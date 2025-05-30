@@ -7,6 +7,7 @@
     string selectedCountry = ViewBag.SelectedCountry as string;
     var countries = ViewBag.Countries as List<string>;
     int countriesIndex = 0;
+    var tripId = Model.Id;
 
     // string startDate = Model.Places.FirstOrDefault().StartingDate?.ToString("yyyy-MM-dd");
 }
@@ -25,7 +26,7 @@
 <br />
 <h5>@Model.Title</h5>
 <hr />
-<a asp-action="Create">Back to Your Trips</a>
+<a asp-action="Create" style="color: #2f4f4f;">Back to Your Trips</a>
 
 <div class="row mt-4">
     <!-- LEFT SIDE -->
@@ -33,7 +34,7 @@
 
         <!-- Add place -->
         <div class="form-group mb-3">
-            <a asp-controller="Places" asp-action="CreateFromTrip" asp-route-tripName="@Model.Title" asp-route-countryIndex="@countriesIndex" class="btn btn-outline-primary w-100">
+            <a asp-controller="Places" asp-action="CreateFromTrip" asp-route-tripName="@Model.Title" asp-route-countryIndex="@countriesIndex" class="btn btn-outline-primary w-100" style="background-color: #2f4f4f; color: white">
                 Add place
             </a>
         </div>
@@ -54,22 +55,36 @@
                         }
                     </select>
                 </div>
-                <button type="submit" class="btn btn-outline-primary ms-2" style="height: 38px;">Add</button>
+                <button type="submit" class="btn btn-outline-primary ms-2" style="height: 38px;background-color: #2f4f4f; color: white">Add</button>
             </div>
         </form>
 
         <!-- Trip Description -->
-        <div class="form-group text-center">
+        <form id="descriptionForm" asp-controller="Trips" asp-action="UpdateDescription" method="post" asp-route-tripId="@Model.Id">
+            @Html.AntiForgeryToken()
+
+            <div class="form-group text-center">
+                <label asp-for="Description">Description:</label>
+                <input asp-for="Description" name="description" class="form-control w-50 mx-auto"
+                       style="width:100%!important"
+                       placeholder="Enter trip description here" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+        </form>
+        @* <div class="form-group text-center">
             <label asp-for="Description">Description:</label>
-            <input asp-for="Description" class="form-control w-50 mx-auto" style="width:100%!important" placeholder="Enter trip description here" />
+            <input asp-for="Description" class="form-control w-50 mx-auto"
+                   style="width:100%!important"
+                   placeholder="Enter trip description here"
+                   id="tripDescription" />
             <span asp-validation-for="Description" class="text-danger"></span>
-        </div>
+        </div> *@
 
         <!-- Disabled autofill starting and ending dates-->
-        <div class="form-group text-center mt-3">
+       @*  <div class="form-group text-center mt-3">
             <label for="DateRange"><strong>Date Range</strong></label>
             <input type="text" id="DateRange" class="form-control w-50 mx-auto" placeholder="Loading..." readonly />
-        </div>
+        </div> *@
         @*   <div class="form-group text-center mt-3">
             <label for="DateRange"><strong>Date Range</strong></label>
             <input type="text" id="DateRange" name="DateRange" class="form-control w-50 mx-auto" placeholder="Select date range" />
@@ -79,10 +94,15 @@
 
         <!-- Generate Trip Button -->
         <div class="form-group mt-4">
-            <button class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#generateTripModal">
+            <button class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#generateTripModal" style="background-color: #2f4f4f; color: white">
                 Generate Trip
             </button>
         </div>
+
+        <br />
+        <button type="submit" form="descriptionForm" class="btn btn-primary" style="background-color: #2f4f4f; color: white">
+            Save Description
+        </button>
 
         <!-- Modal -->
         <div class="modal fade" id="generateTripModal" tabindex="-1" aria-labelledby="generateTripLabel" aria-hidden="true">
@@ -97,7 +117,7 @@
                         <div class="row justify-content-center">
                             <div class="col-md-8">
                                 <form asp-controller="Trips" asp-action="GenerateTrip" id="tripCriteriaForm" class="p-4 rounded shadow bg-light">
-                                    <h4 class="mb-4 text-primary fw-bold text-center">Create Your Dream Trip</h4>
+                                    <h4 class="mb-4 text-primary fw-bold text-center" style="color: #2f4f4f; ">Create Your Dream Trip</h4>
 
                                     <div class="row mb-3">
                                         <div class="col-md-6">
@@ -146,7 +166,7 @@
                                     </div>
 
                                     <div class="d-grid mt-4">
-                                        <button type="submit" class="btn btn-success btn-lg">
+                                        <button type="submit" class="btn btn-success btn-lg" style="background-color: #2f4f4f; color: white">
                                             🚀 Generate Trip
                                         </button>
                                     </div>
@@ -157,7 +177,7 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: #2f4f4f; color: white">Cancel</button>
                         @* <button class="btn btn-primary" id="generateTripBtn">Generate</button> *@
                     </div>
                 </div>
@@ -210,11 +230,11 @@
                         @if (Model.Places != null && Model.Places.Any())
                         {
                             <ul class="ms-4">
-                                @foreach (var place in Model.Places)
+                                @foreach (var place in Model.Places.OrderByDescending(p => p.StartingDate))
                                 {
                                     if (place.CoutryAlphaCode == country.AlphaCode)
                                     {
-                                        <li class="text-danger">📍 @place.Name [@place.StartingDate.Value.ToShortDateString() - @place.EndingDate.Value.ToShortDateString()]</li>
+                                        <li class="text-danger">📍 @place.Name  [@place.StartingDate.Value.AddDays(1).ToShortDateString() - @place.EndingDate.Value.AddDays(1).ToShortDateString()]</li>
                                     }
                                 }
                             </ul>
@@ -428,6 +448,41 @@
                 });
             });
             //END Setup the Generate Button END
+
+
+        @Html.AntiForgeryToken()
+            //Description
+      document.addEventListener('DOMContentLoaded', function () {
+            const input = document.getElementById('tripDescription');
+            const tripId = document.getElementById('tripId').value;
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+            input.addEventListener('input', function () {
+                const value = input.value.trim();
+
+                if (value !== "") {
+                    fetch('/YourController/UpdateDescription', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'RequestVerificationToken': token
+                        },
+                        body: JSON.stringify({ tripId: parseInt(tripId), description: value })
+                    })
+                    .then(response => {
+                        if (!response.ok) throw new Error("Failed to update description.");
+                        return response.text();
+                    })
+                    .then(result => {
+                        console.log("Description updated:", result);
+                    })
+                    .catch(err => {
+                        console.error("Error:", err);
+                    });
+                }
+            });
+        });
+            //End of Description
     </script>
 }
 

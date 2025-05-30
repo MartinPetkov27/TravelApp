@@ -8,16 +8,21 @@ using Microsoft.EntityFrameworkCore;
 using BusinessLayer;
 using DataLayer;
 using ServiceLayer;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using PresentationLayer.ViewModels;
+using Microsoft.IdentityModel.Tokens;
 
 namespace PresentationLayer.Controllers
 {
     public class CountriesController : Controller
     {
         private readonly CountryManager countryManager;
+        private readonly TripManager tripManager;
 
-        public CountriesController(CountryManager countryManager)
+        public CountriesController(CountryManager countryManager, TripManager tripManager)
         {
             this.countryManager = countryManager;   
+            this.tripManager = tripManager;
         }
 
         // GET: Countries
@@ -27,7 +32,7 @@ namespace PresentationLayer.Controllers
         }
 
         // GET: Countries/Details/5
-        public async Task<IActionResult> Details(string? id)
+        public async Task<IActionResult> Details(string? id, int tripId)
         {
             if (id == null)
             {
@@ -41,7 +46,11 @@ namespace PresentationLayer.Controllers
                 return NotFound();
             }
 
-            return View(country);
+            EditTripPlacesByCountryViewModel viewModel = new EditTripPlacesByCountryViewModel();
+            viewModel.Country = country;
+            viewModel.TripId = tripId;
+
+            return View(viewModel);
         }
 
         // GET: Countries/Create
@@ -65,6 +74,44 @@ namespace PresentationLayer.Controllers
             return View(country);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> AddCountryToTrip(int tripId)
+        {
+            Trip trip = await tripManager.ReadAsync(tripId, false, true);
+
+            ViewBag.TripId = tripId;
+            //ViewBag.TripTitle = trip.Title;    
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddCountryToTrip(AddCountryToTripViewModel viewModel)
+        {
+            Trip trip = new Trip();
+            if (ModelState.IsValid)
+            {
+                Country country = await countryManager.GetCountryByName(viewModel.CountryName);
+                trip = await tripManager.ReadAsync(viewModel.TripId, true, true);
+
+                trip.Countries.Add(country);
+                await tripManager.UpdateAsync(trip, true);
+
+                if (country.Trips == null)
+                {
+                    country.Trips = new List<Trip>() { trip };
+                    countryManager.UpdateAsync(country, true);
+                }
+                else 
+                {
+                    country.Trips.Add(trip);
+                    countryManager.UpdateAsync(country, true);
+                }
+                
+                return RedirectToAction(nameof(EditTripCountries), new { tripId = viewModel.TripId });
+            }
+            return View(trip.Id);
+        }
+
         // GET: Countries/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
@@ -80,6 +127,13 @@ namespace PresentationLayer.Controllers
                 return NotFound();
             }
             return View(country);
+        }
+
+        // GET: Countries/Edit/5
+        public async Task<IActionResult> EditTripCountries(int tripId)
+        {
+            ViewBag.TripId = tripId;
+            return View(await countryManager.ReadByTripAsync(tripId, true, true));
         }
 
         // POST: Countries/Edit/5
@@ -98,7 +152,7 @@ namespace PresentationLayer.Controllers
             {
                 try
                 {
-                   await countryManager.UpdateAsync(country);
+                   await countryManager.UpdateAsync(country, true);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -148,9 +202,61 @@ namespace PresentationLayer.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: Countries/Delete/5
+        [HttpGet]
+        public async Task<IActionResult> DeleteCountryFromTrip(string id, int tripId)
+        {
+            Trip trip = await tripManager.ReadAsync(tripId, true, true);
+
+            if (trip != null)
+            {
+                TempData["TripName"] = trip.Title;
+                TempData["TripId"] = trip.Id;
+            }
+            else
+            { TempData["TripId"] = "no title"; TempData["TripId"] = 0; }
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var country = await countryManager.ReadAsync(id, true, true);
+
+            if (country == null)
+            {
+                return NotFound();
+            }
+
+            DeleteCountryFromTripViewModel viewModel = new DeleteCountryFromTripViewModel();
+            viewModel.Country = country;
+            viewModel.TripId = tripId;
+
+            return View(viewModel);
+        }
+        // POST: Countries/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteCountryFromTripConfirmed(DeleteCountryFromTripViewModel viewModel)
+        {
+            var country = await countryManager.GetCountryByName(viewModel.Country.Name);
+
+            var trip = await tripManager.ReadAsync(viewModel.TripId,true, true);
+
+            if (country != null && trip != null)
+            {
+                trip.Countries.Remove(country);
+                await tripManager.UpdateAsync(trip, true);
+            }
+            
+            return RedirectToAction(nameof(EditTripCountries), new { tripId = viewModel.TripId});
+        }
+
         private bool CountryExists(string id)
         {
             return countryManager.ReadAsync(id) is not null;
         }
+
+
     }
 }

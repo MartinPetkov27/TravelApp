@@ -1,0 +1,154 @@
+﻿@model PresentationLayer.ViewModels.AddCountryToTripViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    int tripId = ViewBag.Tripid;
+    string tripTitle = ViewBag.TripTitle;
+}
+
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+
+<h1>Add Country to "@tripTitle"</h1>
+
+<br />
+<h4>Where do you want to go?</h4>
+
+<form id="addCountry" asp-controller="Countries" asp-action="AddCountryToTrip" method="post">
+
+    <!-- Search input -->
+    <input type="text" id="searchBox" placeholder="Search for a country..." class="form-control" autocomplete="off" />
+
+    <!-- Dropdown list -->
+    <ul id="suggestions" class="dropdown-menu"></ul>
+
+    <!-- Hidden input to store selected country -->
+    <input asp-for="CountryName" type="hidden" id="SelectedCountry" value="" />
+
+    <!-- Hidden input to store tripTitle -->
+    <input asp-for="TripId" type="hidden" value="@tripId" />
+</form>
+<hr />
+<div id="map" style="height: 500px;"></div>
+<hr />
+
+<button type="submit" form="addCountry" class="btn" style="background-color: #2f4f4f; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+    Add Country
+</button>
+
+<div>
+    <a asp-action="EditTripCountries">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+
+<script>
+            document.addEventListener("DOMContentLoaded", function () {
+                var map = L.map('map').setView([20, 0], 2);
+
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                    attribution: '© OpenStreetMap & CartoDB'
+                }).addTo(map);
+
+                let selectedLayer = null;
+                let countryLayers = {};
+                let countryNames = [];
+
+                fetch('/Trips/GetCountries')
+                    .then(response => response.json())
+                    .then(data => {
+                        let countryLayer = L.geoJSON(data, {
+                            style: { color: "#000", weight: 1, fillOpacity: 0.3 },
+                            onEachFeature: function (feature, layer) {
+                                let countryName = feature.properties.name;
+                                countryLayers[countryName.toLowerCase()] = layer;
+                                countryNames.push(countryName);
+
+                                layer.on('click', function () {
+                                    selectCountry(layer, countryName);
+                                });
+                            }
+                        }).addTo(map);
+                    })
+                    .catch(error => console.error('Error loading country data:', error));
+
+                function selectCountry(layer, countryName) {
+                    if (selectedLayer) {
+                        selectedLayer.setStyle({ color: "#000", weight: 1, fillOpacity: 0.3 });
+                    }
+
+                    layer.setStyle({ color: "blue", weight: 3, fillOpacity: 0.5 });
+
+                    document.getElementById('searchBox').value = countryName;
+                    document.getElementById('SelectedCountry').value = countryName;
+                    document.getElementById('suggestions').innerHTML = '';
+
+                    map.fitBounds(layer.getBounds());
+                    selectedLayer = layer;
+
+                    let titleInput = document.getElementById('titleInput');
+                    if (titleInput && countryName) {
+                        titleInput.value = `Holiday to ${countryName}`;
+                    }
+                }
+
+                // Auto-suggest dropdown
+                document.getElementById('searchBox').addEventListener('input', function () {
+                    let query = this.value.toLowerCase();
+                    let suggestionsBox = document.getElementById('suggestions');
+
+                    suggestionsBox.innerHTML = '';
+
+                    if (query.length > 0) {
+                        let matches = countryNames.filter(name => name.toLowerCase().startsWith(query));
+
+                        matches.forEach(name => {
+                            let listItem = document.createElement('li');
+                            listItem.textContent = name;
+                            listItem.classList.add('dropdown-item');
+
+                            listItem.addEventListener('click', function (event) {
+                                event.stopPropagation(); // Prevents any weird bubbling issues
+
+                                let searchBox = document.getElementById('searchBox');
+                                let suggestionsBox = document.getElementById('suggestions');
+
+                                searchBox.value = name;
+                                suggestionsBox.innerHTML = '';
+                                suggestionsBox.style.display = 'none'; // Hides dropdown after selection
+
+
+                                // Ensure the selected country is actually recognized
+                                if (countryLayers[name.toLowerCase()]) {
+                                 selectCountry(countryLayers[name.toLowerCase()], name);
+                                } else {
+                                    console.warn("Country not found in layers:", name);
+                                }
+                            });
+
+
+                            suggestionsBox.appendChild(listItem);
+                        });
+
+                        suggestionsBox.style.display = matches.length > 0 ? 'block' : 'none';
+                    } else {
+                        suggestionsBox.style.display = 'none';
+                    }
+                });
+
+                // Hide suggestions when clicking outside
+                document.addEventListener('click', function (e) {
+                    if (!document.getElementById('searchBox').contains(e.target) &&
+                        !document.getElementById('suggestions').contains(e.target)) {
+                        document.getElementById('suggestions').innerHTML = '';
+                    }
+                });
+            });
+</script>
+}

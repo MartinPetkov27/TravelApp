@@ -1,233 +1,81 @@
-﻿
+﻿@model BusinessLayer.BucketList
 
-@using BusinessLayer
-@model BusinessLayer.BucketList
 @{
-    ViewData["Title"] = "Create";
-    var countries = ViewBag.Countries as List<Country>;
+    ViewData["Title"] = "Add Places";
 }
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TripTale - Create BucketList</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:wght@400&display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" />
-    <link rel="stylesheet" href="~/css/BucketListCreate/reset.css" />
-    <link rel="stylesheet" href="~/css/BucketListCreate/main.css" />
-    @* <link rel="stylesheet" href="css/header.css" /> *@
-    <link rel="stylesheet" href="~/css/BucketListCreate/bucketlist.css" />
-    @* <link rel="stylesheet" href="css/footer.css" /> *@
-    <link rel="stylesheet" href="~/css/BucketListCreate/responsive.css" />
-    @* <link rel="stylesheet" href="~/css/BucketListCreate/index.css" />  *@
-</head>
-<body>
-    <div class="main-container">
-        <div class="create-trip-start">
-            <main class="bucket-list-create">
-                <section class="page-header">
-                    <div class="header-content">
-                        <h2 class="create-bucketlist">Create BucketList</h2>
-                        <p class="start-journey-now">Start your journey now.</p>
-                    </div>
-                </section>
 
-                <section class="bucketlist-form">
-                    <div class="form-group">
-                        <label for="bucketlist-name">BucketList Name:</label>
-                        <input type="text" id="bucketlist-name" class="input-field" placeholder="Enter your bucketlist name">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="country-select" class="choose-country">Choose a country:</label>
-                        <select id="country-select" class="country-dropdown">
-                            <option value="" selected disabled>Select a country</option>
-                                @foreach (var country in countries)
-                                {
-                                    <option value="countryName" style="color:white">@country.Name</option>
-                                }
-                        </select>
-                        <input type="hidden" name="countryName" id="selectedCountryInput" readonly />
-                        <input type="hidden" name="" id="selectedCountryCodeInput" readonly />
-                    </div>
-  
-                    <div class="places-container">
-                        <div class="country-display">
-                            <div class="image-background"></div>
-                            <div class="country-sidebar">
-                                <h3 class="country-name">Country name</h3>
-
-                                <div class="place-inputs">
-                                    <div class="input-group">
-                                        <input type="text" class="place-input" id="place-autocomplete" placeholder="Enter a place">
-                                        <button class="add-place-btn" id="add-place">+</button>
-                                    </div>
-                                    <div class="input-group">
-                                        <input type="url" class="image-url-input" id="image-url" placeholder="Enter image URL">
-                                        <button class="add-btn" id="add-image">ADD</button>
-                                    </div>
-                                </div>
-
-                                <div class="image-preview">
-                                    <div class="preview-box" id="preview-box">
-                                        <span class="image-label">image preview</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            @* Tab of added countries and places *@
-                            <div class="country-main">
-                                <div class="country-tabs">
-                                    <button class="country-tab active">Country name1</button>
-                                    <button class="country-tab">Country name1</button>
-                                    <button class="country-tab">Country name1</button>
-                                    <button class="country-tab">Country name1</button>
-                                </div>
-                            </div>
-
-                            <div class="country-content">
-                                <ul class="places-list">
-                                    <!-- Here the places will be listed dynamically -->
-                                    <li class="place-item">Place 1</li>
-                                    <li class="place-item">Place 2</li>
-                                    <li class="place-item">Place 3</li>
-                                </ul>
-                            </div>
-
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-5">
+                    <h2 class="mb-4 text-center fw-bold text-primary" style="color:#60a1a0!important; ">Create New Entry</h2>
+                    <form asp-action="Create" method="post">
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label">Name</label>
+                            <input asp-for="Name" class="form-control" placeholder="Name" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="button" class="save-button" id="save-bucketlist">
-                            Save BucketList
+                        <div class="mb-3">
+                            <label asp-for="Place1" class="form-label">Place1</label>
+                            <input asp-for="Place1" class="form-control" placeholder="Place1" />
+                            <span asp-validation-for="Place1" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="ImageUrl1" class="form-label">ImageUrl1</label>
+                            <input asp-for="ImageUrl1" class="form-control" placeholder="ImageUrl1" />
+                            <span asp-validation-for="ImageUrl1" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Place2" class="form-label">Place2</label>
+                            <input asp-for="Place2" class="form-control" placeholder="Place2"  />
+                            <span asp-validation-for="Place2" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="ImageUrl2" class="form-label">ImageUrl2</label>
+                            <input asp-for="ImageUrl2" class="form-control" placeholder="ImageUrl2" />
+                            <span asp-validation-for="ImageUrl2" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Place3" class="form-label">Place3</label>
+                            <input asp-for="Place3" class="form-control" placeholder="Place3" />
+                            <span asp-validation-for="Place3" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="ImageUrl3" class="form-label">ImageUrl3</label>
+                                <input asp-for="ImageUrl3" class="form-control" placeholder="ImageUrl3"  />
+                            <span asp-validation-for="ImageUrl3" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Place4" class="form-label">Place4</label>
+                            <input asp-for="Place4" class="form-control" placeholder="Place4" />
+                            <span asp-validation-for="Place4" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="ImageUrl4" class="form-label">ImageUrl4</label>
+                            <input asp-for="ImageUrl4" class="form-control" placeholder="ImageUrl4" />
+                            <span asp-validation-for="ImageUrl4" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Place5" class="form-label">Place5</label>
+                            <input asp-for="Place5" class="form-control" placeholder="Place5" />
+                            <span asp-validation-for="Place5" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="ImageUrl5" class="form-label">ImageUrl5</label>
+                            <input asp-for="ImageUrl5" class="form-control" placeholder="ImageUrl5" />
+                            <span asp-validation-for="ImageUrl5" class="text-danger"></span>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mt-3 fw-semibold" style="background-color: #2f4f4f; color: white">
+                            Submit
                         </button>
-                    </div>
-                </section>
-            </main>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
+</div>
 
-</body>
-</html>
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVCMcaodMWF5rbNUVo7YdZaAIHPC3draE&libraries=places"></script>
- 
-    <script>
-            // Autocomplete Search
-            const input = document.getElementById("place-autocomplete");
-            autocomplete = new google.maps.places.Autocomplete(input);
-
-            autocomplete.addListener("place_changed", () => {
-                const place = autocomplete.getPlace();
-                if (!place.geometry) {
-                    alert("No details available for input: '" + place.name + "'");
-                    return;
-                }
-            });
-
-        // Country dropdown functionality
-        document.getElementById("country-select").addEventListener("click", function () {
-            const list = document.getElementById("countryList");
-            list.style.display = list.style.display === "none" ? "block" : "none";
-        });
-
-        document.querySelectorAll(".country-option").forEach(function (item) {
-            item.addEventListener("click", function () {
-                console.log('selected');
-
-                const countryName = this.textContent;
-                document.getElementById("country-select").textContent = countryName;
-                document.getElementById("selectedCountryInput").value = countryName;
-                document.getElementById("countryList").style.display = "none";
-                console.log('selecte3d');
-            });
-        });
-
-        //Get the value from the select tag
-        document.getElementById('country-select').addEventListener('change', function() {
-            const selectedCountry = this.value;
-            document.getElementById('selectedCountryInput').value = selectedCountry;
-
-        });
-
-        // Close dropdown on outside click
-        document.addEventListener("click", function (event) {
-            const dropdown = document.getElementById("country-select");
-            const list = document.getElementById("countryList");
-            if (!dropdown.contains(event.target) && !list.contains(event.target)) {
-                list.style.display = "none";
-            }
-        });
-
-        //Image preview update on placed url
-        window.onload = function() {
-            const imageUrlInput = document.getElementById('image-url');
-            const previewBox = document.getElementById('preview-box');
-
-            imageUrlInput.addEventListener('input', function () {
-                const url = imageUrlInput.value.trim();
-
-                if (url) {
-                    previewBox.innerHTML = `<img src="${url}" alt="Image Preview" style="max-width: 100%; max-height: 200px; border-radius: 8px;">`;
-                } else {
-                    previewBox.innerHTML = `<span class="image-label">Image preview will appear here</span>`;
-                }
-            });
-        };
-
-        //Add button functionality
-        document.getElementById('add-image').addEventListener('click', async function () {
-            const placeName = document.getElementById("place-autocomplete");
-            if(!placeName)placeName.value.trim();
-            const imageUrl = document.getElementById("image-url");
-            if(!imageUrl) imageUrl.value.trim();
-            const selectedCountryCode = document.getElementById("selectedCountryInput");
-            if(!selectedCountryCode)selectedCountryCode.value.trim();
-
-            if (!placeName || !imageUrl || !selectedCountryCode) {
-                alert("Please fill all fields: Place Name, Image URL, and Country!");
-                return;
-            }
-
-            const newPlace = {
-                name: placeName,
-                imageUrl: imageUrl,
-                coutryAlphaCode: selectedCountryCode // careful spelling!
-            };
-
-            try {
-                const response = await fetch('/Places/CreateFromBucketList', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(newPlace)
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to create Place.'+response);
-                }
-
-                const createdPlace = await response.json();
-                console.log("Place saved successfully:", createdPlace);
-
-                // Add the createdPlace to bucketList.destinations
-                bucketList.destinations.push(createdPlace);
-
-                // Optionally clear the inputs
-                document.getElementById('place-autocomplete').value = "";
-                document.getElementById('image-url').value = "";
-
-            } catch (error) {
-                console.error(error);
-                alert('Error creating place.');
-            }
-        });
-
-    </script>
+    <partial name="_ValidationScriptsPartial" />
 }

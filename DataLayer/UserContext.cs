@@ -91,7 +91,7 @@ namespace DataLayer
         }
 
         //Read method for the User
-        public async Task<User> ReadAsync(string key, bool useNavigationalProperties = false, bool isReadOnly = true)
+        public async Task<User> ReadAsync(string key, bool useNavigationalProperties, bool isReadOnly = true)
         {
             try
             {
@@ -138,7 +138,7 @@ namespace DataLayer
         }
 
         //Update method for the User
-        public async Task UpdateAsync(User item, bool useNavigationalProperties = false)
+        public async Task UpdateAsync(User item, bool useNavigationalProperties)
         {
             User userFromDb = await ReadAsync(item.Id, useNavigationalProperties, false);
 

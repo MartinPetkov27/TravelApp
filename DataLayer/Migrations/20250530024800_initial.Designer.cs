@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataLayer.Migrations
 {
     [DbContext(typeof(TravelAppDbContext))]
-    [Migration("20250524180813_initial")]
+    [Migration("20250530024800_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -33,13 +33,42 @@ namespace DataLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ImageUrl1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl3")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl4")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl5")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("Place1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Place2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Place3")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Place4")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Place5")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -435,8 +464,7 @@ namespace DataLayer.Migrations
                     b.HasOne("BusinessLayer.User", "User")
                         .WithMany("BucketLists")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("User");
                 });
@@ -486,7 +514,8 @@ namespace DataLayer.Migrations
                 {
                     b.HasOne("BusinessLayer.User", "User")
                         .WithMany("Trips")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("User");
                 });

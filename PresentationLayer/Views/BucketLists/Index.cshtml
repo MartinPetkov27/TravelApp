@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿@* <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
@@ -10,9 +10,9 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:wght@400&display=swap" />
     <link rel="stylesheet" href="~/css/BucketListIndex/reset.css" />
     <link rel="stylesheet" href="~/css/BucketListIndex/main.css" />
-    @* <link rel="stylesheet" href="css/header.css" /> *@
+        <link rel="stylesheet" href="css/header.css" /> 
     <link rel="stylesheet" href="~/css/BucketListIndex/bucketlist.css" />
-    @* <link rel="stylesheet" href="css/footer.css" /> *@
+        <link rel="stylesheet" href="css/footer.css" /> 
     <link rel="stylesheet" href="~/css/BucketListIndex/responsive.css" />
 </head>
 <body>
@@ -25,7 +25,7 @@
             </section>
 
             <section class="search-section">
-                <a class="save-button" href="~/BucketLists/Create"> <span>Create a BucketList</span></a>
+                <a class="save-button" href="~/BucketLists/CreateBucketList"> <span>Create a BucketList</span></a>
                 <br />
                 <div class="search-container">
                     <input type="text" class="search-input" placeholder="Search for a bucketList..." aria-label="Search for bucket lists">
@@ -66,4 +66,54 @@
     </div>
     <script src="js/main.js"></script>
 </body>
-</html>
+</html> *@
+
+@model IEnumerable<BusinessLayer.BucketList>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>BucketList</h1>
+
+<p>
+    <a asp-action="Create" style="color: #2f4f4f; ">Create New</a>
+</p>
+<div class="container-fluid mt-4">
+    <div class="row justify-content-center">
+        @foreach (var item in Model)
+        {
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4 d-flex justify-content-center">
+                <div class="card h-100 shadow-sm w-100" style="max-width: 300px;">
+                    @* Show image if available *@
+                    @if (!string.IsNullOrEmpty(item.ImageUrl1))
+                    {
+                        <img src="@item.ImageUrl1" class="card-img-top" alt="Bucket List Image" style="object-fit: cover; height: 200px;" />
+                    }
+                    <div class="card-body text-center">
+                        <h5 class="card-title">@item.Name</h5>
+
+                        @* Display places in italics, comma-separated *@
+                        @{
+                            var places = new List<string?> { item.Place1, item.Place2, item.Place3, item.Place4, item.Place5 }
+                            .Where(p => !string.IsNullOrWhiteSpace(p))
+                            .ToList();
+                        }
+
+                        @if (places.Any())
+                        {
+                            <p class="card-text fst-italic text-muted">@string.Join(", ", places)</p>
+                        }
+
+                        <p class="card-text"><small class="text-muted">@item.User?.Email</small></p>
+                    </div>
+                    <div class="card-footer bg-white border-0 d-flex justify-content-around">
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm" style="background-color: #2f4f4f; color: white">Edit</a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm" style="background-color: #2f4f4f; color: white">Details</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm" style="background-color: #2f4f4f; color: white">Delete</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

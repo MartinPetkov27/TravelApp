@@ -37,8 +37,8 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index" class="btn btn-primary">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.Id" style="color: #60a1a0;">Edit</a> |
+    <a asp-action="IndexAdminPending" class="btn btn-primary" style="background-color: #2f4f4f; color: white">Back to List</a>
     <div class="mt-4 d-flex justify-content-center gap-3">
         <form asp-action="Approve" asp-route-id="@Model.Id" method="post" >
             <button type="submit" class="btn btn-success btn-lg" style="background-color:green; color: white">Approve</button>

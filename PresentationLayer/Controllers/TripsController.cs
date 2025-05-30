@@ -89,7 +89,7 @@ namespace PresentationLayer.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateTripSelectCities(string Title, string CountryName)
         {
-            var countries = await countryManager.ReadAllAsync();
+            var countries = await countryManager.ReadAllAsync(false);
             ViewBag.Countries = countries.Select(c => c.Name).ToList();
 
             var trip = (await tripManager.ReadAllAsync(true, true))
@@ -120,6 +120,9 @@ namespace PresentationLayer.Controllers
                 trip.UserId = user.Id;
                 trip.User = user;
                 await tripManager.CreateAsync(trip);
+
+                country.Trips = new List<Trip>() { trip };
+                await countryManager.UpdateAsync(country, true);
             }
 
             //var lastEndingDate = trip.Places.OrderByDescending(p => p.EndingDate).FirstOrDefault()?.EndingDate;
@@ -159,13 +162,27 @@ namespace PresentationLayer.Controllers
                     trip.Countries.Add(null);
                     trip.Countries[trip.Countries.Count-1] = country;
                     
-                    trip.CountryIndexMap.Add(trip.Countries.Count, country.Name);
+                    //trip.CountryIndexMap.Add(trip.Countries.Count, country.Name);
                     
                     await tripManager.UpdateAsync(trip, true);
                 }
             }
 
             return RedirectToAction("CreateTripSelectCities", new { Title = title, CountryName = trip.Countries.First().Name });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateDescription(int tripId, string description)
+        {
+            Trip trip = await tripManager.ReadAsync(tripId, true);
+            if (trip == null)
+                return NotFound();
+
+            trip.Description = description;
+            await tripManager.UpdateAsync(trip, true);
+
+            return View("Index", await tripManager.ReadAllAsync(true, true));
         }
 
 
@@ -186,67 +203,67 @@ namespace PresentationLayer.Controllers
         //[HttpPost("generate")]
         //public async Task<IActionResult> GenerateTrip([FromBody] TripCriteria criteria)
         //{
-            //metoda shte ide w tripManagera i shte bude vikan tuk
-            
-            //return await tripGeneratorController.GenerateTrip(criteria);
+        //metoda shte ide w tripManagera i shte bude vikan tuk
 
-//            var prompt = $@"
-//Generate a simple trip plan for the following:
-//- Continent: {criteria.Continent}
-//- Target Group: {criteria.TargetGroup}
-//- Duration: {criteria.Duration} days
-//- Theme: {criteria.Criteria}
+        //return await tripGeneratorController.GenerateTrip(criteria);
 
-//Return only a JSON array like this:
-//[
-//  {{
-//    ""country"": ""Italy"",
-//    ""places"": [""Rome"", ""Florence"", ""Venice""]
-//  }},
-//  {{
-//    ""country"": ""France"",
-//    ""places"": [""Paris"", ""Nice""]
-//  }}
-//]";
+        //            var prompt = $@"
+        //Generate a simple trip plan for the following:
+        //- Continent: {criteria.Continent}
+        //- Target Group: {criteria.TargetGroup}
+        //- Duration: {criteria.Duration} days
+        //- Theme: {criteria.Criteria}
 
-//            using var http = new HttpClient();
-//            http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "your-openai-api-key");
+        //Return only a JSON array like this:
+        //[
+        //  {{
+        //    ""country"": ""Italy"",
+        //    ""places"": [""Rome"", ""Florence"", ""Venice""]
+        //  }},
+        //  {{
+        //    ""country"": ""France"",
+        //    ""places"": [""Paris"", ""Nice""]
+        //  }}
+        //]";
 
-//            var requestBody = new
-//            {
-//                model = "gpt-4",
-//                messages = new[]
-//                {
-//            new { role = "user", content = prompt }
-//        },
-//                temperature = 0.7
-//            };
+        //            using var http = new HttpClient();
+        //            http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "your-openai-api-key");
 
-//            var response = await http.PostAsJsonAsync("https://api.openai.com/v1/chat/completions", requestBody);
+        //            var requestBody = new
+        //            {
+        //                model = "gpt-4",
+        //                messages = new[]
+        //                {
+        //            new { role = "user", content = prompt }
+        //        },
+        //                temperature = 0.7
+        //            };
 
-//            if (!response.IsSuccessStatusCode)
-//                return StatusCode((int)response.StatusCode, "OpenAI API call failed");
+        //            var response = await http.PostAsJsonAsync("https://api.openai.com/v1/chat/completions", requestBody);
 
-//            var resultJson = await response.Content.ReadAsStringAsync();
+        //            if (!response.IsSuccessStatusCode)
+        //                return StatusCode((int)response.StatusCode, "OpenAI API call failed");
 
-//            // Extract assistant's message
-//            var result = JsonDocument.Parse(resultJson);
-//            var content = result.RootElement
-//                .GetProperty("choices")[0]
-//                .GetProperty("message")
-//                .GetProperty("content")
-//                .GetString();
+        //            var resultJson = await response.Content.ReadAsStringAsync();
 
-//            // Try to parse what the AI returned as actual JSON
-//            try
-//            {
-//                var jsonElement = System.Text.Json.JsonSerializer.Deserialize<JsonElement>(content);
-//                return Ok(jsonElement); // ✅ Return as parsed JSON array
-//            }
-//            catch
-//            {
-//                return Ok(new { rawResponse = content }); // 🧪 fallback: return plain text
-//            }
+        //            // Extract assistant's message
+        //            var result = JsonDocument.Parse(resultJson);
+        //            var content = result.RootElement
+        //                .GetProperty("choices")[0]
+        //                .GetProperty("message")
+        //                .GetProperty("content")
+        //                .GetString();
+
+        //            // Try to parse what the AI returned as actual JSON
+        //            try
+        //            {
+        //                var jsonElement = System.Text.Json.JsonSerializer.Deserialize<JsonElement>(content);
+        //                return Ok(jsonElement); // ✅ Return as parsed JSON array
+        //            }
+        //            catch
+        //            {
+        //                return Ok(new { rawResponse = content }); // 🧪 fallback: return plain text
+        //            }
         //}
 
 
@@ -297,7 +314,7 @@ namespace PresentationLayer.Controllers
                 {
                     try
                     {
-                        await tripManager.UpdateAsync(trip);
+                        await tripManager.UpdateAsync(trip, true);
                     }
                     catch (DbUpdateConcurrencyException)
                     {
@@ -348,7 +365,7 @@ namespace PresentationLayer.Controllers
 
             private bool TripExists(int id)
             {
-                return tripManager.ReadAsync(id) is not null;
+                return tripManager.ReadAsync(id, false) is not null;
             }
 
             [HttpGet]

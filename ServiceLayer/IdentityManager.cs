@@ -12,12 +12,16 @@ namespace ServiceLayer
 {
     public class IdentityManager
     {
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IdentityContext identityContext;
 
         //Methods for managing the countryContext for CRUD operaatin in Country
-        public IdentityManager(IdentityContext context)
+        public IdentityManager(IdentityContext context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
             identityContext = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public async Task<Tuple<IdentityResult, User>> CreateUserAsync(string username, string password, string email, string firstName, string lastName, string phoneNumber, RoleType role)
@@ -30,7 +34,7 @@ namespace ServiceLayer
             return await identityContext.LogInUserAsync(username, password);
         }
 
-        public async Task<User> ReadAsync(string key, bool useNavigationalProperties = false, bool isReadOnly = true)
+        public async Task<User> ReadAsync(string key, bool useNavigationalProperties , bool isReadOnly = true)
         {
             return await identityContext.ReadUserAsync(key, useNavigationalProperties);
         }
@@ -43,6 +47,32 @@ namespace ServiceLayer
         public async Task UpdateUserAsync(string id, string username, string email, string firstName, string lastName, string phoneNumber)
         {
             await identityContext.UpdateUserAsync(id, username, email, firstName, lastName, phoneNumber);
+        }
+        public async Task UpdateUserWithRolesAsync(string id, string username, string email, string firstName, string lastName, string phoneNumber, string newRole)
+        { 
+            await identityContext.UpdateUserAsync(id, username, email, firstName, lastName, phoneNumber);
+            User user = await ReadAsync(id, true);
+            await UpdateUserRolesAsync(user, newRole);
+        }
+        public async Task UpdateUserRolesAsync(User user, string newRole)
+        {
+            // Get the existing roles
+            var existingRoles = await _userManager.GetRolesAsync(user);
+
+            // Remove roles that are no longer in the new list
+            foreach (var existingRole in existingRoles)
+            {
+                if (newRole != existingRole)
+                {
+                    await _userManager.RemoveFromRoleAsync(user, existingRole);
+                }
+            }
+
+                if (!existingRoles.Contains(newRole))
+                {
+                    await _userManager.AddToRoleAsync(user, newRole);
+                }
+            
         }
 
         public async Task DeleteUserByNameAsync(string username)

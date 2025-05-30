@@ -3,6 +3,10 @@
 @{
     ViewData["Title"] = "Create";
     string? firstImageUrl = Model.ImageUrls?.FirstOrDefault();
+    string? secondImageUrl = Model.ImageUrls?[1];
+    string? thirdImageUrl = Model.ImageUrls?[2];
+    string? firstHalfContent = TempData["firstHalfContent"].ToString();
+    string? secondHalfContent = TempData["secondHalfContent"].ToString();
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -18,7 +22,7 @@
 </head>
 <style>
     html {
-        scroll-behavior: smooth;
+    scroll-behavior: smooth;
     }
 </style>
 <body>
@@ -28,13 +32,20 @@
 
             <div class="header" id="header-target-1">
                 <div class="bg"></div>
-                
-                <div class="bg-2"></div>
-                
+
+                @if (!string.IsNullOrEmpty(secondImageUrl))
+                {
+                    <div class="bg-2" style="background-image: url('@secondImageUrl'); background-size: cover; background-position: center;"></div>
+                }
+                else
+                {
+                    <div class="bg-2"></div>
+                }
+
                 <div class="rectangle"></div>
 
                 @* Text editor *@
-                <textarea  id="textEditor1" class="rectangle-3 editor" readonly maxlength="2000" placeholder="Start your Story...(max lenght - 2000 characters)"></textarea>
+                <textarea id="textEditor1" class="rectangle-3 editor" readonly maxlength="2000">@firstHalfContent</textarea>
 
                 @* A arrow button for scrolling down *@
                 <a href="#header-6-target-2">
@@ -45,12 +56,19 @@
             </div>
 
             <div class="header-6" id="header-6-target-2">
-                <div class="frame"></div>
+                @if (!string.IsNullOrEmpty(thirdImageUrl))
+                {
+                    <div class="frame" style="background-image: url('@thirdImageUrl'); background-size: cover; background-position: center;"></div>
+                }
+                else
+                {
+                    <div class="frame"></div>
+                }
                 
                 <div class="rectangle-7"></div>
                 
                 @* Text editor *@
-                <textarea id="textEditor2" class="rectangle-3 editor-2" readonly maxlength="2000" placeholder="Start your Story...(max lenght - 2000 characters)"></textarea>
+                <textarea id="textEditor2" class="rectangle-3 editor-2" readonly maxlength="2000"> @secondHalfContent</textarea>
              
 
                 @* A arrow button for scrolling down *@
@@ -101,7 +119,7 @@
                     {
                         <div class="frame-11"></div> <!-- Empty div if no image available -->
                     }
-                <textarea class="write-your-way" readonly>@Model.Title</textarea>
+                <textarea class="write-your-way" readonly>@($"\"{Model.Title}\"\nby {Model.User.UserName}")</textarea>
             </div>
             <div class="frame-14">
                     <span class="good-story-title">Uncover New Destinations</span>
@@ -145,7 +163,7 @@
             @* <button href="#placeMap" type="submit" class="unnamed-1b">
                 <span class="save-story">Explore 3D map</span>
             </button> *@
-            <a href="#placeMap" class="unnamed-1b" style="text-decoration: none;">
+            <a href="@Model.MapsUrl" class="unnamed-1b" style="text-decoration: none;">
                 <span class="save-story">Explore 3D map</span>
             </a>
         </div>
@@ -239,31 +257,31 @@
 
         window.onload = initMap;
 
-        //devinding the text
-                window.onload = function() {
-            const fullText = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Content));
+        // //devinding the text
+        //         window.onload = function() {
+        //     const fullText = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Content));
 
-            const splitTexts = smartSplitText(fullText);
+        //     const splitTexts = smartSplitText(fullText);
 
-            document.getElementById("textEditor1").value = splitTexts[0];
-            document.getElementById("textEditor2").value = splitTexts[1];
-        };
+        //     document.getElementById("textEditor1").value = splitTexts[0];
+        //     document.getElementById("textEditor2").value = splitTexts[1];
+        // };
 
-        function smartSplitText(text) {
-            const middle = Math.floor(text.length / 2);
+        // function smartSplitText(text) {
+        //     const middle = Math.floor(text.length / 2);
 
-            let splitPoint = text.indexOf('.', middle);
-            if (splitPoint === -1) splitPoint = text.indexOf('!', middle);
-            if (splitPoint === -1) splitPoint = text.indexOf('?', middle);
+        //     let splitPoint = text.indexOf('.', middle);
+        //     if (splitPoint === -1) splitPoint = text.indexOf('!', middle);
+        //     if (splitPoint === -1) splitPoint = text.indexOf('?', middle);
 
-            if (splitPoint === -1) splitPoint = middle;
+        //     if (splitPoint === -1) splitPoint = middle;
 
-            splitPoint += 1; // after punctuation
+        //     splitPoint += 1; // after punctuation
 
-            const firstHalf = text.slice(0, splitPoint).trim();
-            const secondHalf = text.slice(splitPoint).trim();
+        //     const firstHalf = text.slice(0, splitPoint).trim();
+        //     const secondHalf = text.slice(splitPoint).trim();
 
-            return [firstHalf, secondHalf];
-        }
+        //     return [firstHalf, secondHalf];
+        // }
     </script>
 }

@@ -9,22 +9,57 @@
 <div>
     <h4>BucketList</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.User)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.Email)
-        </dd>
-    </dl>
+    <div class="container d-flex justify-content-center mt-5">
+        <div class="card shadow-lg w-100" style="max-width: 800px;">
+            <div class="card-body">
+                <h4 class="card-title text-center text-primary mb-4" style="color: #60a1a0!important;">Bucket List Details</h4>
+                <dl class="row">
+                    <dt class="col-sm-3">Name</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Name)</dd>
+
+                   @*  <dt class="col-sm-3">User Email</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.User.Email)</dd> *@
+                </dl>
+
+                <hr />
+
+                @{
+                    var places = new List<(string? Place, string? Url)>
+                {
+                (Model.Place1, Model.ImageUrl1),
+                (Model.Place2, Model.ImageUrl2),
+                (Model.Place3, Model.ImageUrl3),
+                (Model.Place4, Model.ImageUrl4),
+                (Model.Place5, Model.ImageUrl5),
+                }.Where(p => !string.IsNullOrWhiteSpace(p.Place) || !string.IsNullOrWhiteSpace(p.Url)).ToList();
+                }
+
+                @if (places.Any())
+                {
+                    <h5 class="text-center text-secondary mb-3">Destinations</h5>
+                    <div class="row row-cols-1 row-cols-md-2 g-4 justify-content-center">
+                        @foreach (var place in places)
+                        {
+                            <div class="col d-flex justify-content-center">
+                                <div class="card shadow-sm" style="width: 100%; max-width: 300px;">
+                                    @if (!string.IsNullOrWhiteSpace(place.Url))
+                                    {
+                                        <img src="@place.Url" class="card-img-top" alt="Destination Image" style="object-fit: cover; height: 180px;">
+                                    }
+                                    <div class="card-body text-center">
+                                        <p class="card-text fst-italic">@place.Place</p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.Id" style="color: #60a1a0;">Edit</a> |
+    <a asp-action="Index" style="color: #60a1a0;">Back to List</a>
 </div>

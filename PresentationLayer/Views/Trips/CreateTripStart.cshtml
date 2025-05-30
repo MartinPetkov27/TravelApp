@@ -6,6 +6,7 @@
 
 <h1>Create Trip</h1>
 
+<br />
 <h4>Start your journey now.</h4>
 <hr />
 
@@ -21,7 +22,7 @@
         <span asp-validation-for="Title" class="text-danger"></span>
     </div>
 
-    <h4>Where do you strat from?</h4>
+    <h4>Where do you start from?</h4>
 
     <!-- Search input -->
     <input type="text" id="searchBox" placeholder="Search for a country..." class="form-control" autocomplete="off" />
@@ -40,13 +41,13 @@
 <hr />
 
 <div class="mt-3">
-    <button type="submit" form="tripForm" class="btn btn-primary">Continue to Select Cities</button>
+    <button type="submit" form="tripForm" class="btn btn-primary" style="background-color: #2f4f4f; color: white">Continue to Select Cities</button>
 </div>
 
 @* <a asp-action="CreateTripSelectCities" asp-route-Title="@Model.Title" asp-route-CountryName="@Model.CountryName">Continue Editing Trip</a>
  *@
 <div>
-    <a asp-action="Index">Back to your trips.</a>
+    <a asp-action="Index" style="color: #2f4f4f;">Back to your trips.</a>
 </div>
 
 @section Scripts {

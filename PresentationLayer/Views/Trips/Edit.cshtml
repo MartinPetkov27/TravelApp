@@ -28,7 +28,7 @@
                         <input asp-for="Description" class="form-control" />
                         <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
+                    @* <div class="form-group">
                         <label asp-for="StartingDate" class="control-label"></label>
                         <input asp-for="StartingDate" class="form-control" value="@Model.StartingDate"/>
                         <span asp-validation-for="StartingDate" class="text-danger"></span>
@@ -37,7 +37,7 @@
                         <label asp-for="EndingDate" class="control-label"></label>
                         <input asp-for="EndingDate" class="form-control" />
                         <span asp-validation-for="EndingDate" class="text-danger"></span>
-                    </div>
+                    </div> *@
                     <div class="form-group">
                         <label asp-for="User.Email" class="control-label"></label>
                         <input asp-for="User.Email" class="form-control" disabled></input>
@@ -45,7 +45,19 @@
                     </div>
                     <br />
                     <div class="form-group">
-                        <input type="submit" value="Save" class="btn btn-primary" />
+                        <a asp-controller="Countries" asp-action="EditTripCountries" asp-route-tripId="@Model.Id" class="btn btn-info" style="background-color: #2f4f4f; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                            Edit Countries
+                        </a>
+                    </div>
+                  @*   <br />
+                    <div class="form-group">
+                        <button asp-controller="Places" asp-action="EditTripPlaces" asp-route-tripId="@Model.Id" class="btn btn-info" style="background-color: #2f4f4f; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                            Edit Places
+                        </button>
+                    </div> *@
+                    <br />
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-primary" style="background-color: #2f4f4f; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;" />
                     </div>
                 </form>
             </div>
@@ -57,22 +69,22 @@
         <div class="p-3">
             <h4>Your Trip Timeline</h4>
             <div class="timeline">
-                @for (var i = 0; i < Model.Countries.Count; i++)
+                @foreach (var country in Model.Countries)
                 {
                     <div class="timeline-step">
                         <span class="dot"></span>
                         <span class="step-title">
-                            <strong>@Model.Countries.Skip(i).FirstOrDefault().Name</strong>
+                            <strong>@country.Name</strong>
                         </span>
 
                         @if (Model.Places != null && Model.Places.Any())
                         {
                             <ul class="ms-4">
-                                @foreach (var place in Model.Places)
+                                @foreach (var place in Model.Places.OrderByDescending(p => p.StartingDate))
                                 {
-                                    if (place.CoutryAlphaCode == @Model.Countries.Skip(i).FirstOrDefault().AlphaCode)
+                                    if (place.CoutryAlphaCode == country.AlphaCode)
                                     {
-                                        <li class="text-danger">📍 @place.Name</li>
+                                        <li class="text-danger">📍 @place.Name  [@place.StartingDate.Value.AddDays(1).ToShortDateString() - @place.EndingDate.Value.AddDays(1).ToShortDateString()]</li>
                                     }
                                 }
                             </ul>
@@ -90,7 +102,7 @@
 
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" style="color: #60a1a0;">Back to List</a>
 </div>
 
 @section Scripts {

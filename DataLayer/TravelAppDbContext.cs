@@ -33,15 +33,18 @@ namespace DataLayer
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Trips)
                 .WithOne(t => t.User)
-                .HasForeignKey(t => t.UserId);
+                .HasForeignKey(t => t.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<User>()
                 .HasMany(u => u.BucketLists)
                 .WithOne(b => b.User)
-                .HasForeignKey(b => b.UserId);  
+                .HasForeignKey(b => b.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Stories)
                 .WithOne(s => s.User)
-                .HasForeignKey(s => s.UserId);
+                .HasForeignKey(s => s.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Trip>()
                 .HasMany(t => t.Countries)
                 .WithMany(c => c.Trips);

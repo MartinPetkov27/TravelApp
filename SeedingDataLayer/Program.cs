@@ -11,6 +11,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using PresentationLayer.Models;
 using ServiceLayer;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.General;
+using static System.Net.WebRequestMethods;
 
 
 
@@ -47,6 +49,7 @@ namespace SeedingDataConsoleApp
                     );
 
                 IdentityContext identityContext = new IdentityContext(dbContext, userManager);
+                StoryContext storyContext = new StoryContext(dbContext);
                 
                 await ClearTablesAsync(dbContext);
 
@@ -88,10 +91,20 @@ namespace SeedingDataConsoleApp
                 {
                     Console.WriteLine("Historian account failed to be created!");
                 }
+
+                //Seeding Stories
+                await SeedStories(dbContext);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+
+                Console.WriteLine("Top-level error:");
+                Console.WriteLine(ex.Message);
+                if (ex.InnerException != null)
+                    Console.WriteLine("Inner Exception: " + ex.InnerException.Message);
+                if (ex.InnerException?.InnerException != null)
+                    Console.WriteLine("Deeper Inner Exception: " + ex.InnerException.InnerException.Message);
             }
             finally
             {
@@ -108,7 +121,8 @@ namespace SeedingDataConsoleApp
             // Optionally, for many-to-many or other related tables, clear those too
             await dbContext.SaveChangesAsync();
         }
-        static async Task SeedCountries(TravelAppDbContext dbContext)
+        
+        public static async Task SeedCountries(TravelAppDbContext dbContext)
         {
             var httpClient = new HttpClient();
             var geoNamesService = new GeoNamesService(httpClient);
@@ -144,9 +158,91 @@ namespace SeedingDataConsoleApp
                 if (ex.InnerException != null)
                     Console.WriteLine("Inner exception: " + ex.InnerException.Message);
             }
-
         }
+        public static async Task SeedStories(TravelAppDbContext dbContext)
+        {
+            StoryContext storyContext = new StoryContext(dbContext);
+            //Retrieve a user(e.g., historian)
+            User historian = await dbContext.Users.FirstOrDefaultAsync(u => u.UserName == "historian");
+            if (historian == null)
+            {
+                Console.WriteLine("Historian user not found!");
+                return;
+            }
 
+            Story story1 = new Story
+            {
+
+                Title = "Veliki Preslav",
+                Content = "This is some content about Veliki Preslav.",
+                ImageUrls = new List<string> { "https://complexzdravec.com/wp-content/uploads/veliki-preslav.webp", "https://www.business-register.bg/media/k2/items/cache/a975f7fffe3f534e70a3234554906c80_XL.jpg", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3FWAfw3KbQnkTKA5xLjj6coVZ4hc13jtbvA&s" },
+                MapsUrl = "https://maps.app.goo.gl/c9yf9W6A7R8UqPRN9",
+                Status = Status.Approved,
+                UserId = historian.Id,
+                User = historian
+            };
+
+            Story story2 = new Story
+            {
+                Title = "Tsarevets Fortress",
+                Content = "Tsarevets is a medieval stronghold located on a hill.",
+                ImageUrls = new List<string> { "https://static.pochivka.bg/sights.bgstay.com/images/00/822/547ef4b17d249.jpg", "https://tickets.museumvt.com/uploads/museum/locations/yw0vvwlb40m/images/Tsarevets_3.jpg", "https://www.tsarevets.eu/assets/images/index-meta.jpg" },
+                MapsUrl = "https://maps.app.goo.gl/1KxhxLrYL5DrztBf9",
+                Status = Status.Approved,
+                UserId = historian.Id,
+                User = historian
+            };
+
+            Story story3 = new Story
+            {
+                Title = "Pliska",
+                Content = "Pliska was the first capital of Bulgaria.",
+                ImageUrls = new List<string> { "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-jnShHPHtitadCeIheNepJYjee0wSvyqTNw&s", "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/bb/93/09/caption.jpg?w=1200&h=1200&s=1", "https://archaeologyinbulgaria.wordpress.com/wp-content/uploads/2015/05/great-basilica-41.jpg" },
+                MapsUrl = "https://maps.app.goo.gl/nmzEunzSKG7cMGnD8",
+                Status = Status.Approved,
+                UserId = historian.Id,
+                User = historian
+            };
+
+            Console.WriteLine($"Story: Title={story1.Title}, UserId={story1.UserId}, UserName={story1.User.UserName},Content={story1.Content},FirstImage={story1.ImageUrls.FirstOrDefault()}, MapsUrl = {story1.MapsUrl}");
+
+            dbContext.Stories.Add(story1);
+            dbContext.Stories.Add(story2);
+            dbContext.Stories.Add(story3);
+
+            try
+            {
+                await dbContext.SaveChangesAsync();
+                Console.WriteLine("Story created successfully.");
+            }
+            catch (DbUpdateException ex)
+            {
+                Console.WriteLine("Full Exception:");
+                Console.WriteLine(ex.ToString());
+            }
+
+            //try
+            //{
+            //    await storyContext.CreateAsync(story2);
+            //    Console.WriteLine("Story created successfully.");
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine($"Error creating story: {ex.Message}");
+            //}
+
+            //try
+            //{
+            //    await storyContext.CreateAsync(story3);
+            //    Console.WriteLine("Story created successfully.");
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine($"Error creating story: {ex.Message}");
+            //}
+
+            //Console.WriteLine("Stories seeded successfully.");
+        }
     }
 }
 

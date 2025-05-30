@@ -177,7 +177,7 @@
             </div>
         </div>
         <div class="unnamed-e" id="read-more">
-            <span class="read-more">Read MOre stories</span>
+            <a asp-controller="Stories" asp-action="IndexMoreStories" class="read-more" role="button">Read more stories</a>
         </div>
         @*   @{
             var redirectUrl = User.Identity?.IsAuthenticated == true
@@ -245,8 +245,8 @@
                         You need to be logged in to start planning a trip.
                     </div>
                     <div class="modal-footer">
-                        <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Login">Log In</a>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Login" style="background-color: #2f4f4f; color: white">Log In</a>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: #2f4f4f; color: white">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -261,11 +261,11 @@
                     </div>
                     <div class="modal-body">
                         You need to be a historian to start planning a trip.
-                        To be granted the the historian role, you need to have atleast 3 trips.
+                        @* To be granted the the historian role, you need to have atleast 3 trips. *@
                     </div>
                     <div class="modal-footer">
-                        <a class="btn btn-primary" asp-controller="Trips" asp-action="Create">Create a trip</a>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <a class="btn btn-primary" asp-controller="Trips" asp-action="Create" style="background-color: #2f4f4f; color: white">Create a trip</a>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: #2f4f4f; color: white">Cancel</button>
                     </div>
                 </div>
             </div>
